@@ -1184,6 +1184,191 @@
       }
     }
 
+  
+    /* 新增滑块验证：从头划到尾 */
+    .speed-slider-box{
+      position:relative;
+      margin-top:2px;
+      padding:16px 12px 8px;
+      border:1.5px solid #d9e4e6;
+      border-radius:18px;
+      background:linear-gradient(180deg,#f9fbfb,#f3f7f7);
+    }
+    .speed-slider-track{
+      position:relative;
+      height:54px;
+      overflow:hidden;
+      border:1.5px solid #cfdde0;
+      border-radius:16px;
+      background:
+        linear-gradient(90deg,rgba(209,235,234,.65),rgba(248,245,235,.8)),
+        linear-gradient(90deg,#edf6f6,#f5f1e7);
+    }
+    .speed-slider-fill{
+      position:absolute;
+      inset:0 auto 0 0;
+      width:0;
+      border-radius:16px;
+      background:linear-gradient(90deg,rgba(84,173,167,.22),rgba(84,173,167,.06));
+      transition:width .05s linear;
+    }
+    .speed-slider-finish{
+      position:absolute;
+      top:50%;
+      right:14px;
+      transform:translateY(-50%);
+      color:#7f9298;
+      font-size:13px;
+      font-weight:800;
+      letter-spacing:.5px;
+    }
+    .speed-slider-handle{
+      position:absolute;
+      left:12px;
+      top:43px;
+      z-index:2;
+      width:56px;
+      height:56px;
+      transform:translateY(-50%);
+      border:1.5px solid #c8d6d9;
+      border-radius:18px;
+      color:#1d6463;
+      background:#fff;
+      box-shadow:0 6px 14px rgba(28,77,78,.12);
+      font-size:26px;
+      font-weight:900;
+      cursor:grab;
+      touch-action:none;
+      user-select:none;
+      -webkit-user-select:none;
+    }
+    .speed-slider-handle:active{cursor:grabbing}
+    .speed-slider-handle span{display:block;line-height:1;transform:translateY(-1px)}
+    .speed-slider-box.is-success .speed-slider-track{
+      border-color:#7db8a5;
+      background:linear-gradient(90deg,#e3f6ef,#f4fbf6);
+    }
+    .speed-slider-box.is-error .speed-slider-track{
+      border-color:#e8b6b6;
+      background:linear-gradient(90deg,#fff2f2,#faf6f2);
+    }
+    .speed-slider-tip{
+      margin:12px 2px 0;
+      color:#6f8288;
+      font-size:13px;
+      line-height:1.55;
+    }
+
+  
+    /* 下载界面已取消：即使旧配置仍保留，也不会再显示。 */
+    .download-page,
+    .download-view{
+      display:none !important;
+    }
+
+  
+    .speed-slider-tip{
+      display:none !important;
+    }
+
+  
+    /* 图片缺口滑块：内置 50 张场景图，切片与缺口来自同一张图。 */
+    .slider-art{
+      background-color:#eaf1f2 !important;
+      background-repeat:no-repeat !important;
+    }
+    .slider-art::before{
+      background:linear-gradient(90deg,rgba(255,255,255,.10),rgba(255,255,255,0),rgba(255,255,255,.08)) !important;
+      opacity:1 !important;
+      pointer-events:none;
+    }
+    .gap,
+    .piece{
+      background-color:transparent !important;
+      background-repeat:no-repeat !important;
+    }
+    .gap{
+      box-shadow:inset 0 0 0 2px rgba(25,66,75,.58), 0 0 0 1px rgba(255,255,255,.48) !important;
+      filter:brightness(.68) saturate(.80);
+    }
+    .piece{
+      box-shadow:0 4px 9px rgba(15,40,47,.28), inset 0 0 0 1px rgba(255,255,255,.50) !important;
+    }
+    .gap::before,
+    .piece::before{
+      display:none !important;
+    }
+
+  
+    /* 手机端沉浸全屏：隐藏外层导航，仅保留当前内嵌程序与退出按钮。 */
+    body.mobile-viewer-fullscreen{
+      overflow:hidden !important;
+      background:#fff;
+    }
+    body.mobile-viewer-fullscreen .app-shell{
+      position:fixed !important;
+      inset:0 !important;
+      z-index:99999 !important;
+      width:100vw !important;
+      max-width:none !important;
+      height:100dvh !important;
+      min-height:100dvh !important;
+      margin:0 !important;
+      border:0 !important;
+      border-radius:0 !important;
+      box-shadow:none !important;
+      overflow:hidden !important;
+      background:#fff !important;
+    }
+    body.mobile-viewer-fullscreen .app-topbar,
+    body.mobile-viewer-fullscreen .file-panel{
+      display:none !important;
+    }
+    body.mobile-viewer-fullscreen .app-workspace{
+      display:block !important;
+      height:100dvh !important;
+      min-height:100dvh !important;
+    }
+    body.mobile-viewer-fullscreen .viewer-panel{
+      display:flex !important;
+      flex-direction:column !important;
+      width:100% !important;
+      height:100dvh !important;
+      min-height:100dvh !important;
+      padding:10px !important;
+      background:#fff !important;
+    }
+    body.mobile-viewer-fullscreen .viewer-heading{
+      flex:0 0 auto !important;
+      display:flex !important;
+      flex-direction:row !important;
+      align-items:center !important;
+      justify-content:flex-end !important;
+      margin:0 0 8px !important;
+    }
+    body.mobile-viewer-fullscreen .viewer-heading-copy,
+    body.mobile-viewer-fullscreen .viewer-path{
+      display:none !important;
+    }
+    body.mobile-viewer-fullscreen .viewer-controls{
+      width:auto !important;
+      margin-left:auto !important;
+    }
+    body.mobile-viewer-fullscreen .viewer-fullscreen-btn{
+      min-height:38px !important;
+      padding:0 13px !important;
+    }
+    body.mobile-viewer-fullscreen .file-viewer{
+      flex:1 1 auto !important;
+      width:100% !important;
+      height:auto !important;
+      min-height:0 !important;
+      border-radius:12px !important;
+    }
+    body.mobile-viewer-fullscreen .file-hint{
+      display:none !important;
+    }
+
   </style>
 </head>
 <body>
@@ -1215,9 +1400,24 @@
       </button>
 
       <section class="secondary-checks" id="secondaryChecks" aria-label="附加验证">
-        <div class="verification-card" id="sliderStep" hidden>
+        <div class="verification-card" id="speedSliderStep" hidden>
           <div class="verification-title">
             <span>滑块验证</span>
+            <span class="mini-status idle" id="speedSliderStatus">请从头滑到尾</span>
+          </div>
+          <div class="speed-slider-box" id="speedSliderBox">
+            <div class="speed-slider-track" id="speedSliderTrack">
+              <div class="speed-slider-fill" id="speedSliderFill"></div>
+              <div class="speed-slider-finish">终点</div>
+            </div>
+            <button class="speed-slider-handle" id="speedSliderHandle" type="button" aria-label="拖动滑块从头划到尾"><span>»</span></button>
+          </div>
+          <p class="speed-slider-tip" id="speedSliderTip">按住滑块，从最左侧拖到最右侧。</p>
+        </div>
+
+        <div class="verification-card" id="sliderStep" hidden>
+          <div class="verification-title">
+            <span>缺口滑块验证</span>
             <span class="mini-status idle" id="sliderStatus">按住并拖到缺口</span>
           </div>
           <div class="slider-captcha" id="sliderCaptcha">
@@ -1330,7 +1530,6 @@
         <button class="app-nav-btn active" type="button" data-section="personal">个人简介</button>
         <button class="app-nav-btn" type="button" data-section="center">中心简介</button>
         <button class="app-nav-btn" type="button" data-section="rollcall">点名程序</button>
-        <button class="app-nav-btn" type="button" data-section="download">下载</button>
       </nav>
       <button class="logout-btn" type="button" id="logoutBtn">退出登录</button>
     </header>
@@ -1366,7 +1565,7 @@
           <p id="downloadCount">可下载文件</p>
         </div>
       </div>
-      <p class="local-server-warning" id="localServerWarning" hidden>当前下载无法保存到设备。</p>
+      <p class="local-server-warning" id="localServerWarning" hidden>当前是直接打开 HTML 的方式。请双击同文件夹内的“启动下载中心.bat”，浏览器打开 localhost 页面后，下载按钮才会直接保存到设备。</p>
       <div class="download-list" id="downloadList"></div>
     </section>
 
@@ -1441,6 +1640,7 @@
 
     const state = {
       human: false,
+      speedSlider: false,
       slider: false,
       captcha: false,
       image: false,
@@ -1457,7 +1657,10 @@
       knowledgeTask: null,
       sliderGapX: 0,
       lastSliderGapX: 0,
-      drag: { active:false, startX:0, handleX:0, pieceX:0, pointerId:null }
+      gapSceneIndex: -1,
+      gapPositionIndex: -1,
+      drag: { active:false, startX:0, handleX:0, pieceX:0, pointerId:null },
+      speedDrag: { active:false, startX:0, handleStartX:0, handleX:0, pointerId:null, startTime:0 }
     };
 
     const els = {
@@ -1469,6 +1672,13 @@
       humanMain: document.getElementById("humanMain"),
       humanStatus: document.getElementById("humanStatus"),
       secondaryChecks: document.getElementById("secondaryChecks"),
+      speedSliderStep: document.getElementById("speedSliderStep"),
+      speedSliderStatus: document.getElementById("speedSliderStatus"),
+      speedSliderBox: document.getElementById("speedSliderBox"),
+      speedSliderTrack: document.getElementById("speedSliderTrack"),
+      speedSliderFill: document.getElementById("speedSliderFill"),
+      speedSliderHandle: document.getElementById("speedSliderHandle"),
+      speedSliderTip: document.getElementById("speedSliderTip"),
       sliderStep: document.getElementById("sliderStep"),
       captchaStep: document.getElementById("captchaStep"),
       sliderCaptcha: document.getElementById("sliderCaptcha"),
@@ -1562,7 +1772,7 @@
           web:    { label: "网页版", file: "http://www.flore.cc.cd/" },
           local1: { label: "httpsyichenxie.com风格", file: "httpsyichenxie.com风格.html" },
           local2: { label: "httpswilliamle.design风格", file: "httpswilliamle.design风格.html" },
-          original: { label: "原版", file: "原版.html" }
+          original: { label: "原版", file: "index.html" }
         }
       },
       rollcall: {
@@ -1783,6 +1993,7 @@
     }
 
     function leaveApp() {
+      document.body.classList.remove("mobile-viewer-fullscreen");
       els.appShell.classList.remove("show", "download-mode");
       els.appShell.setAttribute("aria-hidden", "true");
       els.appWorkspace.hidden = false;
@@ -1800,24 +2011,57 @@
     els.logoutBtn.addEventListener("click", leaveApp);
 
 
+    function isMobileViewport() {
+      return window.matchMedia("(max-width: 780px)").matches;
+    }
+
+    function isViewerFullscreen() {
+      return document.fullscreenElement === els.viewerPanel ||
+        document.body.classList.contains("mobile-viewer-fullscreen");
+    }
+
     function updateFullscreenLabel() {
-      const active = document.fullscreenElement === els.viewerPanel;
-      els.viewerFullscreenBtn.textContent = active ? "退出全屏" : "全屏显示";
+      els.viewerFullscreenBtn.textContent = isViewerFullscreen() ? "退出全屏" : "全屏显示";
+    }
+
+    function enterMobileViewerFullscreen() {
+      document.body.classList.add("mobile-viewer-fullscreen");
+      window.scrollTo({ top: 0, behavior: "instant" });
+      updateFullscreenLabel();
+    }
+
+    function exitMobileViewerFullscreen() {
+      document.body.classList.remove("mobile-viewer-fullscreen");
+      updateFullscreenLabel();
     }
 
     els.viewerFullscreenBtn.addEventListener("click", async () => {
+      if (document.body.classList.contains("mobile-viewer-fullscreen")) {
+        exitMobileViewerFullscreen();
+        return;
+      }
+
+      // 手机端优先使用沉浸式全屏，兼容 iPhone / 安卓浏览器。
+      if (isMobileViewport()) {
+        enterMobileViewerFullscreen();
+        return;
+      }
+
       try {
         if (document.fullscreenElement === els.viewerPanel) {
           await document.exitFullscreen();
-        } else {
+        } else if (els.viewerPanel.requestFullscreen) {
           await els.viewerPanel.requestFullscreen();
+        } else {
+          enterMobileViewerFullscreen();
         }
       } catch {
-        showToast("当前浏览器未允许全屏显示。", "error");
+        enterMobileViewerFullscreen();
       }
     });
 
     document.addEventListener("fullscreenchange", updateFullscreenLabel);
+    window.addEventListener("orientationchange", updateFullscreenLabel);
 
     function createCaptchaImage(code, seed) {
       const palette = [
@@ -1869,31 +2113,186 @@
 
 
     // 四类扩展验证题库：每次进入步骤时随机抽取一道。
+    /*
+      验证题库容量：
+      - 图片点选：100 题（指定物体 / 无目标图片 / 同形状）
+      - 旋转图片：100 个不同倾斜角度
+      - 图标分类：100 题（动物 / 食物 / 交通工具 / 人脸）
+      - 常识询问：200 题（100 道简单数学 + 100 道常识文字问答）
+    */
+    function deterministicShuffle(items, seed) {
+      const list = [...items];
+      let value = (seed + 1) >>> 0;
+      for (let index = list.length - 1; index > 0; index -= 1) {
+        value = (value * 1664525 + 1013904223) >>> 0;
+        const swapIndex = value % (index + 1);
+        [list[index], list[swapIndex]] = [list[swapIndex], list[index]];
+      }
+      return list;
+    }
+
+    const imageTargetCatalog = [
+      ["🍓", "草莓"], ["🐱", "小猫"], ["🌻", "向日葵"], ["🍋", "柠檬"],
+      ["🦊", "小狐狸"], ["🍉", "西瓜"], ["🐶", "小狗"], ["🌈", "彩虹"],
+      ["🍎", "苹果"], ["🦋", "蝴蝶"], ["🌙", "月亮"], ["🐟", "小鱼"]
+    ];
+    const imageFillers = ["☁️","🍀","🌼","🚲","🎈","📘","✏️","🧸","🍊","🌊","🪁","🎵","🏠","🪴"];
+    const absentSymbols = [
+      ["⭐", "星星"], ["♥", "爱心"], ["☀️", "太阳"], ["🌙", "月亮"],
+      ["🍀", "四叶草"], ["🦋", "蝴蝶"], ["🌷", "郁金香"], ["🚗", "汽车"],
+      ["🍎", "苹果"], ["🐱", "小猫"], ["🎈", "气球"]
+    ];
+    const shapeCatalog = ["●","▲","■","◆","★","✚","✦","⬟","⬢","✿"];
+
+    function makeImageTargetTask(index) {
+      const [symbol, label] = imageTargetCatalog[index % imageTargetCatalog.length];
+      const selectedCount = 2 + (index % 2);
+      const fillers = deterministicShuffle(imageFillers.filter(item => item !== symbol), 101 + index).slice(0, 6 - selectedCount);
+      const cells = deterministicShuffle(
+        [...Array(selectedCount).fill(symbol), ...fillers],
+        401 + index
+      );
+      return {
+        mode:"target",
+        prompt:`请选择所有${label}图片`,
+        sample:symbol,
+        cells,
+        answer:cells.map((cell, position) => cell === symbol ? position : -1).filter(position => position >= 0)
+      };
+    }
+
+    function makeImageAbsentTask(index) {
+      const [symbol, label] = absentSymbols[index % absentSymbols.length];
+      const cleanPairs = deterministicShuffle(imageFillers.filter(item => item !== symbol), 801 + index)
+        .slice(0, 6)
+        .map((item, position, list) => `${item}${list[(position + 2) % list.length]}`);
+      const cells = deterministicShuffle([
+        cleanPairs[0], cleanPairs[1], cleanPairs[2],
+        `${symbol}${cleanPairs[3]}`,
+        `${cleanPairs[4]}${symbol}`,
+        `${symbol}${cleanPairs[5]}`
+      ], 1201 + index);
+      return {
+        mode:"none",
+        prompt:`请选择没有出现${label}的图片`,
+        sample:symbol,
+        cells,
+        answer:cells.map((cell, position) => !cell.includes(symbol) ? position : -1).filter(position => position >= 0)
+      };
+    }
+
+    function makeImageShapeTask(index) {
+      const symbol = shapeCatalog[index % shapeCatalog.length];
+      const selectedCount = 2 + (index % 2);
+      const others = deterministicShuffle(shapeCatalog.filter(item => item !== symbol), 1601 + index).slice(0, 6 - selectedCount);
+      const cells = deterministicShuffle([...Array(selectedCount).fill(symbol), ...others], 2001 + index);
+      return {
+        mode:"shape",
+        prompt:"请选择与示例形状相同的图案",
+        sample:symbol,
+        cells,
+        answer:cells.map((cell, position) => cell === symbol ? position : -1).filter(position => position >= 0)
+      };
+    }
+
     const imageTasks = [
-      { mode:"target", prompt:"请选择所有草莓图片", sample:"🍓", cells:["🍓","☁️","🍉","🍓","🌻","🍀"], answer:[0,3] },
-      { mode:"target", prompt:"请选择所有小猫图片", sample:"🐱", cells:["🐶","🐱","🐱","🌈","🦊","🍋"], answer:[1,2] },
-      { mode:"none", prompt:"请选择没有出现星星的图片", sample:"⭐", cells:["⭐🍀","🌙☁️","🍎🌼","⭐🚲","🐟🌊","⭐🍋"], answer:[1,2,4] },
-      { mode:"none", prompt:"请选择没有出现爱心的图片", sample:"♥", cells:["♥🌷","🍊☀️","🦋🍃","♥🎈","📘✏️","♥🌙"], answer:[1,2,4] },
-      { mode:"shape", prompt:"请选择与示例形状相同的图案", sample:"●", cells:["●","▲","●","■","★","●"], answer:[0,2,5] },
-      { mode:"shape", prompt:"请选择与示例形状相同的图案", sample:"▲", cells:["■","▲","●","▲","★","◆"], answer:[1,3] }
+      ...Array.from({ length:34 }, (_, index) => makeImageTargetTask(index)),
+      ...Array.from({ length:33 }, (_, index) => makeImageAbsentTask(index)),
+      ...Array.from({ length:33 }, (_, index) => makeImageShapeTask(index))
     ];
-    const rotateAngles = [45,70,90,120,135,160,200,225,250,270,300,315];
-    const iconTasks = [
-      { prompt:"请选择所有动物图标", cells:["🦊","🍎","🚲","🐱","🙂","🐶","🍞","🚗"], answer:[0,3,5] },
-      { prompt:"请选择所有食物图标", cells:["🐼","🍓","🚌","🍰","😄","🍜","🐟","🚲"], answer:[1,3,5] },
-      { prompt:"请选择所有交通工具图标", cells:["🙂","🛵","🍋","🚗","🐱","🚄","🍩","🐶"], answer:[1,3,5] },
-      { prompt:"请选择所有人脸图标", cells:["🐼","😎","🍇","😄","🚲","🙂","🍜","🐱"], answer:[1,3,5] }
-    ];
-    const knowledgeTasks = [
-      { prompt:"7 + 5 等于多少？", answers:["12","十二"] },
-      { prompt:"一周有几天？", answers:["7","七","七天"] },
-      { prompt:"太阳通常从哪个方向升起？", answers:["东","东方"] },
-      { prompt:"冰融化后会变成什么？", answers:["水"] },
-      { prompt:"交通信号灯中，哪种颜色表示停止？", answers:["红","红色"] },
-      { prompt:"中国的首都是哪里？", answers:["北京"] },
-      { prompt:"3 × 4 等于多少？", answers:["12","十二"] },
-      { prompt:"一天有多少小时？", answers:["24","二十四","二十四小时"] }
-    ];
+
+    // 100 个互不相同的倾斜角度；每次会避开上一题角度。
+    const rotateAngles = Array.from({ length:100 }, (_, index) => {
+      const angle = (17 + index * 37) % 360;
+      return angle === 0 ? 1 : angle;
+    });
+
+    const iconCatalog = {
+      "动物":["🐱","🐶","🦊","🐼","🦁","🐸","🐰","🐨","🐯","🐵","🦄","🐙"],
+      "食物":["🍓","🍎","🍞","🍰","🍜","🍋","🍉","🍇","🍩","🍔","🍕","🥕"],
+      "交通工具":["🚗","🚌","🚲","🛵","🚄","✈️","🚢","🚕","🚜","🚁","🚇","🛶"],
+      "人脸":["🙂","😄","😎","🥳","🤓","😴","😍","🤔","😮","😇","😂","🤩"]
+    };
+    const iconCategoryOrder = ["动物","食物","交通工具","人脸"];
+
+    function makeIconTask(index) {
+      const category = iconCategoryOrder[Math.floor(index / 25)];
+      const targets = deterministicShuffle(iconCatalog[category], 2501 + index).slice(0, 3);
+      const distractors = deterministicShuffle(
+        iconCategoryOrder
+          .filter(item => item !== category)
+          .flatMap(item => iconCatalog[item]),
+        2901 + index
+      ).slice(0, 5);
+
+      const taggedCells = deterministicShuffle([
+        ...targets.map(symbol => ({ symbol, category })),
+        ...distractors.map(symbol => ({ symbol, category:"其他" }))
+      ], 3301 + index);
+
+      return {
+        prompt:`请选择所有${category}图标`,
+        cells:taggedCells.map(item => item.symbol),
+        answer:taggedCells.map((item, position) => item.category === category ? position : -1).filter(position => position >= 0)
+      };
+    }
+
+    const iconTasks = Array.from({ length:100 }, (_, index) => makeIconTask(index));
+
+    function buildMathKnowledgeTasks() {
+      const tasks = [];
+
+      // 60 道加法题
+      for (let index = 0; index < 60; index += 1) {
+        const a = 5 + (index % 20);
+        const b = 3 + Math.floor(index / 20) * 7;
+        tasks.push({
+          prompt:`${a} + ${b} 等于多少？`,
+          answers:[String(a + b)]
+        });
+      }
+
+      // 25 道减法题
+      for (let index = 0; index < 25; index += 1) {
+        const a = 30 + index;
+        const b = 4 + (index % 9);
+        tasks.push({
+          prompt:`${a} - ${b} 等于多少？`,
+          answers:[String(a - b)]
+        });
+      }
+
+      // 15 道乘法题
+      for (let index = 0; index < 15; index += 1) {
+        const a = 2 + (index % 5);
+        const b = 3 + Math.floor(index / 5);
+        tasks.push({
+          prompt:`${a} × ${b} 等于多少？`,
+          answers:[String(a * b)]
+        });
+      }
+
+      return tasks;
+    }
+
+    const generalKnowledgeTasks = [{"prompt":"一周有几天？","answers":["7","七","七天"]},{"prompt":"一年有几个月？","answers":["12","十二","十二个月"]},{"prompt":"一天有多少小时？","answers":["24","二十四","二十四小时"]},{"prompt":"一小时有多少分钟？","answers":["60","六十","六十分钟"]},{"prompt":"一分钟有多少秒？","answers":["60","六十","六十秒"]},{"prompt":"太阳通常从哪个方向升起？","answers":["东","东方"]},{"prompt":"太阳通常从哪个方向落下？","answers":["西","西方"]},{"prompt":"地球的天然卫星是什么？","answers":["月亮","月球"]},{"prompt":"水结冰后会变成什么？","answers":["冰"]},{"prompt":"冰融化后会变成什么？","answers":["水"]},{"prompt":"植物通常通过什么进行光合作用？","answers":["叶子","叶片"]},{"prompt":"鱼用什么呼吸？","answers":["鳃","鱼鳃"]},{"prompt":"鸟通常用什么飞行？","answers":["翅膀"]},{"prompt":"蜜蜂主要采集什么？","answers":["花蜜"]},{"prompt":"熊猫最常吃什么？","answers":["竹子","竹"]},{"prompt":"青蛙小时候生活在水里的形态叫什么？","answers":["蝌蚪"]},{"prompt":"蚕宝宝长大后会变成什么？","answers":["蛾","蚕蛾"]},{"prompt":"鸡蛋通常来自哪种动物？","answers":["鸡"]},{"prompt":"牛奶通常来自哪种动物？","answers":["牛"]},{"prompt":"羊毛通常来自哪种动物？","answers":["羊"]},{"prompt":"交通信号灯中，红色表示什么？","answers":["停止","停"]},{"prompt":"交通信号灯中，绿色表示什么？","answers":["通行","可以通行"]},{"prompt":"斑马线主要供谁通行？","answers":["行人","步行的人"]},{"prompt":"汽车通常有几个轮子？","answers":["4","四","四个"]},{"prompt":"自行车通常有几个轮子？","answers":["2","二","两个"]},{"prompt":"火车通常在哪种轨道上行驶？","answers":["铁路","铁轨","轨道"]},{"prompt":"飞机通常在哪个地方起飞和降落？","answers":["机场"]},{"prompt":"船通常在哪种水域航行？","answers":["水上","水面","海上"]},{"prompt":"雨伞主要用来遮挡什么？","answers":["雨"]},{"prompt":"冬天通常比夏天更冷还是更热？","answers":["更冷","冷"]},{"prompt":"夏天通常比冬天更热还是更冷？","answers":["更热","热"]},{"prompt":"彩虹通常有几种主要颜色？","answers":["7","七","七种"]},{"prompt":"白天最明亮的天体通常是什么？","answers":["太阳"]},{"prompt":"夜晚天空中常见的明亮天体是什么？","answers":["月亮","月球"]},{"prompt":"指南针的红色一端通常指向哪个方向？","answers":["北","北方"]},{"prompt":"地图上方通常表示哪个方向？","answers":["北","北方"]},{"prompt":"中国的首都是哪里？","answers":["北京"]},{"prompt":"法国的首都是哪里？","answers":["巴黎"]},{"prompt":"日本的首都是哪里？","answers":["东京"]},{"prompt":"英国的首都是哪里？","answers":["伦敦"]},{"prompt":"美国的首都是哪里？","answers":["华盛顿","华盛顿特区"]},{"prompt":"地球上最大的海洋是什么？","answers":["太平洋"]},{"prompt":"陆地上最大的动物是什么？","answers":["大象","非洲象"]},{"prompt":"世界上速度很快的陆地动物常被称为什么？","answers":["猎豹"]},{"prompt":"企鹅主要生活在寒冷地区还是沙漠地区？","answers":["寒冷地区","寒冷","极地"]},{"prompt":"骆驼更适应沙漠还是海洋？","answers":["沙漠"]},{"prompt":"树叶在春夏季通常是什么颜色？","answers":["绿色","绿"]},{"prompt":"成熟的香蕉常见是什么颜色？","answers":["黄色","黄"]},{"prompt":"草莓常见是什么颜色？","answers":["红色","红"]},{"prompt":"橙子常见是什么颜色？","answers":["橙色","橙"]},{"prompt":"雪通常是什么颜色？","answers":["白色","白"]},{"prompt":"煤炭常见是什么颜色？","answers":["黑色","黑"]},{"prompt":"洗手通常使用什么清洁？","answers":["肥皂","洗手液"]},{"prompt":"刷牙通常使用什么工具？","answers":["牙刷"]},{"prompt":"剪纸通常使用什么工具？","answers":["剪刀"]},{"prompt":"写字通常使用什么工具？","answers":["笔"]},{"prompt":"读书通常需要看什么？","answers":["书"]},{"prompt":"吃饭通常使用什么餐具？","answers":["筷子","勺子","餐具"]},{"prompt":"喝水通常使用什么容器？","answers":["杯子","水杯"]},{"prompt":"睡觉通常在什么家具上？","answers":["床"]},{"prompt":"开门通常需要使用什么？","answers":["钥匙","门把手"]},{"prompt":"下雨时地面通常会变得怎样？","answers":["湿","潮湿"]},{"prompt":"刮风时树叶通常会怎样？","answers":["摇动","摇晃","飘动"]},{"prompt":"雷雨天常见的闪光现象叫什么？","answers":["闪电"]},{"prompt":"雷雨天听到的巨大声音叫什么？","answers":["雷声","打雷"]},{"prompt":"医生通常在哪种场所工作？","answers":["医院"]},{"prompt":"老师通常在哪种场所上课？","answers":["学校","教室"]},{"prompt":"图书管理员通常在哪种场所工作？","answers":["图书馆"]},{"prompt":"消防员主要负责扑灭什么？","answers":["火","火灾"]},{"prompt":"警察主要帮助维护什么？","answers":["秩序","安全"]},{"prompt":"邮递员通常递送什么？","answers":["信件","邮件","包裹"]},{"prompt":"厨师通常在什么地方做饭？","answers":["厨房"]},{"prompt":"钟表主要用来显示什么？","answers":["时间"]},{"prompt":"温度计主要用来测量什么？","answers":["温度"]},{"prompt":"尺子主要用来测量什么？","answers":["长度"]},{"prompt":"秤主要用来测量什么？","answers":["重量","体重"]},{"prompt":"放大镜主要用来做什么？","answers":["放大","观察细小物体"]},{"prompt":"相机主要用来做什么？","answers":["拍照","摄影"]},{"prompt":"电话主要用来做什么？","answers":["打电话","通信"]},{"prompt":"电脑常用来处理什么？","answers":["信息","数据"]},{"prompt":"键盘主要用来输入什么？","answers":["文字","字符"]},{"prompt":"鼠标主要用来控制什么？","answers":["光标","电脑光标"]},{"prompt":"浏览器主要用来访问什么？","answers":["网页","网站"]},{"prompt":"垃圾应该放进什么地方？","answers":["垃圾桶"]},{"prompt":"废旧纸张通常属于哪类垃圾？","answers":["可回收物","可回收垃圾"]},{"prompt":"蓝色常使人联想到什么自然事物？","answers":["天空","海洋"]},{"prompt":"红绿灯通常设置在什么地方？","answers":["路口","十字路口"]},{"prompt":"过马路前应该先观察什么？","answers":["车辆","交通情况"]},{"prompt":"骑自行车时通常建议佩戴什么？","answers":["头盔"]},{"prompt":"游泳前通常应该做什么准备？","answers":["热身"]},{"prompt":"运动后口渴应该补充什么？","answers":["水"]},{"prompt":"早晨起床后通常先做什么清洁？","answers":["洗漱","刷牙洗脸"]},{"prompt":"饭前便后应该做什么？","answers":["洗手"]},{"prompt":"图书馆里通常应该保持什么？","answers":["安静"]},{"prompt":"电影院里通常应该把手机调成什么状态？","answers":["静音","静音模式"]},{"prompt":"排队时应该站在什么后面？","answers":["队伍后面","队尾"]},{"prompt":"收到帮助后通常应该说什么？","answers":["谢谢","感谢"]},{"prompt":"向别人道歉时通常应该说什么？","answers":["对不起","抱歉"]},{"prompt":"早上见面通常可以说什么？","answers":["早上好","早"]},{"prompt":"晚上休息前通常可以说什么？","answers":["晚安"]}];
+    const knowledgeTasks = [...buildMathKnowledgeTasks(), ...generalKnowledgeTasks];
+
+
+    const challengePoolSizes = Object.freeze({
+      image: imageTasks.length,
+      rotate: rotateAngles.length,
+      icons: iconTasks.length,
+      knowledge: knowledgeTasks.length
+    });
+    if (
+      challengePoolSizes.image !== 100 ||
+      challengePoolSizes.rotate !== 100 ||
+      challengePoolSizes.icons !== 100 ||
+      challengePoolSizes.knowledge !== 200
+    ) {
+      console.warn("验证题库数量异常：", challengePoolSizes);
+    }
 
     function randomOther(list, previous) {
       const choices = list.filter(item => item !== previous);
@@ -2051,6 +2450,106 @@
       updateLoginState();
     }
 
+
+    function resetSpeedSlider({quiet=false}={}) {
+      state.speedSlider = false;
+      state.speedDrag.active = false;
+      state.speedDrag.pointerId = null;
+      state.speedDrag.startTime = 0;
+      state.speedDrag.handleX = 12;
+      els.speedSliderBox.classList.remove("is-success", "is-error");
+      els.speedSliderHandle.style.left = "12px";
+      els.speedSliderFill.style.width = "0px";
+      setMiniStatus(els.speedSliderStatus, "请从头滑到尾", "idle");
+      els.speedSliderTip.textContent = "按住滑块，从最左侧拖到最右侧。";
+      if (!quiet) updateLoginState();
+    }
+
+    function speedSliderMetrics() {
+      const boxRect = els.speedSliderBox.getBoundingClientRect();
+      const handleWidth = els.speedSliderHandle.offsetWidth || 56;
+      const minX = 12;
+      const maxX = Math.max(minX, boxRect.width - handleWidth - 12);
+      return { boxRect, handleWidth, minX, maxX };
+    }
+
+    function updateSpeedSliderHandle(nextLeft) {
+      const { minX, maxX, handleWidth } = speedSliderMetrics();
+      const clamped = Math.max(minX, Math.min(nextLeft, maxX));
+      state.speedDrag.handleX = clamped;
+      els.speedSliderHandle.style.left = `${clamped}px`;
+      els.speedSliderFill.style.width = `${Math.max(0, clamped - minX + handleWidth * 0.55)}px`;
+    }
+
+    function startSpeedSliderDrag(clientX, pointerId = null) {
+      if (!state.human || state.speedSlider || els.speedSliderStep.hidden) return false;
+      const currentLeft = parseFloat(els.speedSliderHandle.style.left || "12") || 12;
+      state.speedDrag.active = true;
+      state.speedDrag.pointerId = pointerId;
+      state.speedDrag.startX = clientX;
+      state.speedDrag.handleStartX = currentLeft;
+      state.speedDrag.startTime = performance.now();
+      return true;
+    }
+
+    function moveSpeedSliderDrag(clientX) {
+      if (!state.speedDrag.active) return;
+      updateSpeedSliderHandle(state.speedDrag.handleStartX + (clientX - state.speedDrag.startX));
+    }
+
+    async function finishSpeedSliderDrag(event = null) {
+      if (!state.speedDrag.active) return;
+      state.speedDrag.active = false;
+
+      if (event && typeof event.pointerId !== "undefined" && els.speedSliderHandle.hasPointerCapture?.(event.pointerId)) {
+        try { els.speedSliderHandle.releasePointerCapture(event.pointerId); } catch {}
+      }
+
+      const { maxX } = speedSliderMetrics();
+      const elapsed = (performance.now() - state.speedDrag.startTime) / 1000;
+      const reachedEnd = state.speedDrag.handleX >= maxX - 2;
+
+      if (!reachedEnd) {
+        state.speedSlider = false;
+        els.speedSliderBox.classList.remove("is-success");
+        els.speedSliderBox.classList.add("is-error");
+        setMiniStatus(els.speedSliderStatus, "未滑到终点，请重试", "error");
+        els.speedSliderTip.textContent = "";
+        window.setTimeout(() => resetSpeedSlider(), 800);
+        updateLoginState();
+        return;
+      }
+
+      if (elapsed < 0.5) {
+        state.speedSlider = false;
+        els.speedSliderBox.classList.remove("is-success");
+        els.speedSliderBox.classList.add("is-error");
+        setMiniStatus(els.speedSliderStatus, "滑动过快，验证失败", "error");
+        els.speedSliderTip.textContent = "";
+        window.setTimeout(() => resetSpeedSlider(), 900);
+        updateLoginState();
+        return;
+      }
+
+      if (Math.random() < 0.80) {
+        state.speedSlider = true;
+        els.speedSliderBox.classList.remove("is-error");
+        els.speedSliderBox.classList.add("is-success");
+        setMiniStatus(els.speedSliderStatus, "验证成功", "success");
+        els.speedSliderTip.textContent = "";
+        els.sliderStep.hidden = false;
+        requestAnimationFrame(() => resetSlider({quiet:true}));
+      } else {
+        state.speedSlider = false;
+        els.speedSliderBox.classList.remove("is-success");
+        els.speedSliderBox.classList.add("is-error");
+        setMiniStatus(els.speedSliderStatus, "验证失败，请重试", "error");
+        els.speedSliderTip.textContent = "";
+        window.setTimeout(() => resetSpeedSlider(), 900);
+      }
+      updateLoginState();
+    }
+
     function resetSlider({quiet=false}={}) {
       state.slider = false;
       state.captcha = false;
@@ -2058,26 +2557,23 @@
       els.captchaStep.hidden = true;
       els.sliderCaptcha.classList.remove("is-success", "is-error");
 
-      const artWidth = els.sliderArt.clientWidth || 420;
-      const minX = 92;
-      const maxX = Math.max(minX + 26, artWidth - 65);
-      let nextGap = minX;
-
-      // 每次重置都避开上一次的缺口位置，确保缺口不重复。
-      for (let attempt = 0; attempt < 24; attempt += 1) {
-        const candidate = Math.round(minX + Math.random() * (maxX - minX));
-        if (!state.lastSliderGapX || Math.abs(candidate - state.lastSliderGapX) >= 42) {
-          nextGap = candidate;
-          break;
-        }
-        nextGap = candidate;
+      // 50 张内置图片 × 每张 10 个位置；避开上一题的图片+位置组合。
+      let sceneIndex = Math.floor(Math.random() * GAP_SCENE_IMAGE_COUNT);
+      let positionIndex = Math.floor(Math.random() * GAP_SCENE_POSITION_COUNT);
+      if (
+        GAP_SCENE_IMAGE_COUNT * GAP_SCENE_POSITION_COUNT > 1 &&
+        sceneIndex === state.gapSceneIndex &&
+        positionIndex === state.gapPositionIndex
+      ) {
+        positionIndex = (positionIndex + 1 + Math.floor(Math.random() * (GAP_SCENE_POSITION_COUNT - 1))) % GAP_SCENE_POSITION_COUNT;
       }
 
-      state.sliderGapX = nextGap;
-      state.lastSliderGapX = nextGap;
+      state.gapSceneIndex = sceneIndex;
+      state.gapPositionIndex = positionIndex;
       state.drag.handleX = 0;
       state.drag.pieceX = 0;
-      els.sliderGap.style.left = `${state.sliderGapX}px`;
+
+      applyGapScene(sceneIndex, positionIndex);
       els.sliderPiece.style.transform = "translateX(0px)";
       els.sliderHandle.style.left = "0px";
       els.sliderFill.style.width = "0px";
@@ -2106,12 +2602,13 @@
           els.humanMain.textContent = "验证成功";
           els.humanStatus.textContent = "请完成下一项验证";
 
-          // 第一步成功后，才显示滑块验证。
+          // 第一步成功后，先显示“从头滑到尾”滑块验证。
           els.secondaryChecks.classList.add("is-unlocked");
-          els.sliderStep.hidden = false;
+          els.speedSliderStep.hidden = false;
+          els.sliderStep.hidden = true;
           els.captchaStep.hidden = true;
           resetAdvancedSteps();
-          requestAnimationFrame(() => resetSlider({quiet:true}));
+          requestAnimationFrame(() => resetSpeedSlider({quiet:true}));
         } else {
           state.human = false;
           state.slider = false;
@@ -2122,10 +2619,12 @@
           els.humanStatus.textContent = "请点击重新验证";
 
           els.secondaryChecks.classList.remove("is-unlocked");
+          els.speedSliderStep.hidden = true;
           els.sliderStep.hidden = true;
           els.captchaStep.hidden = true;
           resetAdvancedSteps();
-          setMiniStatus(els.sliderStatus, "等待上方验证", "idle");
+          setMiniStatus(els.speedSliderStatus, "等待上方验证", "idle");
+          setMiniStatus(els.sliderStatus, "等待上一项验证", "idle");
           setMiniStatus(els.captchaStatus, "等待滑块验证", "idle");
         }
         updateLoginState();
@@ -2154,7 +2653,7 @@
     function updateLoginState() {
       const accountReady = els.account.value.trim().length > 0;
       const fullyVerified =
-        state.human && state.slider && state.captcha && state.image &&
+        state.human && state.speedSlider && state.slider && state.captcha && state.image &&
         state.rotate && state.icons && state.knowledge &&
         els.agreement.checked && accountReady;
       els.loginBtn.disabled = false;
@@ -2192,6 +2691,155 @@
     });
     els.refreshCaptcha.addEventListener("click", chooseCaptcha);
 
+
+    /*
+      缺口滑块题库：
+      50 张内置 SVG 场景图（10 组配色 × 5 种场景）；
+      每一张图都只从 10 个固定缺口位置中随机选取一个。
+    */
+    const GAP_SCENE_IMAGE_COUNT = 50;
+    const GAP_SCENE_POSITION_COUNT = 10;
+
+    const gapScenePalettes = [
+      ["#dceff1","#9fc9cf","#5d9aa2","#f8dfad","#6a987c"],
+      ["#f4e5d2","#eabf94","#ca8169","#a9c7c4","#557d83"],
+      ["#e5e4f4","#b9b7d9","#7f8db4","#f3cb9d","#778c71"],
+      ["#e3f3e3","#b8dcb5","#6aa683","#f6dc9f","#6d8277"],
+      ["#f5e4ea","#dfb1c3","#b06b83","#cee0e7","#678f96"],
+      ["#e6f0fb","#b7d2eb","#6799c2","#f6d49c","#6c9478"],
+      ["#f1ead8","#d3c58d","#a8874d","#b7d8d0","#607f70"],
+      ["#e5eff0","#b2d1d0","#4d9991","#f0c895","#6a7c83"],
+      ["#f2e8dc","#d8c1aa","#b78362","#bfdbd3","#5a837c"],
+      ["#e9e8db","#c4d0a4","#899b64","#ecc78d","#66858a"]
+    ];
+
+    function svgDataUri(svg) {
+      return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
+    }
+
+    function createGapSceneSvg(index) {
+      const palette = gapScenePalettes[Math.floor(index / 5) % gapScenePalettes.length];
+      const [sky, mid, accent, sun, ground] = palette;
+      const variant = index % 5;
+      const cloudX = 18 + (index * 19) % 150;
+      const sunX = 185 + (index * 13) % 85;
+      const hillY = 58 + (index % 4) * 3;
+      const specks = Array.from({ length: 12 }, (_, point) => {
+        const x = (index * 29 + point * 47) % 320;
+        const y = 12 + ((index * 17 + point * 19) % 58);
+        return `<circle cx="${x}" cy="${y}" r="${1 + (point % 3) * .45}" fill="#ffffff" opacity=".34"/>`;
+      }).join("");
+
+      let artwork = "";
+      if (variant === 0) {
+        artwork = `
+          <path d="M0 82 L58 ${hillY} L105 82 L161 45 L228 82 L277 57 L320 82 Z" fill="${mid}" opacity=".92"/>
+          <path d="M0 82 L83 65 L145 82 L205 58 L266 82 L320 67 L320 82 Z" fill="${ground}" opacity=".9"/>
+          <path d="M154 45 L161 33 L168 45 Z" fill="#ffffff" opacity=".72"/>
+          <circle cx="${sunX}" cy="22" r="12" fill="${sun}" opacity=".9"/>
+        `;
+      } else if (variant === 1) {
+        artwork = `
+          <path d="M0 68 C45 55 73 72 118 60 S189 50 236 61 S288 70 320 56 L320 82 L0 82 Z" fill="${mid}" opacity=".86"/>
+          <path d="M0 73 C55 63 97 80 147 67 S238 61 320 72 L320 82 L0 82 Z" fill="${ground}" opacity=".9"/>
+          <path d="M0 49 C54 39 94 52 137 43 S224 37 320 47" fill="none" stroke="#ffffff" stroke-width="3" opacity=".45"/>
+          <circle cx="${sunX}" cy="21" r="11" fill="${sun}" opacity=".9"/>
+        `;
+      } else if (variant === 2) {
+        const towers = Array.from({ length: 9 }, (_, col) => {
+          const x = col * 37 - 7;
+          const h = 22 + ((index * 7 + col * 13) % 32);
+          const y = 82 - h;
+          return `<rect x="${x}" y="${y}" width="${24 + (col % 2) * 4}" height="${h}" rx="2" fill="${mid}" opacity=".93"/>
+            <rect x="${x + 7}" y="${y + 8}" width="4" height="5" fill="#ffffff" opacity=".48"/>
+            <rect x="${x + 15}" y="${y + 18}" width="4" height="5" fill="#ffffff" opacity=".48"/>`;
+        }).join("");
+        artwork = `
+          <circle cx="${sunX}" cy="20" r="12" fill="${sun}" opacity=".9"/>
+          ${towers}
+          <rect x="0" y="75" width="320" height="7" fill="${ground}" opacity=".96"/>
+        `;
+      } else if (variant === 3) {
+        const flowers = Array.from({ length: 10 }, (_, petal) => {
+          const x = 12 + ((index * 11 + petal * 31) % 300);
+          const y = 50 + ((index * 7 + petal * 9) % 25);
+          return `<g transform="translate(${x} ${y})"><circle cx="0" cy="-4" r="3" fill="#ffffff" opacity=".9"/><circle cx="4" cy="0" r="3" fill="#ffffff" opacity=".85"/><circle cx="0" cy="4" r="3" fill="#ffffff" opacity=".8"/><circle cx="-4" cy="0" r="3" fill="#ffffff" opacity=".85"/><circle cx="0" cy="0" r="2.3" fill="${sun}"/></g>`;
+        }).join("");
+        artwork = `
+          <path d="M0 67 C54 53 108 75 160 59 S263 49 320 65 L320 82 L0 82 Z" fill="${ground}" opacity=".92"/>
+          <path d="M0 58 C43 44 76 55 107 45 S179 43 210 52 S273 58 320 44" fill="none" stroke="${mid}" stroke-width="10" opacity=".42"/>
+          ${flowers}
+          <circle cx="${sunX}" cy="20" r="10" fill="${sun}" opacity=".9"/>
+        `;
+      } else {
+        const trees = Array.from({ length: 8 }, (_, tree) => {
+          const x = 18 + tree * 42;
+          const top = 29 + ((index * 3 + tree * 5) % 15);
+          return `<rect x="${x + 8}" y="${top + 16}" width="5" height="${82 - (top + 16)}" fill="${accent}" opacity=".78"/>
+            <circle cx="${x + 10}" cy="${top + 8}" r="${13 + (tree % 2) * 3}" fill="${mid}" opacity=".96"/>`;
+        }).join("");
+        artwork = `
+          <rect x="0" y="70" width="320" height="12" fill="${ground}" opacity=".95"/>
+          ${trees}
+          <circle cx="${sunX}" cy="19" r="10" fill="${sun}" opacity=".9"/>
+        `;
+      }
+
+      return svgDataUri(`
+        <svg xmlns="http://www.w3.org/2000/svg" width="320" height="82" viewBox="0 0 320 82">
+          <rect width="320" height="82" fill="${sky}"/>
+          <rect y="0" width="320" height="82" fill="url(#fade${index})"/>
+          <defs>
+            <linearGradient id="fade${index}" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#ffffff" stop-opacity=".22"/>
+              <stop offset="1" stop-color="${accent}" stop-opacity=".18"/>
+            </linearGradient>
+          </defs>
+          ${specks}
+          ${artwork}
+          <rect x=".5" y=".5" width="319" height="81" rx="12" fill="none" stroke="#ffffff" stroke-opacity=".48"/>
+        </svg>
+      `);
+    }
+
+    const gapSceneImages = Array.from(
+      { length: GAP_SCENE_IMAGE_COUNT },
+      (_, index) => createGapSceneSvg(index)
+    );
+
+    function getGapPositionX(artWidth, positionIndex) {
+      const pieceWidth = 42;
+      const minX = 60;
+      const maxX = Math.max(minX, artWidth - pieceWidth - 10);
+      return Math.round(minX + ((maxX - minX) * positionIndex) / (GAP_SCENE_POSITION_COUNT - 1));
+    }
+
+    function applyGapScene(sceneIndex, positionIndex) {
+      const artWidth = Math.max(220, Math.round(els.sliderArt.clientWidth || 420));
+      const artHeight = Math.max(82, Math.round(els.sliderArt.clientHeight || 82));
+      const scene = gapSceneImages[sceneIndex];
+      const gapX = getGapPositionX(artWidth, positionIndex);
+      const pieceTop = 19;
+      const backgroundSize = `${artWidth}px ${artHeight}px`;
+      const backgroundPosition = `${-gapX}px ${-pieceTop}px`;
+
+      els.sliderArt.style.backgroundImage = `url("${scene}")`;
+      els.sliderArt.style.backgroundSize = "cover";
+      els.sliderArt.style.backgroundPosition = "center";
+
+      [els.sliderGap, els.sliderPiece].forEach(node => {
+        node.style.backgroundImage = `url("${scene}")`;
+        node.style.backgroundRepeat = "no-repeat";
+        node.style.backgroundSize = backgroundSize;
+        node.style.backgroundPosition = backgroundPosition;
+      });
+
+      state.sliderGapX = gapX;
+      state.lastSliderGapX = gapX;
+      els.sliderGap.style.left = `${gapX}px`;
+    }
+
+
     function updateSliderFromHandle(handleX) {
       const handleWidth = els.sliderHandle.offsetWidth || 54;
       const trackWidth = els.sliderTrack.clientWidth || 1;
@@ -2210,7 +2858,7 @@
     }
 
     function startSliderDrag(clientX, pointerId = null) {
-      if (!state.human || state.slider || els.sliderStep.hidden) return false;
+      if (!state.human || !state.speedSlider || state.slider || els.sliderStep.hidden) return false;
 
       state.drag.active = true;
       state.drag.pointerId = pointerId;
@@ -2254,6 +2902,54 @@
         window.setTimeout(() => resetSlider(), 800);
       }
       updateLoginState();
+    }
+
+    // 新增滑块验证：从头划到尾。
+    els.speedSliderHandle.addEventListener("pointerdown", (event) => {
+      if (!startSpeedSliderDrag(event.clientX, event.pointerId)) return;
+      try { els.speedSliderHandle.setPointerCapture(event.pointerId); } catch {}
+      event.preventDefault();
+    });
+
+    window.addEventListener("pointermove", (event) => {
+      if (!state.speedDrag.active) return;
+      if (state.speedDrag.pointerId !== null && event.pointerId !== state.speedDrag.pointerId) return;
+      moveSpeedSliderDrag(event.clientX);
+      event.preventDefault?.();
+    }, { passive: false });
+
+    window.addEventListener("pointerup", async (event) => {
+      if (!state.speedDrag.active) return;
+      if (state.speedDrag.pointerId !== null && event.pointerId !== state.speedDrag.pointerId) return;
+      await finishSpeedSliderDrag(event);
+    });
+
+    window.addEventListener("pointercancel", async (event) => {
+      if (!state.speedDrag.active) return;
+      if (state.speedDrag.pointerId !== null && event.pointerId !== state.speedDrag.pointerId) return;
+      await finishSpeedSliderDrag(event);
+    });
+
+    if (!window.PointerEvent) {
+      els.speedSliderHandle.addEventListener("mousedown", (event) => {
+        if (startSpeedSliderDrag(event.clientX)) event.preventDefault();
+      });
+      window.addEventListener("mousemove", (event) => moveSpeedSliderDrag(event.clientX));
+      window.addEventListener("mouseup", () => finishSpeedSliderDrag());
+
+      els.speedSliderHandle.addEventListener("touchstart", (event) => {
+        const touch = event.touches[0];
+        if (touch && startSpeedSliderDrag(touch.clientX)) event.preventDefault();
+      }, { passive: false });
+      window.addEventListener("touchmove", (event) => {
+        if (!state.speedDrag.active) return;
+        const touch = event.touches[0];
+        if (touch) {
+          moveSpeedSliderDrag(touch.clientX);
+          event.preventDefault();
+        }
+      }, { passive: false });
+      window.addEventListener("touchend", () => finishSpeedSliderDrag());
     }
 
     // Pointer Events：电脑鼠标、触屏、触控板均可使用。
@@ -2306,7 +3002,8 @@
     }
 
     window.addEventListener("resize", () => {
-      if (state.human && !state.slider) resetSlider({quiet:true});
+      if (state.human && !state.speedSlider && !els.speedSliderStep.hidden) resetSpeedSlider({quiet:true});
+      if (state.human && state.speedSlider && !state.slider) resetSlider({quiet:true});
     });
 
     let loginClickCount = 0;
@@ -2369,7 +3066,7 @@
       }
 
       const allVerified =
-        state.human && state.slider && state.captcha && state.image &&
+        state.human && state.speedSlider && state.slider && state.captcha && state.image &&
         state.rotate && state.icons && state.knowledge && els.agreement.checked;
 
       if (allVerified) {
@@ -2402,6 +3099,7 @@
       if (event.target === els.agreementModal) els.agreementModal.classList.remove("show");
     });
 
+    els.speedSliderStep.hidden = true;
     els.sliderStep.hidden = true;
     els.captchaStep.hidden = true;
     els.imageSelectStep.hidden = true;
