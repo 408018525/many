@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>广州市番禺区市桥中心小学 · 学校介绍</title>
+  <meta name="description" content="由一名市桥中心小学毕业生整理制作的学校介绍页面，展示学校概况、课程体系、校园生活与数字模型内容。">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    (function () {
+      const originalWarn = console.warn;
+      console.warn = function (...args) {
+        if (args[0] && typeof args[0] === 'string' && args[0].includes('cdn.tailwindcss.com')) return;
+        originalWarn.apply(console, args);
+      };
+    })();
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap');
+
+    :root { --accent: #0f766e; --accent-deep: #115e59; --accent-soft: #ccfbf1; }
+
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    .heading-serif { font-family: 'Playfair Display', Georgia, serif; font-weight: 700; line-height: 1.08; }
+    .glass { background: rgba(255,255,255,.86); backdrop-filter: blur(20px); }
+    .dark .glass { background: rgba(24,24,27,.86); }
+    .nav-link { position: relative; transition: color .2s ease; }
+    .nav-link:after { content:''; position:absolute; width:0; height:1.5px; bottom:-4px; left:0; background:var(--accent); transition:width .28s ease; }
+    .nav-link:hover:after { width:100%; }
+    .section-kicker { letter-spacing:.22em; font-size:11px; font-weight:700; color:var(--accent); }
+    .section-title { position:relative; display:inline-block; }
+    .section-title:after { content:''; position:absolute; bottom:-10px; left:0; width:42%; height:2px; border-radius:99px; background:linear-gradient(to right,var(--accent),transparent); }
+    .card-lift { transition:transform .35s cubic-bezier(.34,1.56,.64,1), box-shadow .35s ease; }
+    .card-lift:hover { transform:translateY(-8px); box-shadow:0 22px 28px -12px rgb(0 0 0 / .15); }
+    .fade-in { opacity:0; transform:translateY(26px); transition:all .7s cubic-bezier(.4,0,.2,1); }
+    .fade-in.visible { opacity:1; transform:translateY(0); }
+    .clean-shadow { box-shadow:0 14px 30px -18px rgb(0 0 0 / .28); }
+    .school-bg {
+      background-image:
+        radial-gradient(circle at 14% 30%, rgba(15,118,110,.10) 0%, transparent 38%),
+        radial-gradient(circle at 86% 12%, rgba(251,191,36,.11) 0%, transparent 32%),
+        linear-gradient(135deg, rgba(255,255,255,.35), rgba(255,255,255,0));
+    }
+    .dark .school-bg {
+      background-image:
+        radial-gradient(circle at 14% 30%, rgba(45,212,191,.11) 0%, transparent 38%),
+        radial-gradient(circle at 86% 12%, rgba(251,191,36,.08) 0%, transparent 32%);
+    }
+    .grid-pattern {
+      background-image: linear-gradient(rgba(15,118,110,.08) 1px, transparent 1px), linear-gradient(90deg, rgba(15,118,110,.08) 1px, transparent 1px);
+      background-size: 26px 26px;
+      mask-image: linear-gradient(to bottom,black,transparent);
+    }
+    .stat-divider:not(:last-child):after { content:''; position:absolute; right:0; top:15%; width:1px; height:70%; background:rgb(228 228 231); }
+    .dark .stat-divider:not(:last-child):after { background:rgb(63 63 70); }
+
+    /* 保持原模型展示逻辑与裁切方式不变 */
+    .model-embed-viewport { position:relative; width:100%; height:100%; overflow:hidden; background:#09090b; }
+    .model-embed-viewport iframe { position:absolute; top:-104px; left:0; width:100%; height:calc(100% + 104px); border:0; }
+    .model-embed-viewport:fullscreen { width:100vw; height:100vh; border-radius:0; }
+    .model-embed-viewport:fullscreen iframe { top:-104px; height:calc(100% + 104px); }
+
+    #policy-modal { z-index:2147483647 !important; pointer-events:auto; }
+    #policy-modal .policy-modal-panel { position:relative; isolation:isolate; }
+    #policy-modal .policy-modal-header { position:relative; z-index:2; pointer-events:auto; }
+    #close-policy-modal { position:relative; z-index:3; cursor:pointer; touch-action:manipulation; -webkit-tap-highlight-color:transparent; }
+    #close-policy-modal > * { pointer-events:none; }
+
+    .motto-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      padding: .45rem .8rem;
+      border-radius: 999px;
+      border: 1px solid rgba(15,118,110,.18);
+      color: var(--accent-deep);
+      background: rgba(255,255,255,.68);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .14em;
+    }
+    .dark .motto-chip { background: rgba(24,24,27,.6); border-color: rgba(45,212,191,.24); color: #5eead4; }
+    .profile-fact {
+      border-left: 2px solid rgba(15,118,110,.4);
+      padding-left: .85rem;
+    }
+    .timeline-line { position: relative; }
+    .timeline-line:before {
+      content: '';
+      position: absolute;
+      left: 5px;
+      top: 10px;
+      bottom: -26px;
+      width: 1px;
+      background: linear-gradient(to bottom, rgba(15,118,110,.62), rgba(15,118,110,.08));
+    }
+    .timeline-line:last-child:before { display: none; }
+    .timeline-dot {
+      width: 11px;
+      height: 11px;
+      border-radius: 999px;
+      margin-top: 4px;
+      background: var(--accent);
+      box-shadow: 0 0 0 5px rgba(15,118,110,.10);
+      flex: 0 0 auto;
+    }
+    .honor-card {
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      transition: transform .28s ease, background .28s ease;
+    }
+    .honor-card:hover { transform: translateY(-5px); background: rgba(255,255,255,.1); }
+
+    @media (max-width: 640px) {
+      .model-embed-viewport { min-height:370px !important; }
+    }
+  </style>
+</head>
+
+<body class="bg-[#f8faf9] dark:bg-zinc-950 text-zinc-800 dark:text-zinc-200 transition-colors duration-300">
+  <!-- 顶部导航 -->
+  <nav class="fixed top-0 left-0 right-0 z-50 glass border-b border-zinc-200/75 dark:border-zinc-800/75">
+    <div class="max-w-screen-2xl mx-auto">
+      <div class="px-6 md:px-8 py-4 flex items-center justify-between">
+        <a href="#hero" class="flex items-center gap-x-3" aria-label="返回首页">
+          <div class="w-10 h-10 bg-gradient-to-br from-[#0f766e] to-[#14b8a6] rounded-2xl flex items-center justify-center shadow-inner">
+            <span class="text-white font-bold text-xl">市</span>
+          </div>
+          <div>
+            <div class="font-semibold tracking-tight text-lg sm:text-xl leading-tight">广州市番禺区市桥中心小学</div>
+            <div class="text-[10px] text-zinc-500 tracking-[.18em] mt-0.5">Shiqiao Central Primary School, Panyu District, Guangzhou City</div>
+          </div>
+        </a>
+
+        <div class="hidden lg:flex items-center gap-x-8 text-sm font-medium">
+          <a href="#hero" class="nav-link text-zinc-600 dark:text-zinc-300 hover:text-zinc-950 dark:hover:text-white">首页</a>
+          <a href="#about" class="nav-link text-zinc-600 dark:text-zinc-300 hover:text-zinc-950 dark:hover:text-white">学校概览</a>
+          <a href="#programs" class="nav-link text-zinc-600 dark:text-zinc-300 hover:text-zinc-950 dark:hover:text-white">课程体系</a>
+          <a href="#campus" class="nav-link text-zinc-600 dark:text-zinc-300 hover:text-zinc-950 dark:hover:text-white">校园生活</a>
+          <a href="#honors" class="nav-link text-zinc-600 dark:text-zinc-300 hover:text-zinc-950 dark:hover:text-white">学校荣誉</a>
+          <a href="#contact" class="nav-link text-zinc-600 dark:text-zinc-300 hover:text-zinc-950 dark:hover:text-white">联系作者</a>
+        </div>
+
+        <div class="flex items-center gap-x-2 sm:gap-x-3">
+          <button id="theme-toggle" class="w-10 h-10 flex items-center justify-center rounded-2xl hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors text-xl" aria-label="切换深色/浅色模式">
+            <i class="fa-solid fa-moon text-zinc-600 dark:text-zinc-300" id="theme-icon"></i>
+          </button>
+          <button id="mobile-menu-btn" class="lg:hidden w-10 h-10 flex items-center justify-center rounded-2xl hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors" aria-label="打开菜单">
+            <i class="fa-solid fa-bars text-lg"></i>
+          </button>
+          <a href="#contact" class="hidden sm:inline-flex px-5 py-2.5 text-sm font-semibold bg-zinc-900 hover:bg-black active:bg-zinc-950 dark:bg-[#0f766e] dark:text-white dark:hover:bg-[#115e59] transition-all rounded-3xl text-white">联系作者</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 移动端菜单 -->
+  <div id="mobile-menu" class="hidden lg:hidden fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm">
+    <div class="absolute top-0 right-0 w-72 bg-white dark:bg-zinc-900 h-full p-7 shadow-2xl">
+      <div class="flex justify-between items-center mb-8">
+        <div class="font-semibold text-xl">导航菜单</div>
+        <button id="close-mobile-menu" class="text-2xl text-zinc-400 hover:text-zinc-600" aria-label="关闭菜单">×</button>
+      </div>
+      <div class="flex flex-col gap-y-2 text-base">
+        <a href="#hero" class="mobile-nav-link py-3 px-4 rounded-2xl hover:bg-zinc-100 dark:hover:bg-zinc-800">首页</a>
+        <a href="#about" class="mobile-nav-link py-3 px-4 rounded-2xl hover:bg-zinc-100 dark:hover:bg-zinc-800">学校概览</a>
+        <a href="#programs" class="mobile-nav-link py-3 px-4 rounded-2xl hover:bg-zinc-100 dark:hover:bg-zinc-800">课程体系</a>
+        <a href="#campus" class="mobile-nav-link py-3 px-4 rounded-2xl hover:bg-zinc-100 dark:hover:bg-zinc-800">校园生活</a>
+        <a href="#honors" class="mobile-nav-link py-3 px-4 rounded-2xl hover:bg-zinc-100 dark:hover:bg-zinc-800">学校荣誉</a>
+        <div class="h-px bg-zinc-200 dark:bg-zinc-800 my-3"></div>
+        <a href="#contact" class="mobile-nav-link py-3 px-4 rounded-2xl bg-zinc-900 text-white dark:bg-[#0f766e] dark:text-white font-medium text-center">联系作者</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hero -->
+  <header id="hero" class="relative pt-28 pb-16 md:pt-36 md:pb-24 overflow-hidden school-bg">
+    <div class="absolute inset-0 grid-pattern pointer-events-none"></div>
+    <div class="relative max-w-screen-2xl mx-auto px-6 md:px-12">
+      <div class="grid lg:grid-cols-12 gap-10 lg:gap-16 items-center">
+        <div class="lg:col-span-7">
+          <div class="inline-flex items-center gap-2 px-4 h-8 rounded-3xl bg-white/75 dark:bg-zinc-900/75 text-xs tracking-[2px] font-medium mb-7 border border-zinc-200 dark:border-zinc-800">
+            <div class="w-1.5 h-1.5 bg-[#0f766e] rounded-full animate-pulse"></div>
+            <span>允执其中 · 尚德于心</span>
+          </div>
+          <h1 class="heading-serif text-5xl sm:text-6xl md:text-7xl leading-[1.02] tracking-tighter mb-7">
+            以立德为根，<br><span class="text-[#0f766e]">以成长为场。</span>
+          </h1>
+          <p class="max-w-2xl text-lg md:text-xl leading-relaxed text-zinc-600 dark:text-zinc-400 mb-9">
+            广州市番禺区市桥中心小学，是一所以立德树人为根本、以学生全面发展为目标的实践型公办小学。学校注重课堂学习与真实体验并重，让儿童在观察、思考、表达与协作中不断成长。
+          </p>
+          <div class="flex flex-wrap gap-3">
+            <a href="#about" class="inline-flex items-center justify-center gap-x-3 px-7 h-14 rounded-3xl bg-[#0f766e] hover:bg-[#115e59] transition-all text-white font-semibold text-base shadow-lg shadow-[#0f766e]/25">
+              <span>学校简介</span><i class="fa-solid fa-arrow-down text-sm"></i>
+            </a>
+            <button onclick="openModelFullscreen()" class="inline-flex items-center justify-center gap-x-3 px-7 h-14 rounded-3xl border border-zinc-300 dark:border-zinc-700 hover:bg-white dark:hover:bg-zinc-900 font-medium text-base transition-all">
+              <span>校园数字模型</span><i class="fa-solid fa-cube text-sm"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="lg:col-span-5">
+          <div class="rounded-[32px] bg-white/75 dark:bg-zinc-900/75 border border-white dark:border-zinc-800 clean-shadow p-6 sm:p-7 backdrop-blur">
+            <div class="flex items-start gap-4 mb-7">
+              <div class="w-12 h-12 rounded-2xl bg-teal-50 dark:bg-teal-950/50 text-[#0f766e] flex items-center justify-center text-xl">
+                <i class="fa-solid fa-compass-drafting"></i>
+              </div>
+              <div>
+                <div class="text-sm text-zinc-500 mb-1">办学理念</div>
+                <div class="text-xl font-semibold tracking-tight">中心，为儿童存在</div>
+              </div>
+            </div>
+            <div class="space-y-4 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+              <div class="flex gap-3"><i class="fa-solid fa-check mt-1 text-[#0f766e]"></i><span>以全人教育为导向，关注每一位儿童完整而真实的成长。</span></div>
+              <div class="flex gap-3"><i class="fa-solid fa-check mt-1 text-[#0f766e]"></i><span>探索“全人融乐”智慧课堂，让学习更有参与感与获得感。</span></div>
+              <div class="flex gap-3"><i class="fa-solid fa-check mt-1 text-[#0f766e]"></i><span>以文化浸润、美育实践与劳动探究，涵养有根的现代中国人。</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-14 grid grid-cols-2 md:grid-cols-4 border-y border-zinc-200/80 dark:border-zinc-800/80">
+        <div class="stat-divider relative py-6 md:py-7 text-center">
+          <div class="font-semibold text-2xl md:text-3xl tracking-tight">1986</div>
+          <div class="mt-1 text-xs text-zinc-500">建校办学</div>
+        </div>
+        <div class="stat-divider relative py-6 md:py-7 text-center">
+          <div class="font-semibold text-2xl md:text-3xl tracking-tight">10,656㎡</div>
+          <div class="mt-1 text-xs text-zinc-500">校园占地面积</div>
+        </div>
+        <div class="stat-divider relative py-6 md:py-7 text-center">
+          <div class="font-semibold text-2xl md:text-3xl tracking-tight">39</div>
+          <div class="mt-1 text-xs text-zinc-500">间专用场室</div>
+        </div>
+        <div class="stat-divider relative py-6 md:py-7 text-center">
+          <div class="font-semibold text-2xl md:text-3xl tracking-tight">81</div>
+          <div class="mt-1 text-xs text-zinc-500">名教师共同守护成长</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- 模型展示区：保留原有结构与功能 -->
+  <section id="model" class="max-w-screen-2xl mx-auto px-6 md:px-12 pt-16 pb-16">
+    <div class="mb-6 flex items-end justify-between gap-4">
+      <div>
+        <div class="uppercase tracking-[3px] text-xs font-semibold text-[#0f766e] mb-1">CAMPUS MODEL — 模型</div>
+        <h2 class="heading-serif text-4xl tracking-tighter">校园数字模型展示</h2>
+      </div>
+      <button type="button" onclick="openModelFullscreen()" class="hidden md:inline-flex items-center text-sm font-medium text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 transition">
+        沉浸式全屏 <i class="fa-solid fa-expand ml-2 text-xs"></i>
+      </button>
+    </div>
+
+    <!-- 真实模型 iframe 嵌入：保留 viewer.html、裁切与全屏逻辑 -->
+    <div id="model-embed-viewport" class="model-embed-viewport rounded-[28px] border border-zinc-200 dark:border-zinc-800 shadow-2xl" style="aspect-ratio:16 / 9; min-height:520px;">
+      <iframe id="model-iframe" src="viewer.html" title="校园数字模型展示" allowfullscreen loading="lazy"></iframe>
+      <div class="absolute inset-0 flex items-center justify-center bg-zinc-950/80 pointer-events-none" id="model-loading">
+        <div class="text-center">
+          <div class="w-8 h-8 border-4 border-white/30 border-t-white rounded-full animate-spin mx-auto mb-4"></div>
+          <p class="text-sm text-white/70">正在加载校园数字模型...</p>
+        </div>
+      </div>
+    </div>
+    <p class="text-center text-xs text-zinc-500 mt-3">支持鼠标拖拽旋转、滚轮缩放 · 模型展示保持不变</p>
+  </section>
+
+  <!-- 学校概览 -->
+  <section id="about" class="border-y border-zinc-200 dark:border-zinc-800 bg-white/55 dark:bg-zinc-900/25">
+    <div class="max-w-screen-2xl mx-auto px-6 md:px-12 py-16 md:py-24">
+      <div class="grid lg:grid-cols-12 gap-12 lg:gap-16">
+        <div class="lg:col-span-5">
+          <div class="section-kicker mb-3">ABOUT SHIQIAO CENTRAL PRIMARY SCHOOL</div>
+          <h2 class="section-title heading-serif text-5xl md:text-6xl tracking-tighter">以立德为根，<br>以成长为场。</h2>
+        </div>
+        <div class="lg:col-span-7 pt-2">
+          <p class="text-lg leading-8 text-zinc-700 dark:text-zinc-300 max-w-3xl">
+            广州市番禺区市桥中心小学，是一所面向全体少年儿童的实践型公办小学。学校相信，优质教育不是统一复刻标准答案，而是引导学生在观察、思考、表达与协作中，培育独属于自己的个性与成长底色。
+          </p>
+          <p class="mt-5 text-[15px] leading-7 text-zinc-600 dark:text-zinc-400 max-w-3xl">
+            学校以“根教育”为精神底色，以全人教育为成长方向，围绕文化基础、美育素养、实践探究与德育发展搭建育人课程体系；并把儿童的发展放进真实课堂、校园活动、学科实践与交流分享之中。
+          </p>
+          <div class="mt-7 flex flex-wrap items-center gap-3">
+            <span class="motto-chip"><i class="fa-solid fa-book-open"></i> 校训：允执其中 · 尚德于心</span>
+            <span class="text-xs text-zinc-500">地址：广东省广州市番禺区康乐路 51 号</span>
+          </div>
+          <div class="mt-7 grid sm:grid-cols-2 gap-x-7 gap-y-5 max-w-3xl">
+            <div class="profile-fact"><div class="text-xs text-zinc-500">学校性质</div><div class="mt-1 font-semibold text-sm">广东省一级公立小学</div></div>
+            <div class="profile-fact"><div class="text-xs text-zinc-500">校园设施</div><div class="mt-1 font-semibold text-sm">多媒体系统、标准化课室与体育场馆</div></div>
+            <div class="profile-fact"><div class="text-xs text-zinc-500">学习空间</div><div class="mt-1 font-semibold text-sm">39 间专用场室与多元功能区</div></div>
+            <div class="profile-fact"><div class="text-xs text-zinc-500">师资队伍</div><div class="mt-1 font-semibold text-sm">81 名教师共同守护成长</div></div>
+          </div>
+          <div class="mt-9 grid sm:grid-cols-3 gap-4">
+            <div class="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-5">
+              <i class="fa-solid fa-lightbulb text-[#0f766e] text-lg"></i>
+              <div class="font-semibold mt-4">启发式育人</div>
+              <div class="mt-2 text-xs leading-5 text-zinc-500">从生活、兴趣与日常观察出发，培养学生独立思考、自主探究的能力。</div>
+            </div>
+            <div class="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-5">
+              <i class="fa-solid fa-people-group text-[#0f766e] text-lg"></i>
+              <div class="font-semibold mt-4">协作式成长</div>
+              <div class="mt-2 text-xs leading-5 text-zinc-500">在班级、跨小组集体活动中完成实践任务，学会沟通互助、责任担当。</div>
+            </div>
+            <div class="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-5">
+              <i class="fa-solid fa-display text-[#0f766e] text-lg"></i>
+              <div class="font-semibold mt-4">综合化发展</div>
+              <div class="mt-2 text-xs leading-5 text-zinc-500">掌握适配当下与未来的学习方法、综合素养，塑造全面成长的思维格局。</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 办学沿革：精选呈现，不堆叠全文资料 -->
+  <section id="heritage" class="max-w-screen-2xl mx-auto px-6 md:px-12 py-16 md:py-24">
+    <div class="grid lg:grid-cols-12 gap-12 lg:gap-16">
+      <div class="lg:col-span-5">
+        <div class="section-kicker mb-3">HERITAGE</div>
+        <h2 class="section-title heading-serif text-5xl md:text-6xl tracking-tighter">从北城小学，<br>走向城区中心。</h2>
+        <p class="mt-9 max-w-md text-[15px] leading-7 text-zinc-600 dark:text-zinc-400">学校的成长，始终伴随着市桥城区的发展。四个时间节点，记录一所公办小学从扎根社区到持续探索教育创新的历程。</p>
+      </div>
+      <div class="lg:col-span-7 grid md:grid-cols-2 gap-x-10 gap-y-8 pt-2">
+        <div class="timeline-line flex gap-4"><span class="timeline-dot"></span><div><div class="text-xs font-semibold tracking-[.15em] text-[#0f766e]">1986</div><h3 class="mt-1 font-semibold text-lg">市桥北城小学创办</h3><p class="mt-2 text-sm leading-6 text-zinc-600 dark:text-zinc-400">由市桥人民政府创办，初设 11 个班、495 名学生，开启全日制小学办学实践。</p></div></div>
+        <div class="timeline-line flex gap-4"><span class="timeline-dot"></span><div><div class="text-xs font-semibold tracking-[.15em] text-[#0f766e]">1990</div><h3 class="mt-1 font-semibold text-lg">确立城区中心小学</h3><p class="mt-2 text-sm leading-6 text-zinc-600 dark:text-zinc-400">随着规模与质量提升，学校更名并确定为市桥城区中心小学。</p></div></div>
+        <div class="timeline-line flex gap-4"><span class="timeline-dot"></span><div><div class="text-xs font-semibold tracking-[.15em] text-[#0f766e]">1994</div><h3 class="mt-1 font-semibold text-lg">成为广东省一级学校</h3><p class="mt-2 text-sm leading-6 text-zinc-600 dark:text-zinc-400">以规范办学与教育质量建设为基础，进入广东省首批一级学校行列。</p></div></div>
+        <div class="timeline-line flex gap-4"><span class="timeline-dot"></span><div><div class="text-xs font-semibold tracking-[.15em] text-[#0f766e]">至今</div><h3 class="mt-1 font-semibold text-lg">持续推进教育创新</h3><p class="mt-2 text-sm leading-6 text-zinc-600 dark:text-zinc-400">以“根教育”、全人教育和智慧课堂探索，回应儿童成长与时代发展的需要。</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 课程体系 -->
+  <section id="programs" class="max-w-screen-2xl mx-auto px-6 md:px-12 py-16 md:py-24">
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+      <div>
+        <div class="section-kicker mb-3">PROGRAMS</div>
+        <h2 class="section-title heading-serif text-5xl md:text-6xl tracking-tighter">课程，不止在课堂里发生。</h2>
+      </div>
+      <p class="max-w-md text-sm leading-6 text-zinc-600 dark:text-zinc-400">四大课程板块可分层深耕，也能在综合实践项目中相互融合，助力学生完成从兴趣启蒙到全面素养提升的完整成长路径。</p>
+    </div>
+
+    <div class="grid md:grid-cols-2 xl:grid-cols-4 gap-5 mt-12">
+      <article class="card-lift rounded-[26px] border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-7">
+        <div class="w-12 h-12 rounded-2xl bg-teal-50 dark:bg-teal-950/50 text-[#0f766e] flex items-center justify-center text-xl"><i class="fa-solid fa-pen-ruler"></i></div>
+        <div class="mt-7 text-xs tracking-[.16em] text-[#0f766e] font-semibold">01</div>
+        <h3 class="mt-2 font-semibold text-xl tracking-tight">基础人文课程</h3>
+        <p class="mt-3 text-sm leading-6 text-zinc-600 dark:text-zinc-400">语文、数学、英语学科体系训练，夯实读写思辨、逻辑运算与语言表达，建立扎实学科基础与良好学习习惯。</p>
+      </article>
+
+      <article class="card-lift rounded-[26px] border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-7">
+        <div class="w-12 h-12 rounded-2xl bg-teal-50 dark:bg-teal-950/50 text-[#0f766e] flex items-center justify-center text-xl"><i class="fa-solid fa-camera-retro"></i></div>
+        <div class="mt-7 text-xs tracking-[.16em] text-[#0f766e] font-semibold">02</div>
+        <h3 class="mt-2 font-semibold text-xl tracking-tight">艺体素养课程</h3>
+        <p class="mt-3 text-sm leading-6 text-zinc-600 dark:text-zinc-400">美术、音乐、体育、书法课堂，结合社团展演、运动会，让审美感知、运动活力转化为自信舒展的少年风采。</p>
+      </article>
+
+      <article class="card-lift rounded-[26px] border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-7">
+        <div class="w-12 h-12 rounded-2xl bg-teal-50 dark:bg-teal-950/50 text-[#0f766e] flex items-center justify-center text-xl"><i class="fa-solid fa-cubes"></i></div>
+        <div class="mt-7 text-xs tracking-[.16em] text-[#0f766e] font-semibold">03</div>
+        <h3 class="mt-2 font-semibold text-xl tracking-tight">实践探究课程</h3>
+        <p class="mt-3 text-sm leading-6 text-zinc-600 dark:text-zinc-400">科学实验、劳动教育、项目式学习，走出课本探索生活，动手验证知识，拓宽观察与解决问题的边界。</p>
+      </article>
+
+      <article class="card-lift rounded-[26px] border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-7">
+        <div class="w-12 h-12 rounded-2xl bg-teal-50 dark:bg-teal-950/50 text-[#0f766e] flex items-center justify-center text-xl"><i class="fa-solid fa-microchip"></i></div>
+        <div class="mt-7 text-xs tracking-[.16em] text-[#0f766e] font-semibold">04</div>
+        <h3 class="mt-2 font-semibold text-xl tracking-tight">德育特色课程</h3>
+        <p class="mt-3 text-sm leading-6 text-zinc-600 dark:text-zinc-400">主题班会、文明礼仪、红色教育、心理健康课堂，以品德滋养心灵，让良好品格支撑学生长远成长。</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- 校园生活 -->
+  <section id="campus" class="border-y border-zinc-200 dark:border-zinc-800 bg-[#edf7f5] dark:bg-zinc-900/35">
+    <div class="max-w-screen-2xl mx-auto px-6 md:px-12 py-16 md:py-24">
+      <div class="grid lg:grid-cols-12 gap-10 lg:gap-16">
+        <div class="lg:col-span-5">
+          <div class="section-kicker mb-3">CAMPUS LIFE</div>
+          <h2 class="section-title heading-serif text-5xl md:text-6xl tracking-tighter">把课堂，延伸到校园的每一个角落。</h2>
+          <p class="mt-9 text-[15px] leading-7 text-zinc-600 dark:text-zinc-400 max-w-md">
+            不把资料全部平铺罗列，只选取四类最能体现学校文化与日常学习方式的场景：生态、科技、文化与公共实践。
+          </p>
+        </div>
+        <div class="lg:col-span-7 grid sm:grid-cols-2 gap-5">
+          <div class="rounded-[26px] bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-7 clean-shadow">
+            <div class="flex items-center justify-between"><span class="text-xs tracking-[.18em] text-zinc-500">ECOLOGY FIELD</span><i class="fa-solid fa-leaf text-[#0f766e]"></i></div>
+            <h3 class="mt-9 font-semibold text-xl tracking-tight">生态科普主题区</h3>
+            <p class="mt-3 text-sm leading-6 text-zinc-600 dark:text-zinc-400">“远古沼泽、自然王国、未来都市、生态方舟”四个主题区，把生态观察、科学表达与校园漫游连接成持续发生的自然课。</p>
+          </div>
+          <div class="rounded-[26px] bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-7 clean-shadow">
+            <div class="flex items-center justify-between"><span class="text-xs tracking-[.18em] text-zinc-500">TECH IN DAILY LIFE</span><i class="fa-solid fa-microchip text-[#0f766e]"></i></div>
+            <h3 class="mt-9 font-semibold text-xl tracking-tight">科技融入日常</h3>
+            <p class="mt-3 text-sm leading-6 text-zinc-600 dark:text-zinc-400">科技大厅、人工智能基地、生态缸科普区与创客空间，为学生提供从好奇提问、动手试验到作品分享的多种入口。</p>
+          </div>
+          <div class="rounded-[26px] bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-7 clean-shadow">
+            <div class="flex items-center justify-between"><span class="text-xs tracking-[.18em] text-zinc-500">HERITAGE &amp; READING</span><i class="fa-solid fa-book-open text-[#0f766e]"></i></div>
+            <h3 class="mt-9 font-semibold text-xl tracking-tight">非遗与戏剧化阅读</h3>
+            <p class="mt-3 text-sm leading-6 text-zinc-600 dark:text-zinc-400">粤绣、蓝染等工作坊与戏剧化阅读实践，让传统文化不只停留在讲述里，也成为学生可以参与、可以表达的学习经验。</p>
+          </div>
+          <div class="rounded-[26px] bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-7 clean-shadow">
+            <div class="flex items-center justify-between"><span class="text-xs tracking-[.18em] text-zinc-500">PUBLIC PRACTICE</span><i class="fa-solid fa-people-carry-box text-[#0f766e]"></i></div>
+            <h3 class="mt-9 font-semibold text-xl tracking-tight">红色与公益实践</h3>
+            <p class="mt-3 text-sm leading-6 text-zinc-600 dark:text-zinc-400">红色研学、红领巾爱心跳蚤市场、社区清洁与垃圾分类体验，将责任感、环保意识与公共参与放进真实行动里。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 学校荣誉：精选呈现主要奖项和近年成果 -->
+  <section id="honors" class="bg-[#0f4946] text-white">
+    <div class="max-w-screen-2xl mx-auto px-6 md:px-12 py-16 md:py-24">
+      <div class="grid lg:grid-cols-12 gap-10 lg:gap-16 items-end">
+        <div class="lg:col-span-5">
+          <div class="text-[11px] tracking-[.22em] font-bold text-teal-200">HONORS &amp; ACHIEVEMENTS</div>
+          <h2 class="mt-4 heading-serif text-5xl md:text-6xl tracking-tighter">荣誉，是日常育人的回响。</h2>
+          <p class="mt-8 max-w-md text-[15px] leading-7 text-teal-50/78">学校将荣誉视为教育过程的自然结果。以下选取办学质量、科技创新与德育实践中的代表性成果，呈现不断成长的校园力量。</p>
+        </div>
+        <div class="lg:col-span-7 grid sm:grid-cols-2 gap-4">
+          <div class="honor-card rounded-[24px] p-6"><div class="text-xs tracking-[.16em] text-teal-200">FOUNDATION</div><div class="mt-5 font-semibold text-xl">广东省一级学校</div><p class="mt-3 text-sm leading-6 text-teal-50/70">以规范办学与基础教育质量建设，持续夯实校园发展的根基。</p></div>
+          <div class="honor-card rounded-[24px] p-6"><div class="text-xs tracking-[.16em] text-teal-200">2020</div><div class="mt-5 font-semibold text-xl">网络安全示范校</div><p class="mt-3 text-sm leading-6 text-teal-50/70">将数字素养和网络安全教育融入校园学习场景。</p></div>
+          <div class="honor-card rounded-[24px] p-6"><div class="text-xs tracking-[.16em] text-teal-200">2023</div><div class="mt-5 font-semibold text-xl">优秀创客教育空间</div><p class="mt-3 text-sm leading-6 text-teal-50/70">以创客实践支持学生观察、动手、创造与解决问题。</p></div>
+          <div class="honor-card rounded-[24px] p-6"><div class="text-xs tracking-[.16em] text-teal-200">2024</div><div class="mt-5 font-semibold text-xl">德育创新成果一等奖</div><p class="mt-3 text-sm leading-6 text-teal-50/70">以品格教育、心理健康与校园文化建设，陪伴学生向内生长。</p></div>
+        </div>
+      </div>
+      <div class="mt-10 pt-6 border-t border-white/15 flex flex-col md:flex-row md:items-center justify-between gap-4 text-sm text-teal-50/76">
+        <p>资料还记录了中华优秀文化传承、书香校园、心理健康教育、公益阅读与体育活动等阶段性成果；本页只保留代表性信息，动态成绩以学校官方发布为准。</p>
+        <p class="text-teal-100 whitespace-nowrap">学习 · 实践 · 成长</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 底部联系方式：保留原联系方式 -->
+  <section id="contact" class="max-w-screen-2xl mx-auto px-6 md:px-12 py-16 md:py-24">
+    <div class="max-w-5xl mx-auto">
+      <div class="grid grid-cols-1 md:grid-cols-5 gap-6 md:gap-8">
+        <div class="md:col-span-2 bg-white dark:bg-zinc-900/95 border border-zinc-200 dark:border-zinc-800 rounded-[28px] p-8 clean-shadow">
+          <div class="w-12 h-12 rounded-2xl bg-teal-50 dark:bg-teal-950/50 text-[#0f766e] flex items-center justify-center text-xl mb-6"><i class="fa-solid fa-school"></i></div>
+          <div class="font-semibold text-2xl tracking-tight">欢迎了解市桥中心小学</div>
+          <p class="text-sm leading-relaxed text-zinc-600 dark:text-zinc-400 mt-4">
+            如需了解更多，可通过右侧保留的联系方式与我联系。
+          </p>
+          <div class="pt-5 mt-6 border-t border-zinc-100 dark:border-zinc-800 text-xs flex flex-wrap gap-x-4 gap-y-2 text-zinc-500">
+            <div>📍 广东省广州市番禺区康乐路51号</div>
+            <div>🎓 公办小学教育</div>
+            <div>🌱 关注每一位学生成长</div>
+          </div>
+          <p class="mt-5 text-[11px] leading-5 text-zinc-400 dark:text-zinc-500">本页面由一名市桥中心小学毕业生个人整理制作，内容仅供交流参考，不作为学校官方通知或办事依据。</p>
+        </div>
+
+        <div class="md:col-span-3 bg-[#0f4946] dark:bg-zinc-900 border border-[#0b3c39] dark:border-zinc-800 rounded-[28px] p-8 text-white clean-shadow">
+          <div class="text-xs tracking-[.18em] text-white/55 mb-2">CONTACT</div>
+          <div class="font-semibold tracking-tight text-xl sm:text-2xl mb-7">联系作者（一名中心毕业生）</div>
+          <div class="space-y-4 text-sm">
+            <a href="mailto:408018525@qq.com" class="flex items-center gap-x-3 group">
+              <i class="fa-solid fa-envelope w-4 text-white/60 group-hover:text-teal-200 transition"></i>
+              <span class="group-hover:underline">408018525@qq.com</span>
+            </a>
+            <a href="https://github.com/408018525" target="_blank" rel="noopener" class="flex items-center gap-x-3 group">
+              <i class="fa-brands fa-github w-4 text-white/60 group-hover:text-teal-200 transition"></i>
+              <span class="group-hover:underline">github.com/408018525</span>
+            </a>
+            <a href="https://flore.cc.cd" target="_blank" rel="noopener" class="flex items-center gap-x-3 group">
+              <i class="fa-brands fa-x-twitter w-4 text-white/60 group-hover:text-teal-200 transition"></i>
+              <span class="group-hover:underline">flore.cc.cd</span>
+            </a>
+          </div>
+          <button onclick="copyEmail()" class="mt-8 w-full py-3.5 text-sm font-semibold rounded-2xl border border-white/25 hover:bg-white/10 active:bg-white/15 transition flex items-center justify-center gap-x-2">
+            <i class="fa-solid fa-copy"></i><span>复制邮箱地址</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 页脚 -->
+  <footer class="border-t border-zinc-200 dark:border-zinc-800 py-9">
+    <div class="max-w-screen-2xl mx-auto px-6 md:px-12 text-xs text-zinc-500 flex flex-col md:flex-row md:items-center justify-between gap-y-4">
+      <div>© 2026 市桥中心小学介绍页面 · 个人整理制作</div>
+      <div class="flex gap-x-6">
+        <button type="button" onclick="openPolicyModal('privacy')" class="hover:text-zinc-700 dark:hover:text-zinc-300 transition">隐私政策</button>
+        <button type="button" onclick="openPolicyModal('terms')" class="hover:text-zinc-700 dark:hover:text-zinc-300 transition">使用条款</button>
+      </div>
+      <div class="text-[10px] tracking-widest">LEARN · CREATE · GROW</div>
+    </div>
+  </footer>
+
+  <!-- 隐私政策 / 使用条款弹窗 -->
+  <div id="policy-modal" class="hidden fixed inset-0 z-[100] bg-black/55 backdrop-blur-sm p-4 sm:p-8" role="dialog" aria-modal="true" aria-labelledby="policy-modal-title" aria-hidden="true">
+    <div class="modal policy-modal-panel max-w-4xl h-full max-h-[calc(100vh-2rem)] sm:max-h-[calc(100vh-4rem)] mx-auto rounded-[28px] bg-[#f8faf9] dark:bg-zinc-900 border border-white/60 dark:border-zinc-800 shadow-2xl overflow-hidden flex flex-col">
+      <div class="policy-modal-header shrink-0 flex items-start justify-between gap-5 px-6 sm:px-10 py-6 border-b border-zinc-200 dark:border-zinc-800 bg-[#f8faf9]/95 dark:bg-zinc-900/95 backdrop-blur">
+        <div>
+          <div class="text-[10px] tracking-[0.2em] text-[#0f766e] font-semibold mb-2">POLICIES</div>
+          <h2 id="policy-modal-title" class="heading-serif text-3xl sm:text-4xl tracking-tight">隐私政策与使用条款</h2>
+        </div>
+        <button id="close-policy-modal" type="button" onclick="closePolicyModal(event)" class="shrink-0 w-10 h-10 rounded-2xl border border-zinc-200 dark:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition text-xl" aria-label="关闭政策弹窗" title="关闭"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div id="policy-modal-scroll" class="flex-1 overflow-y-auto overscroll-contain px-6 sm:px-10 py-8 sm:py-10 text-[14px] sm:text-[15px] leading-7 text-zinc-600 dark:text-zinc-300">
+        <section id="privacy-policy" class="scroll-mt-6">
+          <div class="flex flex-wrap items-center gap-x-3 gap-y-1 mb-6">
+            <div>
+              <div class="text-xs font-medium text-[#0f766e] mb-1">一、隐私政策</div>
+              <h3 class="text-2xl font-semibold tracking-tight text-zinc-900 dark:text-white">个人制作学校介绍页面隐私政策</h3>
+            </div>
+            <span class="text-xs text-zinc-500">更新日期：2026 年 07 月 04 日</span>
+          </div>
+
+          <div class="rounded-2xl border border-teal-100 dark:border-teal-900/60 bg-teal-50/65 dark:bg-teal-950/25 p-5 mb-8">
+            <div class="font-semibold text-zinc-900 dark:text-white mb-2">重要说明</div>
+            <p>本页面由一名广州市番禺区市桥中心小学毕业生个人整理、设计与维护，属于非官方的信息展示页面，不代表学校、教育主管部门或任何关联机构的立场，也不承担学校官网、招生平台、家校沟通平台或政务服务平台的职能。页面所列邮箱、GitHub 与外部链接均为作者个人联系方式；请勿将其视为学校官方咨询、投诉、报名、缴费、学位、紧急联络或信息报送渠道。</p>
+          </div>
+
+          <div class="space-y-8">
+            <div>
+              <h4 class="text-base font-semibold text-zinc-900 dark:text-white mb-2">1. 适用范围</h4>
+              <p>本政策适用于您访问、浏览、使用本页面及通过页面展示联系方式主动联系作者时可能涉及的信息处理活动。页面主要提供学校概况、课程体系、校园生活、荣誉、数字模型与资料性说明；当前不提供注册登录、在线报名、在线缴费、留言评论、文件上传、问卷收集或账号服务。</p>
+              <p class="mt-2">您从本页面跳转至 GitHub、外部网站、模型页面、浏览器插件页面或其他第三方服务后，相关服务由其运营者独立提供并适用其自身规则；作者无法控制第三方的内容、可用性或信息处理方式。</p>
+            </div>
+
+            <div>
+              <h4 class="text-base font-semibold text-zinc-900 dark:text-white mb-2">2. 本页面可能处理的信息</h4>
+              <ol class="list-decimal pl-6 space-y-2">
+                <li><strong class="text-zinc-800 dark:text-zinc-100">必要技术信息：</strong>网站托管、内容分发、网络传输或安全服务可能在提供页面访问、排查故障和防范攻击时自动生成访问时间、请求页面、浏览器类型、设备系统、网络地址、来源页、错误日志等技术信息。该类信息通常由相应服务商在其必要范围内处理，作者不会以此建立针对个人的用户画像。</li>
+                <li><strong class="text-zinc-800 dark:text-zinc-100">本地显示偏好：</strong>页面会使用浏览器本地存储记录深色／浅色模式等界面偏好。该数据保存在您的浏览器设备中，用于改善再次访问时的显示体验，不用于识别您的真实身份。</li>
+                <li><strong class="text-zinc-800 dark:text-zinc-100">您主动发送的信息：</strong>当您通过页面列出的邮箱或外部链接联系作者时，作者可能收到您自愿写入邮件或消息中的姓名、邮箱、联系方式、咨询内容及附件。请勿发送身份证号码、银行卡信息、精确住址、健康病历、未成年人敏感信息、学校内部材料或其他与交流无关的资料。</li>
+                <li><strong class="text-zinc-800 dark:text-zinc-100">页面公开内容：</strong>学校介绍文字、统计资料、荣誉信息和模型展示的目的在于信息交流，不以收集访客个人信息为目的。若您发现页面中存在可能涉及个人信息、肖像、作品署名或未成年人权益的问题，请通过“联系作者”渠道反馈。</li>
+              </ol>
+            </div>
+
+            <div>
+              <h4 class="text-base font-semibold text-zinc-900 dark:text-white mb-2">3. 信息使用目的</h4>
+              <p>作者仅会在合理必要范围内使用相关信息，用于维持页面正常访问和安全、保存您的显示偏好、答复您主动发起的沟通、处理内容更正或侵权反馈、排查技术异常，以及履行法律法规要求。作者不会将您的信息出售、出租、交换或用于与本页面无关的广告营销。</p>
+            </div>
+
+            <div>
+              <h4 class="text-base font-semibold text-zinc-900 dark:text-white mb-2">4. Cookie、本地存储与类似技术</h4>
+              <p>本页面不主动设置用于广告投放、跨站追踪或行为画像的营销 Cookie。浏览器本地存储仅用于保存主题显示等必要偏好；字体、图标、前端框架、模型或托管服务可能因技术需要使用缓存、Cookie、访问日志或类似技术。您可在浏览器设置中清除 Cookie、缓存和本地存储；清除后，主题偏好等页面设置可能需要重新选择。</p>
+            </div>
+
+            <div>
+              <h4 class="text-base font-semibold text-zinc-900 dark:text-white mb-2">5. 第三方资源与模型展示</h4>
+              <p>为完成页面呈现，本站可能加载第三方字体、图标库、前端样式资源、静态资源或嵌入式 <code class="px-1 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 text-xs">viewer.html</code> 数字模型。加载此类资源时，您的浏览器可能与相应服务建立网络连接，并由相关服务根据其规则处理必要技术数据。</p>
+              <p class="mt-2">页面中的外部网址、GitHub 链接及模型内容仅作为展示或技术参考，不构成作者对第三方服务的担保、推荐、合作承诺或持续可用性保证。</p>
+            </div>
+
+            <div>
+              <h4 class="text-base font-semibold text-zinc-900 dark:text-white mb-2">6. 信息共享、转让与公开披露</h4>
+              <p>除非取得您的明确同意、为回应您的主动请求、为维持网站托管或安全服务所必需，或法律法规、司法机关、行政机关依法要求，作者不会向无关第三方共享、转让或公开披露您主动提供的个人信息。若使用技术服务商提供的网站托管或安全防护能力，其对必要技术数据的处理应以其自身政策和必要服务范围为准。</p>
+            </div>
+
+            <div>
+              <h4 class="text-base font-semibold text-zinc-900 dark:text-white mb-2">7. 保存期限与删除</h4>
+              <p>本地主题偏好由您的浏览器自行保存和管理。您主动发送的邮件、问题反馈或沟通记录，作者仅在处理相应事项、维护沟通记录或履行必要法律义务所需的合理期限内保留；在不再需要时将删除、归档或作去标识化处理。受限于邮件服务、备份、日志或法律义务，部分副本可能无法即时删除。</p>
+            </div>
+
+            <div>
+              <h4 class="text-base font-semibold text-zinc-900 dark:text-white mb-2">8. 安全措施与风险提示</h4>
+              <p>作者会采取与个人静态页面相适应的合理措施，例如最小化页面功能、减少数据收集、使用常规访问控制、及时更新依赖资源并处理已知异常。互联网传输并非绝对安全，作者无法承诺任何网络传输、邮件或第三方服务完全不存在风险。请您自行保护设备、账号与邮箱安全，不要通过公开网络或普通邮件发送敏感资料。</p>
+            </div>
+
+            <div>
+              <h4 class="text-base font-semibold text-zinc-900 dark:text-white mb-2">9. 未成年人保护</h4>
+              <p>本页面可能被未成年人浏览，但不面向未成年人提供注册、交易或资料提交服务。未成年人应在父母或其他监护人指导下使用页面和外部链接。若监护人认为未成年人未经同意向作者提交了个人信息，可通过“联系作者”渠道提出说明、删除或处理请求；作者会在合理范围内配合处理。</p>
+            </div>
+
+            <div>
+              <h4 class="text-base font-semibold text-zinc-900 dark:text-white mb-2">10. 您的相关权利</h4>
+              <p>在适用法律允许的范围内，您可就自己通过本页面主动提供的信息提出查询、更正、补充、删除、撤回沟通意愿或解释说明请求。为避免他人冒用身份，作者可能要求您提供与请求相关的必要说明。对无法立即处理、超出作者控制范围或可能影响他人合法权益的请求，作者会说明原因。</p>
+            </div>
+
+            <div>
+              <h4 class="text-base font-semibold text-zinc-900 dark:text-white mb-2">11. 政策更新与联系方式</h4>
+              <p>作者可能因页面功能、技术服务或适用规则变化更新本政策。更新后版本将在本页面展示，并以页面标注日期为准。您继续使用页面，即表示知悉更新后的政策内容。</p>
+              <p class="mt-2">如您对隐私、内容更正、未成年人保护、版权或技术安全有疑问，请使用本页“联系作者”区域展示的邮箱或链接沟通。请注意：该联系渠道不等同于学校官方渠道，涉及招生、入学、学位、缴费、校园安全、紧急事项或正式投诉，请直接联系学校或有关主管部门的官方渠道。</p>
+            </div>
+          </div>
+        </section>
+
+        <div class="my-10 h-px bg-zinc-200 dark:bg-zinc-800"></div>
+
+        <section id="terms-of-use" class="scroll-mt-6 pb-4">
+          <div class="flex flex-wrap items-center gap-x-3 gap-y-1 mb-6">
+            <div>
+              <div class="text-xs font-medium text-[#0f766e] mb-1">二、使用条款</div>
+              <h3 class="text-2xl font-semibold tracking-tight text-zinc-900 dark:text-white">个人制作学校介绍页面使用条款</h3>
+            </div>
+            <span class="text-xs text-zinc-500">更新日期：2026 年 07 月 04 日</span>
+          </div>
+
+          <div class="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/45 p-5 mb-8">
+            <div class="font-semibold text-zinc-900 dark:text-white mb-2">使用前请知悉</div>
+            <p>本页面为个人整理制作的学校介绍网页，并非广州市番禺区市桥中心小学的官方网站、招生网站、家校平台、缴费平台或官方对外联络平台。您访问、浏览或使用本页面，即表示您已阅读、理解并同意本条款；不同意任何内容的，请停止使用本页面。</p>
+          </div>
+
+          <div class="space-y-8">
+            <div>
+              <h4 class="text-base font-semibold text-zinc-900 dark:text-white mb-2">1. 页面定位与信息性质</h4>
+              <p>本页面用于展示学校概况、办学理念、课程体系、校园生活、办学沿革、部分荣誉资料、数字模型与作者个人联系方式，内容仅供一般信息交流与网页作品展示。页面不构成任何招生承诺、录取承诺、学位安排、收费依据、考试通知、活动资格、学生管理决定、官方公告或法律意见。</p>
+              <p class="mt-2">涉及招生、入学、转学、学位、收费、考试、校园安全、活动报名、学生管理、家校沟通及其他重要事项，请以学校依法发布的正式通知、教育主管部门公告和官方办事渠道为准。</p>
+            </div>
+
+            <div>
+              <h4 class="text-base font-semibold text-zinc-900 dark:text-white mb-2">2. 非官方关系声明</h4>
+              <p>作者是一名市桥中心小学毕业生。除页面中另有明确、可核验的授权说明外，作者并非以学校工作人员、学校官方代表、教育主管部门工作人员或招生负责人身份运营本页面，也无权代表学校作出招生、录取、收费、学位、活动、合作、投诉处理或其他任何正式承诺。</p>
+            </div>
+
+            <div>
+              <h4 class="text-base font-semibold text-zinc-900 dark:text-white mb-2">3. 内容来源、更新与准确性</h4>
+              <p>页面内容可能基于公开资料、历史资料、作者整理信息及页面制作需要进行概括呈现。作者会尽力保持表述清晰、审慎与及时，但不保证所有内容在任一时间均完整、无误、无遗漏或持续最新。学校办学信息、人员、课程、设施、荣誉、活动、政策和地址说明可能随时间变化，页面内容如与学校官方发布不一致，应以官方发布为准。</p>
+              <p class="mt-2">作者可在不另行通知的情况下对页面内容进行补充、更正、调整、暂停或删除。若您发现可能存在事实错误、引用不当或需补充来源的内容，欢迎通过“联系作者”渠道提出具体说明。</p>
+            </div>
+
+            <div>
+              <h4 class="text-base font-semibold text-zinc-900 dark:text-white mb-2">4. 学校名称、标识与官方信息</h4>
+              <p>页面出现的学校名称、地址、历史资料、荣誉名称或相关表述仅用于识别和介绍目的，不表示作者拥有、受让或获授权使用任何学校名称、校徽、商标、作品或其他标识性权利。任何访问者不得借助本页面或页面内容冒充学校官方账号、伪造学校通知、发布虚假招生或收费信息、制作仿冒页面，或实施其他可能造成公众误解的行为。</p>
+            </div>
+
+            <div>
+              <h4 class="text-base font-semibold text-zinc-900 dark:text-white mb-2">5. 知识产权与合理浏览</h4>
+              <p>除另有说明外，页面的代码、版式、交互、原创说明文字、视觉设计和作者自行制作的内容，受相关法律保护；学校相关名称、资料、图片、模型、作品或第三方资源的权利分别归其相应权利人所有。您可以在个人、非商业、合理范围内浏览页面，但不得未经权利人许可复制、镜像、批量抓取、转载、出售、改编、反向工程、去除署名或以其他方式用于商业用途。</p>
+            </div>
+
+            <div>
+              <h4 class="text-base font-semibold text-zinc-900 dark:text-white mb-2">6. 未成年人、肖像与内容保护</h4>
+              <p>涉及学校、学生、教师、家长或校园活动的资料应受到审慎保护。访问者不得利用本页面内容进行人肉搜索、恶意评论、骚扰、歧视、二次剪辑、商业营销、非法传播或其他可能侵害未成年人、教师、家长及其他人员人格权益、肖像权益、隐私权益、著作权或名誉权的行为。</p>
+            </div>
+
+            <div>
+              <h4 class="text-base font-semibold text-zinc-900 dark:text-white mb-2">7. 数字模型与技术内容</h4>
+              <p>页面中的数字模型、动画、前端效果与嵌入式内容仅供浏览和交互体验。您不得尝试绕过访问控制、下载或提取受保护资源、注入脚本、恶意压测、攻击页面、干扰模型服务或以其他方式影响本页面及相关服务的正常运行。</p>
+            </div>
+
+            <div>
+              <h4 class="text-base font-semibold text-zinc-900 dark:text-white mb-2">8. 外部链接与第三方服务</h4>
+              <p>页面可能包含 GitHub、外部网站、字体、图标、前端框架、托管服务或模型资源链接。第三方内容与服务由其对应运营者独立负责，作者不对其持续可用性、内容准确性、安全性、隐私措施或服务结果作出担保。您在使用第三方服务前，应自行判断风险并阅读对方规则。</p>
+            </div>
+
+            <div>
+              <h4 class="text-base font-semibold text-zinc-900 dark:text-white mb-2">9. 联系作者的使用边界</h4>
+              <p>本页“联系作者（一名中心毕业生）”区域仅用于一般交流、内容更正、技术反馈或个人作品沟通。请勿通过该渠道提交正式报名、缴费凭证、学位申请、学生材料、紧急安全求助、隐私敏感资料或任何需要学校官方处理的事项。紧急情况请联系紧急服务机构；涉及学校事务请联系学校或教育主管部门的正式渠道。</p>
+            </div>
+
+            <div>
+              <h4 class="text-base font-semibold text-zinc-900 dark:text-white mb-2">10. 禁止行为</h4>
+              <p>您不得实施或协助实施以下行为：违反法律法规、公共秩序或社会公德；使用爬虫、脚本、镜像、扫描、攻击或压力测试工具干扰网站；传播病毒、木马、钓鱼链接、虚假信息或侮辱诽谤内容；冒用作者、学校、教师、学生、家长或其他主体名义；收集、买卖、交换、公开或传播从页面获取的个人信息；以及其他可能损害作者、学校、师生、家长或第三方合法权益的行为。</p>
+            </div>
+
+            <div>
+              <h4 class="text-base font-semibold text-zinc-900 dark:text-white mb-2">11. 服务中断、责任限制与风险自担</h4>
+              <p>因网络环境、设备故障、系统维护、浏览器兼容性、第三方服务异常、模型加载失败、不可抗力或其他合理原因，本页面可能出现访问中断、显示差异、链接失效、内容延迟或部分功能不可用。作者会在合理范围内维护页面，但不对因使用或无法使用页面产生的间接损失、预期收益损失或第三方服务问题承担责任；法律另有规定的除外。</p>
+            </div>
+
+            <div>
+              <h4 class="text-base font-semibold text-zinc-900 dark:text-white mb-2">12. 反馈、条款更新与适用</h4>
+              <p>如您发现页面存在内容错误、侵权风险、隐私问题、链接失效或技术异常，请通过“联系作者”渠道提供具体页面、问题说明和必要依据。作者可根据实际情况修订本条款，修订后版本发布于本页面即生效。继续使用页面，即视为您知悉并接受更新后的条款。</p>
+              <p class="mt-2">本条款的解释与适用以中华人民共和国现行有效法律法规为参考。因使用本页面引发争议时，双方应优先友好沟通；无法解决的，可依法通过有管辖权的机构处理。</p>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function initTailwind() {
+      tailwind.config = { darkMode:'class', theme:{ extend:{ fontFamily:{ 'serif-custom':['Playfair Display','Georgia','serif'] } } } };
+    }
+
+    function initThemeToggle() {
+      const toggleBtn = document.getElementById('theme-toggle');
+      const icon = document.getElementById('theme-icon');
+      let memoryTheme = null;
+      const safeGetTheme = () => { try { return localStorage.getItem('theme'); } catch(e) { return memoryTheme; } };
+      const safeSetTheme = (value) => { try { localStorage.setItem('theme', value); } catch(e) { memoryTheme = value; } };
+      const updateIcon = (isDark) => {
+        if (!icon) return;
+        icon.classList.toggle('fa-moon', !isDark);
+        icon.classList.toggle('fa-sun', isDark);
+      };
+      const savedTheme = safeGetTheme();
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const isDarkMode = savedTheme === 'dark' || (!savedTheme && prefersDark);
+      document.documentElement.classList.toggle('dark', isDarkMode);
+      updateIcon(isDarkMode);
+      if (toggleBtn) toggleBtn.addEventListener('click', () => {
+        const isDark = document.documentElement.classList.toggle('dark');
+        safeSetTheme(isDark ? 'dark' : 'light');
+        updateIcon(isDark);
+      });
+    }
+
+    function initMobileMenu() {
+      const menuBtn = document.getElementById('mobile-menu-btn');
+      const mobileMenu = document.getElementById('mobile-menu');
+      const closeBtn = document.getElementById('close-mobile-menu');
+      if (!menuBtn || !mobileMenu || !closeBtn) return;
+      menuBtn.addEventListener('click', () => { mobileMenu.classList.remove('hidden'); mobileMenu.classList.add('flex'); });
+      closeBtn.addEventListener('click', () => { mobileMenu.classList.add('hidden'); mobileMenu.classList.remove('flex'); });
+      document.querySelectorAll('.mobile-nav-link').forEach(link => link.addEventListener('click', () => {
+        mobileMenu.classList.add('hidden'); mobileMenu.classList.remove('flex');
+      }));
+    }
+
+    let policyPreviousOverflow = '';
+    function openPolicyModal(target) {
+      const modal = document.getElementById('policy-modal');
+      const scrollBox = document.getElementById('policy-modal-scroll');
+      const closeBtn = document.getElementById('close-policy-modal');
+      const targetSection = document.getElementById(target === 'terms' ? 'terms-of-use' : 'privacy-policy');
+      if (!modal || !scrollBox) return;
+      policyPreviousOverflow = document.body.style.overflow;
+      modal.classList.remove('hidden');
+      modal.setAttribute('aria-hidden','false');
+      document.body.style.overflow = 'hidden';
+      requestAnimationFrame(() => {
+        scrollBox.scrollTop = targetSection ? Math.max(0, targetSection.offsetTop - 12) : 0;
+        if (closeBtn) closeBtn.focus({ preventScroll:true });
+      });
+    }
+    function closePolicyModal(event) {
+      if (event) { event.preventDefault(); event.stopPropagation(); }
+      const modal = document.getElementById('policy-modal');
+      if (!modal || modal.classList.contains('hidden')) return false;
+      modal.classList.add('hidden');
+      modal.setAttribute('aria-hidden','true');
+      document.body.style.overflow = policyPreviousOverflow || '';
+      return false;
+    }
+    window.openPolicyModal = openPolicyModal;
+    window.closePolicyModal = closePolicyModal;
+
+    function initPolicyModal() {
+      const modal = document.getElementById('policy-modal');
+      const closeBtn = document.getElementById('close-policy-modal');
+      if (!modal || !closeBtn) return;
+      closeBtn.onclick = closePolicyModal;
+      closeBtn.addEventListener('pointerup', (event) => { event.preventDefault(); closePolicyModal(event); }, { passive:false });
+      modal.addEventListener('pointerdown', (event) => { if (event.target === modal) closePolicyModal(event); });
+      document.addEventListener('keydown', (event) => { if (event.key === 'Escape' && !modal.classList.contains('hidden')) closePolicyModal(event); });
+    }
+
+    function initSmoothScroll() {
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => anchor.addEventListener('click', function (e) {
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) { e.preventDefault(); target.scrollIntoView({ behavior:'smooth', block:'start' }); }
+      }));
+    }
+
+    function initFadeInAnimations() {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); } });
+      }, { threshold:.12, rootMargin:'0px 0px -30px 0px' });
+      document.querySelectorAll('#about > div, #heritage, #programs, #campus > div, #honors > div, #contact > div').forEach((el,index) => {
+        el.classList.add('fade-in'); el.style.transitionDelay = `${index * 45}ms`; observer.observe(el);
+      });
+    }
+
+    function openModelFullscreen() {
+      const viewport = document.getElementById('model-embed-viewport');
+      if (!viewport) return;
+      viewport.scrollIntoView({ behavior:'smooth', block:'center' });
+      const requestFullscreen = viewport.requestFullscreen || viewport.webkitRequestFullscreen || viewport.msRequestFullscreen;
+      if (requestFullscreen) setTimeout(() => requestFullscreen.call(viewport).catch(() => {}), 260);
+    }
+    function launchRealModel() { openModelFullscreen(); }
+
+    function copyEmail() {
+      const email = '408018525@qq.com';
+      const done = () => {
+        const btn = document.querySelector('#contact button[onclick="copyEmail()"]');
+        if (!btn) return;
+        const original = btn.innerHTML;
+        btn.innerHTML = '<i class="fa-solid fa-check"></i><span>邮箱已复制</span>';
+        setTimeout(() => { btn.innerHTML = original; }, 1800);
+      };
+      if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(email).then(done).catch(() => prompt('请复制邮箱地址：', email));
+      else prompt('请复制邮箱地址：', email);
+    }
+
+    function initializeWebsite() {
+      initTailwind();
+      initThemeToggle();
+      initMobileMenu();
+      initPolicyModal();
+      initSmoothScroll();
+      initFadeInAnimations();
+      setTimeout(() => {
+        const loading = document.getElementById('model-loading');
+        if (loading) {
+          loading.style.transition = 'opacity .4s ease';
+          loading.style.opacity = '0';
+          setTimeout(() => loading.remove(), 400);
+        }
+      }, 6500);
+    }
+
+    window.onload = initializeWebsite;
+  </script>
+</body>
+</html>

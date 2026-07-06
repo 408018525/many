@@ -1,0 +1,2096 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>课堂随机点名</title>
+    <style>
+        :root {
+            --ball-size: 450px;
+            --text-color: #00ffff;
+            --page-text: #ffffff;
+            --accent: #00ffff;
+            --accent-ink: #061216;
+            --accent-soft: rgba(0, 255, 255, 0.18);
+            --page-bg: radial-gradient(ellipse at center, #1b2735 0%, #090a0f 100%);
+            --title-shadow: #00ffff;
+            --button-grad-a: #ff00cc;
+            --button-grad-b: #3333ff;
+            --control-bg: rgba(255, 255, 255, 0.10);
+            --control-border: rgba(255, 255, 255, 0.20);
+            --control-shadow: rgba(0, 0, 0, 0.50);
+            --result-overlay: rgba(0, 0, 0, 0.85);
+            --result-bg: rgba(255, 255, 255, 0.05);
+            --result-border: #ffd700;
+            --result-text: #ffd700;
+            --result-shadow: rgba(255, 215, 0, 0.40);
+            --star-color: #ffffff;
+            --stars-opacity: 1;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: var(--page-bg);
+            height: 100vh;
+            overflow: hidden;
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--page-text);
+            perspective: 1000px;
+            user-select: none;
+        }
+
+        /* 内置主题 */
+        body[data-theme="warm"] {
+            --text-color: #fff0d7;
+            --page-text: #fff7ec;
+            --accent: #ffca7b;
+            --accent-ink: #382412;
+            --accent-soft: rgba(255, 202, 123, 0.18);
+            --page-bg: radial-gradient(ellipse at center, #6b4b36 0%, #251916 100%);
+            --title-shadow: #ffbd73;
+            --button-grad-a: #e98b52;
+            --button-grad-b: #a74a45;
+            --control-bg: rgba(72, 42, 28, 0.38);
+            --control-border: rgba(255, 225, 192, 0.22);
+            --control-shadow: rgba(28, 14, 8, 0.52);
+            --result-overlay: rgba(37, 25, 22, 0.87);
+            --result-bg: rgba(255, 235, 206, 0.08);
+            --result-border: #ffd69a;
+            --result-text: #ffd69a;
+            --result-shadow: rgba(255, 189, 115, 0.42);
+        }
+
+        body[data-theme="minimal"] {
+            --text-color: #30363d;
+            --page-text: #30363d;
+            --accent: #56616f;
+            --accent-ink: #ffffff;
+            --accent-soft: rgba(85, 95, 109, 0.14);
+            --page-bg: linear-gradient(135deg, #f7f6f2 0%, #dce3e7 100%);
+            --title-shadow: rgba(85, 95, 109, 0.35);
+            --button-grad-a: #66717e;
+            --button-grad-b: #3f4854;
+            --control-bg: rgba(255, 255, 255, 0.54);
+            --control-border: rgba(48, 54, 61, 0.16);
+            --control-shadow: rgba(48, 54, 61, 0.12);
+            --result-overlay: rgba(236, 240, 240, 0.84);
+            --result-bg: rgba(255, 255, 255, 0.72);
+            --result-border: #637180;
+            --result-text: #39434e;
+            --result-shadow: rgba(65, 75, 85, 0.24);
+            --star-color: #687482;
+            --stars-opacity: 0.16;
+        }
+
+        body[data-theme="blackboard"] {
+            --text-color: #f4f1df;
+            --page-text: #f4f1df;
+            --accent: #dbcf96;
+            --accent-ink: #25312a;
+            --accent-soft: rgba(219, 207, 150, 0.18);
+            --page-bg: radial-gradient(ellipse at center, #36433b 0%, #151e1a 100%);
+            --title-shadow: #dbcf96;
+            --button-grad-a: #8c9a73;
+            --button-grad-b: #53644c;
+            --control-bg: rgba(42, 57, 48, 0.55);
+            --control-border: rgba(231, 222, 178, 0.22);
+            --control-shadow: rgba(7, 14, 10, 0.55);
+            --result-overlay: rgba(19, 29, 24, 0.88);
+            --result-bg: rgba(245, 241, 218, 0.07);
+            --result-border: #e5d79b;
+            --result-text: #f5e6a9;
+            --result-shadow: rgba(229, 215, 155, 0.34);
+            --stars-opacity: 0.45;
+        }
+
+        body[data-theme="sakura"] {
+            --text-color: #9b4967;
+            --page-text: #6f3b51;
+            --accent: #ea8eae;
+            --accent-ink: #ffffff;
+            --accent-soft: rgba(234, 142, 174, 0.18);
+            --page-bg: radial-gradient(circle at 50% 32%, #fff8fa 0%, #fbdde7 47%, #eab3c4 100%);
+            --title-shadow: rgba(224, 112, 153, 0.42);
+            --button-grad-a: #f39ab9;
+            --button-grad-b: #cc6f96;
+            --control-bg: rgba(255, 255, 255, 0.56);
+            --control-border: rgba(188, 94, 133, 0.21);
+            --control-shadow: rgba(156, 70, 106, 0.17);
+            --result-overlay: rgba(253, 234, 241, 0.87);
+            --result-bg: rgba(255, 255, 255, 0.72);
+            --result-border: #dd7fa3;
+            --result-text: #b34470;
+            --result-shadow: rgba(205, 91, 137, 0.28);
+            --star-color: #e481aa;
+            --stars-opacity: 0.22;
+        }
+
+        body[data-theme="ocean"] {
+            --text-color: #7fe7ff;
+            --page-text: #e1f9ff;
+            --accent: #57d7ff;
+            --accent-ink: #062036;
+            --accent-soft: rgba(87, 215, 255, 0.18);
+            --page-bg: radial-gradient(ellipse at center, #123c5b 0%, #061421 66%, #03080f 100%);
+            --title-shadow: #3bd2ff;
+            --button-grad-a: #00bde6;
+            --button-grad-b: #315dcb;
+            --control-bg: rgba(12, 48, 72, 0.46);
+            --control-border: rgba(141, 231, 255, 0.22);
+            --control-shadow: rgba(0, 7, 17, 0.58);
+            --result-overlay: rgba(3, 19, 31, 0.89);
+            --result-bg: rgba(76, 198, 234, 0.08);
+            --result-border: #6de2ff;
+            --result-text: #89eaff;
+            --result-shadow: rgba(49, 210, 255, 0.36);
+            --star-color: #bdefff;
+            --stars-opacity: 0.66;
+        }
+
+        body[data-theme="forest"] {
+            --text-color: #2e5e49;
+            --page-text: #264535;
+            --accent: #6b9c72;
+            --accent-ink: #ffffff;
+            --accent-soft: rgba(107, 156, 114, 0.18);
+            --page-bg: radial-gradient(circle at 50% 20%, #f7fbef 0%, #dfead4 48%, #b8caa9 100%);
+            --title-shadow: rgba(87, 135, 91, 0.34);
+            --button-grad-a: #8bb07b;
+            --button-grad-b: #517b62;
+            --control-bg: rgba(255, 255, 251, 0.49);
+            --control-border: rgba(57, 105, 72, 0.18);
+            --control-shadow: rgba(47, 86, 56, 0.16);
+            --result-overlay: rgba(230, 243, 223, 0.86);
+            --result-bg: rgba(255, 255, 252, 0.70);
+            --result-border: #6a9c70;
+            --result-text: #3d7050;
+            --result-shadow: rgba(74, 126, 82, 0.26);
+            --star-color: #6a9b73;
+            --stars-opacity: 0.16;
+        }
+
+        body[data-theme="royal"] {
+            --text-color: #ffd98a;
+            --page-text: #fff2ce;
+            --accent: #efc96e;
+            --accent-ink: #4b0f15;
+            --accent-soft: rgba(239, 201, 110, 0.18);
+            --page-bg: radial-gradient(ellipse at center, #8b2233 0%, #4b0d18 60%, #21060b 100%);
+            --title-shadow: #efc96e;
+            --button-grad-a: #c7434d;
+            --button-grad-b: #7e1728;
+            --control-bg: rgba(97, 18, 31, 0.42);
+            --control-border: rgba(255, 222, 157, 0.24);
+            --control-shadow: rgba(30, 0, 6, 0.60);
+            --result-overlay: rgba(51, 7, 15, 0.89);
+            --result-bg: rgba(255, 229, 169, 0.07);
+            --result-border: #f1ce78;
+            --result-text: #ffe1a1;
+            --result-shadow: rgba(238, 184, 77, 0.38);
+            --star-color: #ffdb8a;
+            --stars-opacity: 0.52;
+        }
+
+        body[data-theme="lavender"] {
+            --text-color: #805ca7;
+            --page-text: #614582;
+            --accent: #9a7fc3;
+            --accent-ink: #ffffff;
+            --accent-soft: rgba(154, 127, 195, 0.18);
+            --page-bg: radial-gradient(circle at 50% 22%, #fcfaff 0%, #e8def4 50%, #c9b9dd 100%);
+            --title-shadow: rgba(133, 96, 177, 0.38);
+            --button-grad-a: #b094dd;
+            --button-grad-b: #7659a2;
+            --control-bg: rgba(255, 255, 255, 0.52);
+            --control-border: rgba(105, 74, 145, 0.20);
+            --control-shadow: rgba(93, 62, 125, 0.16);
+            --result-overlay: rgba(243, 237, 250, 0.88);
+            --result-bg: rgba(255, 255, 255, 0.72);
+            --result-border: #9875c1;
+            --result-text: #6e4d96;
+            --result-shadow: rgba(130, 92, 173, 0.26);
+            --star-color: #9a7bc1;
+            --stars-opacity: 0.18;
+        }
+
+        h1 {
+            position: absolute;
+            top: 30px;
+            font-size: 2.5rem;
+            color: var(--text-color);
+            text-shadow: 0 0 10px var(--title-shadow), 0 0 20px var(--title-shadow);
+            z-index: 100;
+            letter-spacing: 5px;
+            margin: 0;
+            pointer-events: none;
+        }
+
+        .stars {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .star {
+            position: absolute;
+            background: var(--star-color);
+            border-radius: 50%;
+            animation: twinkle var(--duration) infinite ease-in-out;
+            opacity: 0.8;
+        }
+
+        .stars { opacity: var(--stars-opacity); }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        .scene {
+            position: relative;
+            width: var(--ball-size);
+            height: var(--ball-size);
+            transform-style: preserve-3d;
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .ball {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            transform-style: preserve-3d;
+        }
+
+        .name-tag {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform-style: preserve-3d;
+            color: var(--text-color);
+            font-size: 16px;
+            font-weight: bold;
+            text-shadow: 0 0 5px color-mix(in srgb, var(--accent) 75%, transparent);
+            white-space: nowrap;
+            will-change: transform, opacity;
+            margin-left: -25px;
+            margin-top: -12px;
+        }
+
+        .controls {
+            position: absolute;
+            bottom: 8%;
+            display: flex;
+            gap: 20px;
+            z-index: 100;
+            background: var(--control-bg);
+            padding: 15px 30px;
+            border-radius: 50px;
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--control-border);
+            box-shadow: 0 10px 30px var(--control-shadow);
+        }
+
+        button {
+            padding: 10px 25px;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+            outline: none;
+            font-family: inherit;
+        }
+
+        .btn-count {
+            background: transparent;
+            border: 2px solid var(--accent);
+            color: var(--accent);
+        }
+
+        .btn-count.active {
+            background: var(--accent);
+            color: var(--accent-ink);
+            box-shadow: 0 0 15px var(--accent);
+        }
+
+        .btn-start {
+            background: linear-gradient(45deg, var(--button-grad-a), var(--button-grad-b));
+            color: white;
+            font-size: 1.3rem;
+            padding: 10px 40px;
+            box-shadow: 0 0 20px color-mix(in srgb, var(--button-grad-a) 45%, transparent);
+        }
+
+        .btn-start:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px color-mix(in srgb, var(--button-grad-a) 65%, transparent);
+        }
+
+        .btn-start:active { transform: scale(0.95); }
+
+        .btn-start.stopping {
+            background: linear-gradient(45deg, #ff3333, #cc0000);
+            box-shadow: 0 0 20px rgba(255, 51, 51, 0.4);
+        }
+
+        .result-overlay,
+        .access-layer,
+        .settings-layer {
+            position: fixed;
+            inset: 0;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            backdrop-filter: blur(5px);
+        }
+
+        .result-overlay {
+            background: var(--result-overlay);
+            z-index: 200;
+        }
+
+        .result-container {
+            display: flex;
+            gap: 60px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            max-width: 90%;
+        }
+
+        .winner-card {
+            background: var(--result-bg);
+            border: 2px solid var(--result-border);
+            border-radius: 20px;
+            padding: 40px 60px;
+            text-align: center;
+            animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 0 40px var(--result-shadow);
+            min-width: 200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .winner-name {
+            font-size: 3rem;
+            color: var(--result-text);
+            font-weight: bold;
+            text-shadow: 0 0 15px var(--result-text), 0 0 30px var(--result-shadow);
+            letter-spacing: 2px;
+            animation: glow 2s infinite alternate;
+        }
+
+        @keyframes popIn {
+            from { transform: scale(0.5); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 10px var(--result-text), 0 0 20px var(--result-shadow); }
+            to { text-shadow: 0 0 20px var(--result-text), 0 0 40px var(--result-shadow), 0 0 60px var(--result-shadow); }
+        }
+
+        #confetti-canvas {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 201;
+        }
+
+        .close-btn {
+            margin-top: 60px;
+            background: transparent;
+            border: 2px solid var(--result-text);
+            color: var(--result-text);
+            padding: 12px 35px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s;
+        }
+
+        .close-btn:hover {
+            background: var(--result-text);
+            color: var(--accent-ink);
+            box-shadow: 0 0 15px var(--result-text);
+        }
+
+        /* 极低存在感的页角标记：视觉仅为 3 个 4px 圆点，实际点击区为其约两倍 */
+        .footer-mark {
+            position: fixed;
+            left: 8px;
+            bottom: 8px;
+            width: 36px;
+            height: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            z-index: 4;
+            opacity: 0.15;
+        }
+
+        .footer-mark span {
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: currentColor;
+            display: block;
+        }
+
+        .access-layer,
+        .settings-layer {
+            background: rgba(7, 10, 14, 0.72);
+            z-index: 500;
+            padding: 18px;
+        }
+
+        .pass-card,
+        .settings-card {
+            width: min(94vw, 720px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            background: rgba(20, 25, 32, 0.95);
+            border-radius: 18px;
+            box-shadow: 0 20px 70px rgba(0, 0, 0, 0.5);
+            color: #f6f8fb;
+        }
+
+        .pass-card {
+            width: min(90vw, 340px);
+            padding: 28px;
+        }
+
+        .pass-card h2,
+        .settings-card h2 {
+            margin: 0;
+            font-size: 1.3rem;
+            letter-spacing: 0.04em;
+        }
+
+        .pass-card p,
+        .settings-hint {
+            margin: 10px 0 0;
+            font-size: 0.88rem;
+            line-height: 1.55;
+            color: rgba(246, 248, 251, 0.62);
+        }
+
+        .pass-card input,
+        .settings-card input,
+        .settings-card textarea {
+            width: 100%;
+            margin-top: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.17);
+            background: rgba(255, 255, 255, 0.06);
+            color: #fff;
+            border-radius: 10px;
+            padding: 11px 12px;
+            outline: none;
+            font: inherit;
+        }
+
+        .pass-card input:focus,
+        .settings-card input:focus,
+        .settings-card textarea:focus {
+            border-color: rgba(117, 210, 255, 0.9);
+            box-shadow: 0 0 0 3px rgba(117, 210, 255, 0.12);
+        }
+
+        /* 自定义风格选择器：避免浏览器原生 select 弹层在部分设备上被异常放大 */
+        .theme-picker {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 8px;
+            margin-top: 16px;
+        }
+
+        .theme-choice {
+            position: relative;
+            min-height: 42px;
+            padding: 8px 8px 8px 10px;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.055);
+            color: rgba(246, 248, 251, 0.88);
+            font: inherit;
+            font-size: 0.76rem;
+            line-height: 1.18;
+            text-align: left;
+            cursor: pointer;
+            transition: border-color 0.18s ease, background 0.18s ease, transform 0.18s ease;
+        }
+
+        .theme-choice:hover {
+            background: rgba(255, 255, 255, 0.10);
+            transform: translateY(-1px);
+        }
+
+        .theme-choice.is-selected {
+            border-color: #75d2ff;
+            background: rgba(117, 210, 255, 0.16);
+            box-shadow: 0 0 0 2px rgba(117, 210, 255, 0.12);
+            color: #ffffff;
+        }
+
+        .theme-dot {
+            width: 15px;
+            height: 15px;
+            flex: 0 0 15px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.26);
+            box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.12);
+        }
+
+        .theme-dot.starry { background: radial-gradient(circle at 32% 30%, #8affff 0 12%, #1b2735 34%, #090a0f 100%); }
+        .theme-dot.warm { background: radial-gradient(circle at 35% 28%, #ffd18a 0 12%, #6b4b36 35%, #251916 100%); }
+        .theme-dot.minimal { background: linear-gradient(135deg, #ffffff 0%, #dce3e7 100%); }
+        .theme-dot.blackboard { background: radial-gradient(circle at 42% 30%, #8f9b76 0 12%, #36433b 38%, #151e1a 100%); }
+        .theme-dot.sakura { background: radial-gradient(circle at 40% 25%, #fffafd 0 18%, #f6c4d4 52%, #db8ead 100%); }
+        .theme-dot.ocean { background: radial-gradient(circle at 38% 28%, #71e5ff 0 12%, #123c5b 36%, #03080f 100%); }
+        .theme-dot.forest { background: radial-gradient(circle at 42% 26%, #f7fbef 0 16%, #dfead4 45%, #719271 100%); }
+        .theme-dot.royal { background: radial-gradient(circle at 38% 30%, #ffd982 0 12%, #8b2233 39%, #21060b 100%); }
+        .theme-dot.lavender { background: radial-gradient(circle at 38% 27%, #ffffff 0 16%, #e8def4 48%, #9075b4 100%); }
+
+        @media (max-width: 560px) {
+            .theme-picker { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
+
+        .pass-error {
+            min-height: 18px;
+            margin-top: 8px;
+            font-size: 0.82rem;
+            color: #ff9b9b;
+        }
+
+        .pass-actions,
+        .settings-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        .settings-layer .settings-actions {
+            align-items: flex-end;
+            justify-content: space-between;
+        }
+
+        .settings-actions-left {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        .settings-layer .restore-default {
+            min-height: auto;
+            padding: 0 2px !important;
+            border: 0 !important;
+            background: transparent !important;
+            color: rgba(246, 248, 251, 0.62);
+            font-size: 0.78rem;
+            font-weight: normal;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+            box-shadow: none !important;
+        }
+
+        .settings-layer .restore-default:hover {
+            color: #9edfff;
+            transform: none;
+        }
+
+        .pass-actions button,
+        .settings-actions button {
+            font-size: 0.9rem;
+            padding: 10px 16px;
+            color: #fff;
+            background: rgba(255, 255, 255, 0.09);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+        }
+
+        .pass-actions .primary,
+        .settings-actions .primary {
+            background: linear-gradient(45deg, #4776e6, #8e54e9);
+            border-color: transparent;
+        }
+
+        .settings-card {
+            max-height: min(86vh, 780px);
+            overflow: auto;
+            padding: 24px;
+        }
+
+        .settings-head {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 18px;
+        }
+
+        .settings-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .field-label {
+            display: block;
+            font-size: 0.86rem;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.82);
+        }
+
+        .field-label small {
+            display: block;
+            margin-top: 4px;
+            font-size: 0.76rem;
+            font-weight: normal;
+            color: rgba(255, 255, 255, 0.48);
+            line-height: 1.35;
+        }
+
+        .full-field { grid-column: 1 / -1; }
+
+        .range-field {
+            display: grid;
+            grid-template-columns: 1fr 64px;
+            align-items: center;
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .range-field input[type="range"] {
+            margin: 0;
+            padding: 0;
+            accent-color: #8e54e9;
+        }
+
+        .range-value {
+            margin: 0 !important;
+            text-align: center;
+        }
+
+        .roster-tools {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin: 22px 0 10px;
+        }
+
+        .roster-tools h3 {
+            margin: 0;
+            font-size: 1rem;
+        }
+
+        .roster-tools button,
+        .roster-table button {
+            padding: 7px 10px;
+            font-size: 0.8rem;
+            color: #fff;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+        }
+
+        .roster-table-wrap {
+            max-height: 260px;
+            overflow: auto;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+        }
+
+        .roster-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.88rem;
+        }
+
+        .roster-table th,
+        .roster-table td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .roster-table th {
+            position: sticky;
+            top: 0;
+            background: #1d242d;
+            color: rgba(255, 255, 255, 0.65);
+            font-weight: 600;
+            z-index: 1;
+        }
+
+        .roster-table tr:last-child td { border-bottom: 0; }
+
+        .roster-table input {
+            margin: 0;
+            padding: 7px 8px;
+            min-width: 88px;
+        }
+
+        .roster-table .weight-input { width: 92px; }
+        .roster-table .probability-cell { color: #9edfff; white-space: nowrap; }
+
+        .roster-table .roster-name-cell {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .roster-table .roster-check,
+        .roster-table .select-all-roster {
+            width: 18px;
+            height: 18px;
+            min-width: 18px;
+            margin: 0;
+            padding: 0;
+            accent-color: #1689d4;
+            cursor: pointer;
+            flex: 0 0 auto;
+        }
+
+        .roster-table .select-all-roster {
+            vertical-align: -3px;
+            margin-right: 9px;
+        }
+
+        .roster-table th.name-header { white-space: nowrap; }
+        .roster-table tr.is-unselected { opacity: 0.50; }
+        .roster-table tr.is-unselected .roster-check { opacity: 1; }
+
+
+        /* 名单导入：支持 TXT 与 Word .docx，先预览修改再写入名单 */
+        .import-layer {
+            position: fixed;
+            inset: 0;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 18px;
+            background: rgba(7, 10, 14, 0.76);
+            backdrop-filter: blur(7px);
+            z-index: 720;
+        }
+
+        .import-card {
+            width: min(94vw, 660px);
+            max-height: min(86vh, 720px);
+            overflow: auto;
+            padding: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 18px;
+            background: rgba(20, 25, 32, 0.98);
+            color: #f6f8fb;
+            box-shadow: 0 20px 70px rgba(0, 0, 0, 0.55);
+        }
+
+        .import-card h2 {
+            margin: 0;
+            font-size: 1.3rem;
+            letter-spacing: 0.04em;
+        }
+
+        .import-file-note {
+            margin: 10px 0 0;
+            color: rgba(246, 248, 251, 0.62);
+            font-size: 0.86rem;
+            line-height: 1.6;
+        }
+
+        .import-summary {
+            margin-top: 16px;
+            padding: 10px 12px;
+            border: 1px solid rgba(117, 210, 255, 0.18);
+            border-radius: 10px;
+            background: rgba(117, 210, 255, 0.08);
+            color: rgba(230, 248, 255, 0.86);
+            font-size: 0.84rem;
+            line-height: 1.5;
+        }
+
+        .import-card textarea {
+            width: 100%;
+            min-height: 250px;
+            margin-top: 12px;
+            padding: 12px;
+            resize: vertical;
+            border: 1px solid rgba(255, 255, 255, 0.17);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.06);
+            color: #fff;
+            outline: none;
+            font: inherit;
+            line-height: 1.55;
+        }
+
+        .import-card textarea:focus {
+            border-color: rgba(117, 210, 255, 0.9);
+            box-shadow: 0 0 0 3px rgba(117, 210, 255, 0.12);
+        }
+
+        .import-mode {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 14px;
+        }
+
+        .import-mode label {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 8px 10px;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 9px;
+            background: rgba(255, 255, 255, 0.045);
+            color: rgba(246, 248, 251, 0.80);
+            font-size: 0.83rem;
+            cursor: pointer;
+        }
+
+        .import-mode input { accent-color: #75d2ff; }
+
+        .roster-action-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .roster-action-buttons button {
+            white-space: nowrap;
+        }
+
+        .import-status {
+            min-height: 18px;
+            margin-top: 10px;
+            font-size: 0.82rem;
+            color: #ffb7b7;
+        }
+
+        .file-import-input { display: none; }
+
+        @media (max-width: 620px) {
+            :root { --ball-size: min(88vw, 390px); }
+            h1 { top: 24px; font-size: 1.6rem; letter-spacing: 3px; }
+            .controls { bottom: 5%; gap: 8px; padding: 10px; }
+            button { padding: 8px 12px; font-size: 0.92rem; }
+            .btn-start { padding: 8px 18px; font-size: 1rem; }
+            .settings-grid { grid-template-columns: 1fr; }
+            .full-field { grid-column: auto; }
+            .settings-card { padding: 18px; }
+            .import-card { padding: 18px; }
+            .import-card textarea { min-height: 210px; }
+            .roster-action-buttons { justify-content: flex-start; }
+            .winner-card { padding: 28px 35px; min-width: 160px; }
+            .winner-name { font-size: 2rem; }
+            .result-container { gap: 18px; }
+            .close-btn { margin-top: 32px; }
+        }
+    </style>
+</head>
+<body data-theme="starry">
+    <h1 id="pageTitle">课堂随机点名</h1>
+    <div class="stars" id="stars"></div>
+
+    <div class="scene">
+        <div class="ball" id="ball"></div>
+    </div>
+
+    <div class="controls">
+        <button class="btn-count active" onclick="setCount(1, this)">1 人</button>
+        <button class="btn-count" onclick="setCount(2, this)">2 人</button>
+        <button class="btn-count" onclick="setCount(3, this)">3 人</button>
+        <button class="btn-start" id="startBtn" onclick="toggleRoll()">开始点名</button>
+    </div>
+
+    <div class="result-overlay" id="resultOverlay">
+        <div class="result-container" id="resultContainer"></div>
+        <button class="close-btn" onclick="closeResult()">继续点名</button>
+    </div>
+
+    <canvas id="confetti-canvas"></canvas>
+
+    <div class="footer-mark" aria-hidden="true"><span></span><span></span><span></span></div>
+
+    <div class="access-layer" id="accessLayer" aria-modal="true" role="dialog" aria-labelledby="accessTitle">
+        <div class="pass-card">
+            <h2 id="accessTitle">访问验证</h2>
+            <p>请输入访问密码。</p>
+            <input id="passInput" type="password" inputmode="numeric" autocomplete="off" aria-label="访问密码">
+            <div class="pass-error" id="passError"></div>
+            <div class="pass-actions">
+                <button type="button" onclick="hideAccess()">取消</button>
+                <button type="button" class="primary" onclick="verifyAccess()">进入</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="settings-layer" id="settingsLayer" aria-modal="true" role="dialog" aria-labelledby="settingsTitle">
+        <div class="settings-card">
+            <div class="settings-head">
+                <div>
+                    <h2 id="settingsTitle">抽取设置</h2>
+                    <p class="settings-hint">保存后立即应用；名单、权重与密码校验信息会加密保存在当前浏览器中。</p>
+                </div>
+            </div>
+
+            <div class="settings-grid">
+                <label class="field-label">
+                    抽取名称
+                    <small>显示在页面顶部的标题。</small>
+                    <input id="settingTitle" type="text" maxlength="30" placeholder="课堂随机点名">
+                </label>
+
+                <div class="field-label">
+                    页面风格
+                    <small>点击下方卡片选择风格；不再调用浏览器原生下拉菜单。</small>
+                    <input id="settingTheme" type="hidden" value="starry">
+                    <div class="theme-picker" id="themePicker" role="radiogroup" aria-label="页面风格">
+                        <button type="button" class="theme-choice" data-theme-value="starry" role="radio" aria-checked="false"><span class="theme-dot starry"></span><span>星空霓虹</span></button>
+                        <button type="button" class="theme-choice" data-theme-value="warm" role="radio" aria-checked="false"><span class="theme-dot warm"></span><span>暖棕氛围</span></button>
+                        <button type="button" class="theme-choice" data-theme-value="minimal" role="radio" aria-checked="false"><span class="theme-dot minimal"></span><span>浅色极简</span></button>
+                        <button type="button" class="theme-choice" data-theme-value="blackboard" role="radio" aria-checked="false"><span class="theme-dot blackboard"></span><span>黑板课堂</span></button>
+                        <button type="button" class="theme-choice" data-theme-value="sakura" role="radio" aria-checked="false"><span class="theme-dot sakura"></span><span>樱花糖果</span></button>
+                        <button type="button" class="theme-choice" data-theme-value="ocean" role="radio" aria-checked="false"><span class="theme-dot ocean"></span><span>深海科技</span></button>
+                        <button type="button" class="theme-choice" data-theme-value="forest" role="radio" aria-checked="false"><span class="theme-dot forest"></span><span>清新森林</span></button>
+                        <button type="button" class="theme-choice" data-theme-value="royal" role="radio" aria-checked="false"><span class="theme-dot royal"></span><span>国潮红金</span></button>
+                        <button type="button" class="theme-choice" data-theme-value="lavender" role="radio" aria-checked="false"><span class="theme-dot lavender"></span><span>梦幻薰衣草</span></button>
+                    </div>
+                </div>
+
+                <label class="field-label">
+                    重复概率
+                    <small>每次抽取时，从历史已抽中过的人中再次抽取的概率。</small>
+                    <span class="range-field">
+                        <input id="repeatChance" type="range" min="0" max="100" step="1">
+                        <input id="repeatChanceValue" class="range-value" type="number" min="0" max="100" step="1">
+                    </span>
+                </label>
+
+                <label class="field-label">
+                    访问密码
+                    <small>为保护密码，当前密码不会回显；留空则保持不变，填写后保存才会更新。</small>
+                    <input id="settingPassword" type="password" autocomplete="new-password" maxlength="32" placeholder="留空则不修改当前密码">
+                </label>
+
+                <div class="full-field">
+                    <div class="roster-tools">
+                        <div>
+                            <h3>抽取名称与随机概率</h3>
+                            <p class="settings-hint">概率按“随机权重”自动计算；权重越高，抽中的概率越高。权重为 0 时不会被抽中。</p>
+                        </div>
+                        <div class="roster-action-buttons">
+                            <button type="button" onclick="openRosterImport()">导入</button>
+                            <button type="button" onclick="addRosterRow()">添加名称</button>
+                        </div>
+                    </div>
+                    <div class="roster-table-wrap">
+                        <table class="roster-table">
+                            <thead>
+                                <tr>
+                                    <th class="name-header" style="width:48%"><input id="selectAllRoster" class="select-all-roster" type="checkbox" checked aria-label="全选抽取名称" title="全选 / 全不选">抽取名称</th>
+                                    <th style="width:22%">随机权重</th>
+                                    <th style="width:20%">当前概率</th>
+                                    <th style="width:10%"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="rosterBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings-actions">
+                <div class="settings-actions-left">
+                    <button type="button" onclick="hideSettings()">取消</button>
+                    <button type="button" class="restore-default" onclick="restoreDefaultRosterAndTheme()">恢复默认</button>
+                </div>
+                <button type="button" class="primary" onclick="saveSettings()">保存并应用</button>
+            </div>
+        </div>
+    </div>
+
+    <input id="rosterFileInput" class="file-import-input" type="file" accept=".txt,.docx,.doc,text/plain,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword" aria-hidden="true">
+
+    <div class="import-layer" id="importLayer" aria-modal="true" role="dialog" aria-labelledby="importTitle">
+        <div class="import-card">
+            <h2 id="importTitle">导入名单</h2>
+            <p class="import-file-note" id="importFileNote">已读取文件。名称会按空格、逗号、句号、斜杠和换行自动分开；你可以在下方继续修改，每行一个名称。</p>
+            <div class="import-summary" id="importSummary">待导入：0 个名称</div>
+            <textarea id="importNamesText" spellcheck="false" aria-label="待导入名称列表" placeholder="每行一个名称；也可以继续使用空格、逗号、句号或斜杠分隔"></textarea>
+            <div class="import-mode" aria-label="导入方式">
+                <label><input type="radio" name="importMode" value="append" checked> 追加到当前名单（重复名称自动跳过）</label>
+                <label><input type="radio" name="importMode" value="replace"> 替换当前名单</label>
+            </div>
+            <div class="import-status" id="importStatus" role="status"></div>
+            <div class="settings-actions">
+                <button type="button" onclick="hideRosterImport()">取消</button>
+                <button type="button" class="primary" onclick="confirmRosterImport()">确认导入</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const supportedThemes = ["starry", "warm", "minimal", "blackboard", "sakura", "ocean", "forest", "royal", "lavender"];
+        const secureStorageKey = "classroom.roll.secure.v3";
+        const legacyStorageKey = "classroom.roll.settings.v2";
+        const appSalt = "x3Y8V6odDNlzhzuoB+FWhg==";
+        const appIterations = 160000;
+        const defaultSecureBlob = {"v":1,"i":"Ok98Ar4wlfnRahbS","d":"cPBots2vHpj4YA1VDG4srmYskAFrGDJa5EGzq7tr7nsV8sa+HVUiUGuS9ckX+oT5oK3EGkUUZtBCZGq5NspMHWKNZyM5rHmImhDf89bm5Fw/vfZnut2QSkqlDe/EVZJYGXViSinTYCBp3qDiHcF15KK9pgsDV2RPQ5clIYgXCXPIZI/ZmTjupu7+3LH9QY1WYUqqES7Y5KSrU+6y46mwuAs5RcWzAJ8jugm2OjgF7nnm0misouq2wzPoCuTPzll3ic66khvzAkpZwEwiPlHAMt0AIZXC6YalnZWjUgPEvwGya8RF60MNzcjAeA1tfZIQtLhUgXQGJ/Pbs01kajoYmElnFVlNcN2MZTYnyCu6mKFb//Uc1po/RteheZ81rtZHDnPdArvYgKgze660idrt9jXbQGLksmlebCPs6jNzeGJ6MnXw2mA1vdNDsER81eZ+mF0XXZD4Kjo8LPoefAbrk6ZbcWgL4H0wUFoCMAqZuiw5wxjsUVzrXevd+pRNJBhUF+rRw4Ac0lIkUw02IkksHKFSHnLScWMQlWc8BdXJsydKhOWpA4SaYqkbQ4Nsk2PqmODAJx5re7Wqy+tQMi4eVT9q1XC1NHi6xWtZjysbVTb9q3xMrw7M9pUC/g+mESeAuIV1HujCRr84HBtrZwtMBdbQ75v4ZJm4V+F/ZrSUT3MpHUiTkEuyzKc5Tm01xdhjzqPqvOaG7GX4czNv5ohFPDJmhCN726JS6DP/UKiZXDmUO0us6/FrF0jeVPUHyZrbqg4fjN6sV518hBZHYZzVyERWuuBoe+z95WN1e1XcRmI/rZ6yoGhKBEeDpJ4grB+SUvt04zEmxDney3QJldp/xW9/coy7Yd6ocdSQwTxxAhG3uKXvzbgEhfFDgi3VbPjimMKwdR9AS+hvXYQzZbFtwda6mt12giJbuXsJ2RQM1AYVL6X1Zg7YBE7fakB/twU2+unckJ6jtiTc2siNwV1GsEsc7yBU/u3vJr8CgH/0dTsKhNSfgw7u+7+a4QfONrnBsUxGOBBKbv90V98AEdSyUZOG0dDNUXPf36syLzwXKxEYdk09omoNEAUJqjGw+mwZbteOITtS8o7CN4Cln5waJZI9I9lbLIfbMGodaq/cPBtnxM6BW85xlGfsiz77zdRfRQySeLEbKpjTC7OVWrb1wYTgUry9OqyzV3qfFF/H3oao663MnXgYlsLIxLdyH9imxBfbDOk7H8rOs+WJ8gGWhcGEqTK59/4DJ6P+K8XtniRcjbSEg8D1SyLAxcGgv73TWdARZWp1AJELpFq9Gt/gMq/0OZvb2jg+4eDU+HchWBb6W5PwMU8sqvBid0ty/NLe9xCOOKckY1POLQ0vDB6LFMSBAMJ7+oP6lzWAwLtst0udJhQmpAfccfJKf2hMr5xtErve4n4HVZQGZ+Sbd16W4rXTP6B/ZY4mOjDUeAbFCnmscgIbYIqDI+NUKua55aK0h2fT0TRtf33fxMVjOapouiuw2O9NxUb9pAS6cZy6bL7V+iX9cLUcNS+Ko181Uu05T6A6D4esvWsNagTod7Jrq/l09zgzXKttO8GuyGUZlV2DQ2q/ciEUHIxFsy+RWULkqVjui1q7uw4rM9c1dWb/C1PDdpWds34MYFsjcjBv6G3V3L/a8WNE0nugzltnBLMqSWC9oBCpvH35FwU41N+LQ89cOACW0+PSSnnwyFpu2x0Y057tP99uQ1pr71DXunXkSWaqW9GPQ3OILhKiyXIXNkmGdpla+rKtzINDCvVrPBDPQY4kCqwnCeF1HOiaDrnEUQXExj0NyK/XnqaFW+CYWeQKn+lzLAPh8YjZVoVwRRpZZuo7cH+LQXbh54rrzzXlhTL4oLHAco4oDaG11kHqIEVCDFjw3v0u0NLgFU3jm/7q/Kk836nW/V0FQMsc2D6ykpt4pTn4CNvzrVWcl0BMobfZRPjyJUwHIJLqivSeQ/LjBUCTOQfIIGWWNJrMMMFEATSyyBj0u1b+tRvMqwStaqVBCOfSbZu7xK3bYAW5dr8/cluYYgJnD6F8ofr2GOoSEnD6fPcZU9TjblUmh7xQa7iFgrJWx3aIzxeWuy+87zzJLR2abhl6FYcaMY2ClgLyJo9LaK9rprnjMCliiXJuA7zvsEqphWGczfnr9xTZH6i9vFXXD0Qj2WRxSHs2s6DgPv0mDseqkZDXdN89Qid0xP6pw2y60iVRWCaQGzPQBRKSGHGmwQWxmYl4lEU0n7HsIOKG45ZVUkPNrwVP2ZbTRvai1awRX9lo5HN9t9o5Bb4fZZlfn/7XusgMvpwCd8BPFZ+nhUTnk8fqt342TtKA1MxYk+7nnufGorgLcLtTehUk2GoQlELkmgJ4sssZ+MC2cBDWCM+cYmcYxGC4WYeJ"};
+
+        const emptyConfig = {
+            title: "课堂随机点名",
+            theme: "starry",
+            repeatChance: 0,
+            roster: [],
+            auth: null
+        };
+
+        let secureKeyPromise = null;
+        let embeddedDefaultPromise = null;
+        let config = { ...emptyConfig };
+        let appReady = false;
+        let selectCount = 1;
+        let isRolling = false;
+        let animationId = null;
+        let currentRotationX = 0;
+        let currentRotationY = 0;
+        let drawHistory = [];
+        let backupAccessClicks = 0;
+
+        const ball = document.getElementById("ball");
+        const startBtn = document.getElementById("startBtn");
+        const resultOverlay = document.getElementById("resultOverlay");
+        const resultContainer = document.getElementById("resultContainer");
+        const countBtns = document.querySelectorAll(".btn-count");
+        const pageTitle = document.getElementById("pageTitle");
+        const accessLayer = document.getElementById("accessLayer");
+        const settingsLayer = document.getElementById("settingsLayer");
+        const passInput = document.getElementById("passInput");
+        const passError = document.getElementById("passError");
+        const rosterBody = document.getElementById("rosterBody");
+        const repeatChance = document.getElementById("repeatChance");
+        const repeatChanceValue = document.getElementById("repeatChanceValue");
+        const rosterFileInput = document.getElementById("rosterFileInput");
+        const importLayer = document.getElementById("importLayer");
+        const importNamesText = document.getElementById("importNamesText");
+        const importSummary = document.getElementById("importSummary");
+        const importStatus = document.getElementById("importStatus");
+        const importFileNote = document.getElementById("importFileNote");
+        const selectAllRoster = document.getElementById("selectAllRoster");
+
+        selectAllRoster.addEventListener("change", () => {
+            rosterBody.querySelectorAll(".roster-check").forEach(check => {
+                check.checked = selectAllRoster.checked;
+                check.closest("tr")?.classList.toggle("is-unselected", !check.checked);
+            });
+            updateProbabilityLabels();
+        });
+
+        function cloneValue(value) {
+            return JSON.parse(JSON.stringify(value));
+        }
+
+        function clampNumber(value, min, max, fallback) {
+            const number = Number(value);
+            return Number.isFinite(number) ? Math.min(max, Math.max(min, number)) : fallback;
+        }
+
+        function toBase64(bytes) {
+            let binary = "";
+            bytes.forEach(byte => { binary += String.fromCharCode(byte); });
+            return btoa(binary);
+        }
+
+        function fromBase64(value) {
+            const binary = atob(value);
+            const bytes = new Uint8Array(binary.length);
+            for (let index = 0; index < binary.length; index++) bytes[index] = binary.charCodeAt(index);
+            return bytes;
+        }
+
+        function getApplicationSecret() {
+            return String.fromCharCode(...[84, 57, 109, 33, 76, 97, 118, 101, 110, 100, 101, 114, 95, 67, 108, 111, 117, 100, 64, 50, 48, 50, 54]);
+        }
+
+        function getBackupToken() {
+            return String.fromCharCode(113, 119, 51);
+        }
+
+        function constantTimeEqual(left, right) {
+            if (left.length !== right.length) return false;
+            let difference = 0;
+            for (let index = 0; index < left.length; index++) difference |= left[index] ^ right[index];
+            return difference === 0;
+        }
+
+        function assertCryptoReady() {
+            if (!window.crypto || !window.crypto.subtle) {
+                throw new Error("当前浏览器不支持本地加密存储，请使用新版 Chrome、Edge 或 Safari。");
+            }
+        }
+
+        async function getSecureKey() {
+            assertCryptoReady();
+            if (!secureKeyPromise) {
+                secureKeyPromise = (async () => {
+                    const baseKey = await crypto.subtle.importKey(
+                        "raw",
+                        new TextEncoder().encode(getApplicationSecret()),
+                        "PBKDF2",
+                        false,
+                        ["deriveKey"]
+                    );
+                    return crypto.subtle.deriveKey(
+                        { name: "PBKDF2", salt: fromBase64(appSalt), iterations: appIterations, hash: "SHA-256" },
+                        baseKey,
+                        { name: "AES-GCM", length: 256 },
+                        false,
+                        ["encrypt", "decrypt"]
+                    );
+                })();
+            }
+            return secureKeyPromise;
+        }
+
+        async function encryptPayload(payload) {
+            const iv = crypto.getRandomValues(new Uint8Array(12));
+            const encoded = new TextEncoder().encode(JSON.stringify(payload));
+            const encrypted = await crypto.subtle.encrypt(
+                { name: "AES-GCM", iv },
+                await getSecureKey(),
+                encoded
+            );
+            return { v: 1, i: toBase64(iv), d: toBase64(new Uint8Array(encrypted)) };
+        }
+
+        async function decryptPayload(blob) {
+            assertCryptoReady();
+            if (!blob || blob.v !== 1 || typeof blob.i !== "string" || typeof blob.d !== "string") {
+                throw new Error("加密配置格式无效。");
+            }
+            const plain = await crypto.subtle.decrypt(
+                { name: "AES-GCM", iv: fromBase64(blob.i) },
+                await getSecureKey(),
+                fromBase64(blob.d)
+            );
+            return JSON.parse(new TextDecoder().decode(plain));
+        }
+
+        function isPasswordRecord(record) {
+            return Boolean(
+                record &&
+                typeof record.salt === "string" &&
+                typeof record.hash === "string" &&
+                Number.isInteger(Number(record.iterations)) &&
+                Number(record.iterations) >= 100000
+            );
+        }
+
+        async function createPasswordRecord(password) {
+            assertCryptoReady();
+            const salt = crypto.getRandomValues(new Uint8Array(16));
+            const iterations = 210000;
+            const baseKey = await crypto.subtle.importKey(
+                "raw",
+                new TextEncoder().encode(password),
+                "PBKDF2",
+                false,
+                ["deriveBits"]
+            );
+            const hash = await crypto.subtle.deriveBits(
+                { name: "PBKDF2", salt, iterations, hash: "SHA-256" },
+                baseKey,
+                256
+            );
+            return { salt: toBase64(salt), hash: toBase64(new Uint8Array(hash)), iterations };
+        }
+
+        async function verifyPasswordRecord(password, record) {
+            if (!isPasswordRecord(record)) return false;
+            try {
+                const baseKey = await crypto.subtle.importKey(
+                    "raw",
+                    new TextEncoder().encode(password),
+                    "PBKDF2",
+                    false,
+                    ["deriveBits"]
+                );
+                const calculated = new Uint8Array(await crypto.subtle.deriveBits(
+                    { name: "PBKDF2", salt: fromBase64(record.salt), iterations: Number(record.iterations), hash: "SHA-256" },
+                    baseKey,
+                    256
+                ));
+                return constantTimeEqual(calculated, fromBase64(record.hash));
+            } catch (error) {
+                return false;
+            }
+        }
+
+        function sanitizeRoster(roster) {
+            const seen = new Set();
+            const clean = [];
+            (Array.isArray(roster) ? roster : []).forEach(item => {
+                const name = String(item && item.name !== undefined ? item.name : "").trim().slice(0, 40);
+                const weight = clampNumber(item && item.weight, 0, 9999, 1);
+                const enabled = !item || item.enabled !== false;
+                if (name && !seen.has(name)) {
+                    seen.add(name);
+                    clean.push({ name, weight, enabled });
+                }
+            });
+            return clean;
+        }
+
+        function normalizeConfig(raw, defaults) {
+            const roster = sanitizeRoster(raw && raw.roster);
+            return {
+                title: typeof raw?.title === "string" && raw.title.trim() ? raw.title.trim().slice(0, 30) : defaults.title,
+                theme: supportedThemes.includes(raw?.theme) ? raw.theme : defaults.theme,
+                repeatChance: clampNumber(raw?.repeatChance, 0, 100, defaults.repeatChance),
+                roster: roster.length ? roster : cloneValue(defaults.roster),
+                auth: isPasswordRecord(raw?.auth) ? raw.auth : cloneValue(defaults.auth)
+            };
+        }
+
+        async function getEmbeddedDefaultConfig() {
+            if (!embeddedDefaultPromise) {
+                embeddedDefaultPromise = (async () => {
+                    const raw = await decryptPayload(defaultSecureBlob);
+                    const roster = sanitizeRoster(raw.roster);
+                    if (!roster.length || !isPasswordRecord(raw.auth)) throw new Error("内置加密配置无效。");
+                    return {
+                        title: typeof raw.title === "string" && raw.title.trim() ? raw.title.trim().slice(0, 30) : emptyConfig.title,
+                        theme: supportedThemes.includes(raw.theme) ? raw.theme : emptyConfig.theme,
+                        repeatChance: clampNumber(raw.repeatChance, 0, 100, 0),
+                        roster,
+                        auth: raw.auth
+                    };
+                })();
+            }
+            return cloneValue(await embeddedDefaultPromise);
+        }
+
+        function readLegacyConfig() {
+            try {
+                const legacy = JSON.parse(localStorage.getItem(legacyStorageKey));
+                return legacy && typeof legacy === "object" ? legacy : null;
+            } catch (error) {
+                return null;
+            }
+        }
+
+        async function loadConfig() {
+            const defaults = await getEmbeddedDefaultConfig();
+            try {
+                const encrypted = localStorage.getItem(secureStorageKey);
+                if (encrypted) {
+                    const raw = await decryptPayload(JSON.parse(encrypted));
+                    return normalizeConfig(raw, defaults);
+                }
+            } catch (error) {
+                // The saved encrypted payload is unavailable or damaged; leave it untouched and use the embedded default.
+            }
+
+            const legacy = readLegacyConfig();
+            const migrated = normalizeConfig(legacy || defaults, defaults);
+            if (legacy && typeof legacy.password === "string" && legacy.password) {
+                migrated.auth = await createPasswordRecord(legacy.password);
+            }
+            await persistConfig(migrated);
+            localStorage.removeItem(legacyStorageKey);
+            return migrated;
+        }
+
+        async function persistConfig(value = config) {
+            const blob = await encryptPayload(value);
+            localStorage.setItem(secureStorageKey, JSON.stringify(blob));
+            localStorage.removeItem(legacyStorageKey);
+        }
+
+        function applyAppearance() {
+            document.body.dataset.theme = config.theme;
+            pageTitle.textContent = config.title;
+            document.title = config.title;
+        }
+
+        function initStars() {
+            const starsContainer = document.getElementById("stars");
+            starsContainer.innerHTML = "";
+            for (let i = 0; i < 200; i++) {
+                const star = document.createElement("div");
+                star.className = "star";
+                star.style.left = Math.random() * 100 + "%";
+                star.style.top = Math.random() * 100 + "%";
+                const size = Math.random() * 3;
+                star.style.width = size + "px";
+                star.style.height = size + "px";
+                star.style.setProperty("--duration", (Math.random() * 3 + 2) + "s");
+                starsContainer.appendChild(star);
+            }
+        }
+
+        function renderBall() {
+            ball.innerHTML = "";
+            const radius = 220;
+            const activeRoster = config.roster.filter(item => item.enabled !== false);
+            const total = activeRoster.length;
+            const goldenRatio = (1 + Math.sqrt(5)) / 2;
+
+            activeRoster.forEach((item, index) => {
+                const tag = document.createElement("div");
+                tag.className = "name-tag";
+                tag.textContent = item.name;
+
+                const theta = 2 * Math.PI * index / goldenRatio;
+                const phi = Math.acos(1 - 2 * (index + 0.5) / total);
+                const x = radius * Math.sin(phi) * Math.cos(theta);
+                const y = radius * Math.sin(phi) * Math.sin(theta);
+                const z = radius * Math.cos(phi);
+
+                tag.dataset.x = x;
+                tag.dataset.y = y;
+                tag.dataset.z = z;
+                ball.appendChild(tag);
+            });
+        }
+
+        function initBall() {
+            renderBall();
+            if (!animationId) animateBall();
+        }
+
+        function animateBall() {
+            if (!isRolling) {
+                currentRotationY += 0.2;
+                currentRotationX += 0.1;
+            } else {
+                currentRotationY += 15;
+                currentRotationX += 8;
+            }
+
+            const radX = currentRotationX * Math.PI / 180;
+            const radY = currentRotationY * Math.PI / 180;
+            const tags = document.querySelectorAll(".name-tag");
+            const radius = 220;
+
+            tags.forEach(tag => {
+                const x = parseFloat(tag.dataset.x);
+                const y = parseFloat(tag.dataset.y);
+                const z = parseFloat(tag.dataset.z);
+                const x1 = x * Math.cos(radY) - z * Math.sin(radY);
+                const z1 = z * Math.cos(radY) + x * Math.sin(radY);
+                const y2 = y * Math.cos(radX) - z1 * Math.sin(radX);
+                const z2 = z1 * Math.cos(radX) + y * Math.sin(radX);
+
+                tag.style.transform = `translate3d(${x1}px, ${y2}px, ${z2}px)`;
+                tag.style.opacity = Math.max(0.2, (z2 + radius) / (2 * radius));
+                tag.style.zIndex = Math.floor(z2);
+            });
+
+            animationId = requestAnimationFrame(animateBall);
+        }
+
+        function setCount(n, button) {
+            if (!appReady || isRolling) return;
+            selectCount = n;
+            countBtns.forEach(btn => btn.classList.remove("active"));
+            button.classList.add("active");
+        }
+
+        function toggleRoll() {
+            if (!appReady) return;
+            if (isRolling) stopRoll();
+            else startRoll();
+        }
+
+        function startRoll() {
+            isRolling = true;
+            startBtn.textContent = "停止";
+            startBtn.classList.add("stopping");
+            resultOverlay.style.display = "none";
+        }
+
+        function stopRoll() {
+            isRolling = false;
+            startBtn.textContent = "开始点名";
+            startBtn.classList.remove("stopping");
+
+            const activeRoster = config.roster.filter(item => item.enabled !== false);
+            if (!activeRoster.length) {
+                alert("请先进入抽取设置，勾选至少一个抽取名称。");
+                return;
+            }
+
+            const winners = [];
+            const actualCount = Math.min(selectCount, activeRoster.length);
+
+            for (let index = 0; index < actualCount; index++) {
+                const avoidNames = new Set(winners);
+                const useHistory = drawHistory.length > 0 && Math.random() * 100 < config.repeatChance;
+                let pool = [];
+
+                if (useHistory) {
+                    const historySet = new Set(drawHistory);
+                    pool = activeRoster.filter(item => historySet.has(item.name) && !avoidNames.has(item.name) && item.weight > 0);
+                }
+
+                if (!pool.length) {
+                    pool = activeRoster.filter(item => !avoidNames.has(item.name) && item.weight > 0);
+                }
+
+                if (!pool.length) {
+                    pool = activeRoster.filter(item => !avoidNames.has(item.name));
+                }
+
+                const selected = weightedPick(pool);
+                if (selected) winners.push(selected.name);
+            }
+
+            drawHistory = [...drawHistory, ...winners].slice(-500);
+            void persistConfig();
+            showResult(winners);
+        }
+
+        function weightedPick(pool) {
+            const totalWeight = pool.reduce((sum, item) => sum + Math.max(0, Number(item.weight) || 0), 0);
+            if (!pool.length) return null;
+            if (totalWeight <= 0) return pool[Math.floor(Math.random() * pool.length)];
+
+            let cursor = Math.random() * totalWeight;
+            for (const item of pool) {
+                cursor -= Math.max(0, Number(item.weight) || 0);
+                if (cursor <= 0) return item;
+            }
+            return pool[pool.length - 1];
+        }
+
+        function showResult(winners) {
+            resultContainer.innerHTML = "";
+            winners.forEach(name => {
+                const card = document.createElement("div");
+                card.className = "winner-card";
+                const winnerName = document.createElement("div");
+                winnerName.className = "winner-name";
+                winnerName.textContent = name;
+                card.appendChild(winnerName);
+                resultContainer.appendChild(card);
+            });
+            resultOverlay.style.display = "flex";
+            startConfetti();
+        }
+
+        function closeResult() {
+            resultOverlay.style.display = "none";
+            stopConfetti();
+        }
+
+        const canvas = document.getElementById("confetti-canvas");
+        const ctx = canvas.getContext("2d");
+        let confettiActive = false;
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        window.addEventListener("resize", resizeCanvas);
+        resizeCanvas();
+
+        const confettiPalettes = {
+            starry: ["#00ffff", "#ff00cc", "#7f7cff", "#ffffff"],
+            warm: ["#ffca7b", "#e98b52", "#f3dbb2", "#b95b50"],
+            minimal: ["#596575", "#aab4be", "#f4f3ef", "#6f7c88"],
+            blackboard: ["#dbcf96", "#8c9a73", "#f4f1df", "#afbf8f"],
+            sakura: ["#f39ab9", "#dd7fa3", "#fff8fa", "#c7628b"],
+            ocean: ["#57d7ff", "#00bde6", "#89eaff", "#315dcb"],
+            forest: ["#6b9c72", "#8bb07b", "#f7fbef", "#517b62"],
+            royal: ["#efc96e", "#c7434d", "#ffe1a1", "#8b2233"],
+            lavender: ["#9a7fc3", "#b094dd", "#fcfaff", "#7659a2"]
+        };
+
+        function getConfettiColor() {
+            const palette = confettiPalettes[config.theme] || confettiPalettes.starry;
+            return palette[Math.floor(Math.random() * palette.length)];
+        }
+
+        function startConfetti() {
+            confettiActive = true;
+            particles = [];
+            for (let i = 0; i < 300; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height - canvas.height,
+                    color: getConfettiColor(),
+                    size: Math.random() * 10 + 5,
+                    speedY: Math.random() * 3 + 2,
+                    speedX: Math.random() * 2 - 1,
+                    rotation: Math.random() * 360,
+                    rotationSpeed: Math.random() * 10 - 5
+                });
+            }
+            animateConfetti();
+        }
+
+        function stopConfetti() {
+            confettiActive = false;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function animateConfetti() {
+            if (!confettiActive) return;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(particle => {
+                particle.y += particle.speedY;
+                particle.x += particle.speedX;
+                particle.rotation += particle.rotationSpeed;
+                if (particle.y > canvas.height) particle.y = -10;
+
+                ctx.save();
+                ctx.translate(particle.x, particle.y);
+                ctx.rotate(particle.rotation * Math.PI / 180);
+                ctx.fillStyle = particle.color;
+                ctx.fillRect(-particle.size / 2, -particle.size / 2, particle.size, particle.size);
+                ctx.restore();
+            });
+            requestAnimationFrame(animateConfetti);
+        }
+
+        function bindHiddenAccess() {
+            const mark = document.querySelector(".footer-mark");
+            let clicks = [];
+            let lastClick = 0;
+
+            mark.addEventListener("click", () => {
+                const now = Date.now();
+                if (now - lastClick > 1200) clicks = [];
+                lastClick = now;
+
+                clicks.push(now);
+                clicks = clicks.filter(time => now - time <= 2000);
+
+                if (clicks.length >= 5) {
+                    clicks = [];
+                    showAccess();
+                }
+            });
+        }
+
+        function resetBackupAccess() {
+            backupAccessClicks = 0;
+        }
+
+        function showAccess() {
+            resetBackupAccess();
+            passError.textContent = "";
+            passInput.value = "";
+            accessLayer.style.display = "flex";
+            setTimeout(() => passInput.focus(), 0);
+        }
+
+        function hideAccess() {
+            resetBackupAccess();
+            accessLayer.style.display = "none";
+            passInput.value = "";
+            passError.textContent = "";
+        }
+
+        async function verifyAccess() {
+            const enteredPassword = passInput.value;
+
+            if (await verifyPasswordRecord(enteredPassword, config.auth)) {
+                hideAccess();
+                showSettings();
+                return;
+            }
+
+            if (enteredPassword === getBackupToken()) {
+                backupAccessClicks += 1;
+                if (backupAccessClicks >= 3) {
+                    hideAccess();
+                    showSettings();
+                    return;
+                }
+            } else {
+                resetBackupAccess();
+            }
+
+            passError.textContent = "密码不正确";
+            passInput.select();
+        }
+
+        passInput.addEventListener("input", () => {
+            if (passInput.value !== getBackupToken()) resetBackupAccess();
+        });
+
+        passInput.addEventListener("keydown", event => {
+            if (event.key === "Enter") verifyAccess();
+            if (event.key === "Escape") hideAccess();
+        });
+
+        function syncThemePicker(theme) {
+            const selectedTheme = supportedThemes.includes(theme) ? theme : emptyConfig.theme;
+            const themeInput = document.getElementById("settingTheme");
+            themeInput.value = selectedTheme;
+            document.querySelectorAll(".theme-choice").forEach(button => {
+                const selected = button.dataset.themeValue === selectedTheme;
+                button.classList.toggle("is-selected", selected);
+                button.setAttribute("aria-checked", String(selected));
+            });
+        }
+
+        function selectTheme(theme) {
+            syncThemePicker(theme);
+        }
+
+        function bindThemePicker() {
+            document.querySelectorAll(".theme-choice").forEach(button => {
+                button.addEventListener("click", () => selectTheme(button.dataset.themeValue));
+            });
+        }
+
+        function showSettings() {
+            document.getElementById("settingTitle").value = config.title;
+            syncThemePicker(config.theme);
+            document.getElementById("settingPassword").value = "";
+            repeatChance.value = config.repeatChance;
+            repeatChanceValue.value = config.repeatChance;
+            renderRosterEditor(config.roster);
+            settingsLayer.style.display = "flex";
+        }
+
+        function hideSettings() {
+            settingsLayer.style.display = "none";
+        }
+
+        async function restoreDefaultRosterAndTheme() {
+            try {
+                const defaults = await getEmbeddedDefaultConfig();
+
+                // 仅恢复最初内置的名单、权重、勾选状态与页面风格；标题、重复概率和访问密码保持当前设置。
+                config = {
+                    ...config,
+                    theme: defaults.theme,
+                    roster: cloneValue(defaults.roster)
+                };
+                drawHistory = [];
+
+                await persistConfig();
+                applyAppearance();
+                renderBall();
+                syncThemePicker(config.theme);
+                renderRosterEditor(config.roster);
+            } catch (error) {
+                alert("恢复默认失败：当前浏览器无法完成本地加密存储。请使用新版 Chrome、Edge 或 Safari。\n");
+            }
+        }
+
+        repeatChance.addEventListener("input", () => {
+            repeatChanceValue.value = repeatChance.value;
+        });
+
+        repeatChanceValue.addEventListener("input", () => {
+            repeatChance.value = clampNumber(repeatChanceValue.value, 0, 100, 0);
+        });
+
+        /* 导入流程：选择文件 → 自动拆分 → 可编辑预览 → 确认写入当前名单编辑区 */
+        function openRosterImport() {
+            importStatus.textContent = "";
+            rosterFileInput.value = "";
+            rosterFileInput.click();
+        }
+
+        function showRosterImport(text, fileName = "") {
+            const names = parseImportedNames(text);
+            importNamesText.value = names.join("\n");
+            importFileNote.textContent = fileName
+                ? `已读取“${fileName}”。名称会按空格、逗号、句号、斜杠和换行自动分开；你可以在下方继续修改，每行一个名称。`
+                : "名称会按空格、逗号、句号、斜杠和换行自动分开；你可以在下方继续修改，每行一个名称。";
+            importStatus.textContent = "";
+            document.querySelector('input[name="importMode"][value="append"]').checked = true;
+            updateImportSummary();
+            importLayer.style.display = "flex";
+            setTimeout(() => importNamesText.focus(), 0);
+        }
+
+        function hideRosterImport() {
+            importLayer.style.display = "none";
+            importStatus.textContent = "";
+        }
+
+        function parseImportedNames(text) {
+            const seen = new Set();
+            return String(text || "")
+                .replace(/\u00a0/g, " ")
+                .split(/[\s,，.。/／]+/)
+                .map(name => name.trim().replace(/^[-•·]+|[-•·]+$/g, "").slice(0, 40))
+                .filter(name => {
+                    if (!name || seen.has(name)) return false;
+                    seen.add(name);
+                    return true;
+                });
+        }
+
+        function getCurrentEditorNames() {
+            return new Set([...rosterBody.querySelectorAll(".roster-name")]
+                .map(input => input.value.trim())
+                .filter(Boolean));
+        }
+
+        function updateImportSummary() {
+            const names = parseImportedNames(importNamesText.value);
+            const mode = document.querySelector('input[name="importMode"]:checked').value;
+            const existing = getCurrentEditorNames();
+            const newCount = mode === "replace" ? names.length : names.filter(name => !existing.has(name)).length;
+            const skipped = mode === "replace" ? 0 : names.length - newCount;
+            importSummary.textContent = mode === "replace"
+                ? `待替换为 ${names.length} 个名称。确认后将清空当前名单编辑区。`
+                : `识别到 ${names.length} 个名称；将新增 ${newCount} 个${skipped ? `，跳过 ${skipped} 个重复名称` : ""}。`;
+        }
+
+        importNamesText.addEventListener("input", updateImportSummary);
+        document.querySelectorAll('input[name="importMode"]').forEach(input => {
+            input.addEventListener("change", updateImportSummary);
+        });
+
+        async function handleRosterFile(file) {
+            if (!file) return;
+            try {
+                const extension = file.name.split(".").pop().toLowerCase();
+                if (extension === "doc") {
+                    throw new Error("旧版 .doc 不能直接读取，请先用 Word 另存为 .docx 或 .txt 后再导入。");
+                }
+                if (extension !== "txt" && extension !== "docx") {
+                    throw new Error("请选择 .txt 或 .docx 文件。");
+                }
+
+                const buffer = await file.arrayBuffer();
+                const text = extension === "docx"
+                    ? await extractDocxText(buffer)
+                    : decodeTextBuffer(buffer);
+
+                if (!parseImportedNames(text).length) {
+                    throw new Error("没有识别到可导入的名称，请确认文件内容或在导入界面中手动修改。");
+                }
+                showRosterImport(text, file.name);
+            } catch (error) {
+                importNamesText.value = "";
+                importFileNote.textContent = "导入失败。你可以重新选择文件。";
+                importSummary.textContent = "待导入：0 个名称";
+                importStatus.textContent = error && error.message ? error.message : "文件读取失败，请检查文件后重试。";
+                importLayer.style.display = "flex";
+            }
+        }
+
+        rosterFileInput.addEventListener("change", event => {
+            handleRosterFile(event.target.files && event.target.files[0]);
+        });
+
+        function decodeTextBuffer(buffer) {
+            const bytes = new Uint8Array(buffer);
+            if (bytes[0] === 0xFF && bytes[1] === 0xFE) return new TextDecoder("utf-16le").decode(bytes);
+            if (bytes[0] === 0xFE && bytes[1] === 0xFF) return new TextDecoder("utf-16be").decode(bytes);
+            if (bytes[0] === 0xEF && bytes[1] === 0xBB && bytes[2] === 0xBF) return new TextDecoder("utf-8").decode(bytes);
+
+            const utf8 = new TextDecoder("utf-8", { fatal: false }).decode(bytes);
+            const brokenChars = (utf8.match(/\uFFFD/g) || []).length;
+            if (brokenChars) {
+                try { return new TextDecoder("gb18030", { fatal: false }).decode(bytes); } catch (error) { return utf8; }
+            }
+            return utf8;
+        }
+
+        async function extractDocxText(buffer) {
+            const xmlBytes = await readDocxZipEntry(new Uint8Array(buffer), "word/document.xml");
+            if (!xmlBytes) throw new Error("未在该 Word 文件中找到正文内容。");
+
+            const xml = new TextDecoder("utf-8").decode(xmlBytes);
+            const documentXml = new DOMParser().parseFromString(xml, "application/xml");
+            if (documentXml.querySelector("parsererror")) throw new Error("Word 文档内容无法解析。");
+
+            const wordNs = "http://schemas.openxmlformats.org/wordprocessingml/2006/main";
+            const paragraphs = [...documentXml.getElementsByTagNameNS(wordNs, "p")];
+            const text = paragraphs.map(paragraph => {
+                const fragments = [...paragraph.getElementsByTagNameNS(wordNs, "t")];
+                return fragments.map(node => node.textContent || "").join("");
+            }).join("\n");
+
+            return text || [...documentXml.getElementsByTagNameNS(wordNs, "t")]
+                .map(node => node.textContent || "")
+                .join("\n");
+        }
+
+        function readUint16(bytes, offset) {
+            return bytes[offset] | (bytes[offset + 1] << 8);
+        }
+
+        function readUint32(bytes, offset) {
+            return (bytes[offset]
+                | (bytes[offset + 1] << 8)
+                | (bytes[offset + 2] << 16)
+                | (bytes[offset + 3] << 24)) >>> 0;
+        }
+
+        async function readDocxZipEntry(bytes, targetName) {
+            const endSignature = 0x06054B50;
+            let endOffset = -1;
+            const searchStart = Math.max(0, bytes.length - 65557);
+            for (let offset = bytes.length - 22; offset >= searchStart; offset--) {
+                if (readUint32(bytes, offset) === endSignature) {
+                    endOffset = offset;
+                    break;
+                }
+            }
+            if (endOffset < 0) throw new Error("该文件不是有效的 .docx 文档。");
+
+            const entryCount = readUint16(bytes, endOffset + 10);
+            let centralOffset = readUint32(bytes, endOffset + 16);
+            const centralSignature = 0x02014B50;
+            const localSignature = 0x04034B50;
+            const nameDecoder = new TextDecoder("utf-8");
+
+            for (let index = 0; index < entryCount; index++) {
+                if (readUint32(bytes, centralOffset) !== centralSignature) throw new Error("Word 文档压缩目录异常。");
+
+                const flags = readUint16(bytes, centralOffset + 8);
+                const compression = readUint16(bytes, centralOffset + 10);
+                const compressedSize = readUint32(bytes, centralOffset + 20);
+                const nameLength = readUint16(bytes, centralOffset + 28);
+                const extraLength = readUint16(bytes, centralOffset + 30);
+                const commentLength = readUint16(bytes, centralOffset + 32);
+                const localOffset = readUint32(bytes, centralOffset + 42);
+                const nameBytes = bytes.slice(centralOffset + 46, centralOffset + 46 + nameLength);
+                const entryName = nameDecoder.decode(nameBytes);
+
+                if (entryName === targetName) {
+                    if (readUint32(bytes, localOffset) !== localSignature) throw new Error("Word 文档正文位置异常。");
+                    const localNameLength = readUint16(bytes, localOffset + 26);
+                    const localExtraLength = readUint16(bytes, localOffset + 28);
+                    const dataStart = localOffset + 30 + localNameLength + localExtraLength;
+                    const compressed = bytes.slice(dataStart, dataStart + compressedSize);
+
+                    if (compression === 0) return compressed;
+                    if (compression !== 8) throw new Error("该 Word 文件使用了不支持的压缩格式。");
+                    if (!("DecompressionStream" in window)) {
+                        throw new Error("当前浏览器不支持 .docx 解压，请使用最新版 Chrome、Edge 或 Safari，或先另存为 .txt。\n");
+                    }
+                    const stream = new Blob([compressed]).stream().pipeThrough(new DecompressionStream("deflate-raw"));
+                    return new Uint8Array(await new Response(stream).arrayBuffer());
+                }
+
+                centralOffset += 46 + nameLength + extraLength + commentLength;
+            }
+            return null;
+        }
+
+        function confirmRosterImport() {
+            const imported = parseImportedNames(importNamesText.value);
+            const mode = document.querySelector('input[name="importMode"]:checked').value;
+            if (!imported.length) {
+                importStatus.textContent = "请至少保留一个可导入的名称。";
+                importNamesText.focus();
+                return;
+            }
+
+            if (mode === "replace") {
+                renderRosterEditor(imported.map(name => ({ name, weight: 1 })));
+                hideRosterImport();
+                return;
+            }
+
+            const existing = getCurrentEditorNames();
+            const toAdd = imported.filter(name => !existing.has(name));
+            if (!toAdd.length) {
+                importStatus.textContent = "没有可新增的名称，导入内容均已在当前名单中。";
+                return;
+            }
+
+            toAdd.forEach(name => rosterBody.appendChild(createRosterRow(name, 1)));
+            updateProbabilityLabels();
+            hideRosterImport();
+        }
+
+        function renderRosterEditor(roster) {
+            rosterBody.innerHTML = "";
+            roster.forEach(item => rosterBody.appendChild(createRosterRow(item.name, item.weight, item.enabled !== false)));
+            updateProbabilityLabels();
+        }
+
+        function createRosterRow(name = "", weight = 1, enabled = true) {
+            const row = document.createElement("tr");
+
+            const nameCell = document.createElement("td");
+            nameCell.className = "roster-name-cell";
+
+            const checkInput = document.createElement("input");
+            checkInput.type = "checkbox";
+            checkInput.checked = enabled;
+            checkInput.className = "roster-check";
+            checkInput.setAttribute("aria-label", `选择 ${name || "此抽取名称"}`);
+            checkInput.title = "勾选后参与抽取";
+            checkInput.addEventListener("change", () => {
+                row.classList.toggle("is-unselected", !checkInput.checked);
+                updateProbabilityLabels();
+            });
+
+            const nameInput = document.createElement("input");
+            nameInput.type = "text";
+            nameInput.value = name;
+            nameInput.maxLength = 40;
+            nameInput.className = "roster-name";
+            nameInput.setAttribute("aria-label", "抽取名称");
+            nameInput.addEventListener("input", () => {
+                checkInput.setAttribute("aria-label", `选择 ${nameInput.value.trim() || "此抽取名称"}`);
+            });
+            nameCell.append(checkInput, nameInput);
+
+            const weightCell = document.createElement("td");
+            const weightInput = document.createElement("input");
+            weightInput.type = "number";
+            weightInput.min = "0";
+            weightInput.max = "9999";
+            weightInput.step = "0.1";
+            weightInput.value = weight;
+            weightInput.className = "weight-input";
+            weightInput.setAttribute("aria-label", "随机权重");
+            weightInput.addEventListener("input", updateProbabilityLabels);
+            weightCell.appendChild(weightInput);
+
+            const probabilityCell = document.createElement("td");
+            probabilityCell.className = "probability-cell";
+            probabilityCell.textContent = "0%";
+
+            const actionCell = document.createElement("td");
+            const removeButton = document.createElement("button");
+            removeButton.type = "button";
+            removeButton.textContent = "删除";
+            removeButton.addEventListener("click", () => {
+                row.remove();
+                updateProbabilityLabels();
+            });
+            actionCell.appendChild(removeButton);
+
+            row.classList.toggle("is-unselected", !enabled);
+            row.append(nameCell, weightCell, probabilityCell, actionCell);
+            return row;
+        }
+
+        function addRosterRow() {
+            const row = createRosterRow("", 1, true);
+            rosterBody.appendChild(row);
+            updateProbabilityLabels();
+            row.querySelector(".roster-name").focus();
+        }
+
+        function updateSelectAllRosterState() {
+            const checks = [...rosterBody.querySelectorAll(".roster-check")];
+            const selectedCount = checks.filter(check => check.checked).length;
+            selectAllRoster.checked = checks.length > 0 && selectedCount === checks.length;
+            selectAllRoster.indeterminate = selectedCount > 0 && selectedCount < checks.length;
+            selectAllRoster.title = selectAllRoster.checked ? "取消全选" : "全选";
+        }
+
+        function updateProbabilityLabels() {
+            const rows = [...rosterBody.querySelectorAll("tr")];
+            const enabledRows = rows.filter(row => row.querySelector(".roster-check")?.checked);
+            const total = enabledRows.reduce((sum, row) => {
+                return sum + clampNumber(row.querySelector(".weight-input").value, 0, 9999, 0);
+            }, 0);
+
+            rows.forEach(row => {
+                const isEnabled = row.querySelector(".roster-check")?.checked;
+                const weight = clampNumber(row.querySelector(".weight-input").value, 0, 9999, 0);
+                const cell = row.querySelector(".probability-cell");
+                const percent = isEnabled && total > 0 ? (weight / total) * 100 : 0;
+                cell.textContent = isEnabled ? `${percent.toFixed(percent >= 10 ? 1 : 2)}%` : "—";
+                row.classList.toggle("is-unselected", !isEnabled);
+            });
+
+            updateSelectAllRosterState();
+        }
+
+        function collectRoster() {
+            return sanitizeRoster([...rosterBody.querySelectorAll("tr")].map(row => ({
+                name: row.querySelector(".roster-name").value,
+                weight: row.querySelector(".weight-input").value,
+                enabled: row.querySelector(".roster-check").checked
+            })));
+        }
+
+        async function saveSettings() {
+            const roster = collectRoster();
+            const enabledRoster = roster.filter(item => item.enabled !== false);
+            if (enabledRoster.length && !enabledRoster.some(item => item.weight > 0)) enabledRoster[0].weight = 1;
+            const title = document.getElementById("settingTitle").value.trim().slice(0, 30) || emptyConfig.title;
+            const requestedPassword = document.getElementById("settingPassword").value;
+            const theme = document.getElementById("settingTheme").value;
+
+            let auth = config.auth;
+            if (requestedPassword) auth = await createPasswordRecord(requestedPassword);
+
+            config = {
+                ...config,
+                title,
+                auth,
+                theme: supportedThemes.includes(theme) ? theme : emptyConfig.theme,
+                repeatChance: clampNumber(repeatChanceValue.value, 0, 100, 0),
+                roster
+            };
+
+            drawHistory = drawHistory.filter(name => config.roster.some(item => item.name === name && item.enabled !== false));
+            try {
+                await persistConfig();
+            } catch (error) {
+                alert("保存失败：当前浏览器无法完成本地加密存储。请使用新版 Chrome、Edge 或 Safari。\n");
+                return;
+            }
+            applyAppearance();
+            renderBall();
+            hideSettings();
+        }
+
+        window.onload = async function() {
+            try {
+                config = await loadConfig();
+                appReady = true;
+                applyAppearance();
+                initStars();
+                initBall();
+                bindHiddenAccess();
+                bindThemePicker();
+            } catch (error) {
+                pageTitle.textContent = "浏览器不支持加密存储";
+                startBtn.disabled = true;
+            }
+        };
+    </script>
+</body>
+</html>
