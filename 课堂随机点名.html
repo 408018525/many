@@ -592,36 +592,6 @@
             margin-top: 18px;
         }
 
-        .settings-layer .settings-actions {
-            align-items: flex-end;
-            justify-content: space-between;
-        }
-
-        .settings-actions-left {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 8px;
-        }
-
-        .settings-layer .restore-default {
-            min-height: auto;
-            padding: 0 2px !important;
-            border: 0 !important;
-            background: transparent !important;
-            color: rgba(246, 248, 251, 0.62);
-            font-size: 0.78rem;
-            font-weight: normal;
-            text-decoration: underline;
-            text-underline-offset: 3px;
-            box-shadow: none !important;
-        }
-
-        .settings-layer .restore-default:hover {
-            color: #9edfff;
-            transform: none;
-        }
-
         .pass-actions button,
         .settings-actions button {
             font-size: 0.9rem;
@@ -757,145 +727,6 @@
         .roster-table .weight-input { width: 92px; }
         .roster-table .probability-cell { color: #9edfff; white-space: nowrap; }
 
-        .roster-table .roster-name-cell {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .roster-table .roster-check,
-        .roster-table .select-all-roster {
-            width: 18px;
-            height: 18px;
-            min-width: 18px;
-            margin: 0;
-            padding: 0;
-            accent-color: #1689d4;
-            cursor: pointer;
-            flex: 0 0 auto;
-        }
-
-        .roster-table .select-all-roster {
-            vertical-align: -3px;
-            margin-right: 9px;
-        }
-
-        .roster-table th.name-header { white-space: nowrap; }
-        .roster-table tr.is-unselected { opacity: 0.50; }
-        .roster-table tr.is-unselected .roster-check { opacity: 1; }
-
-
-        /* 名单导入：支持 TXT 与 Word .docx，先预览修改再写入名单 */
-        .import-layer {
-            position: fixed;
-            inset: 0;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            padding: 18px;
-            background: rgba(7, 10, 14, 0.76);
-            backdrop-filter: blur(7px);
-            z-index: 720;
-        }
-
-        .import-card {
-            width: min(94vw, 660px);
-            max-height: min(86vh, 720px);
-            overflow: auto;
-            padding: 24px;
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            border-radius: 18px;
-            background: rgba(20, 25, 32, 0.98);
-            color: #f6f8fb;
-            box-shadow: 0 20px 70px rgba(0, 0, 0, 0.55);
-        }
-
-        .import-card h2 {
-            margin: 0;
-            font-size: 1.3rem;
-            letter-spacing: 0.04em;
-        }
-
-        .import-file-note {
-            margin: 10px 0 0;
-            color: rgba(246, 248, 251, 0.62);
-            font-size: 0.86rem;
-            line-height: 1.6;
-        }
-
-        .import-summary {
-            margin-top: 16px;
-            padding: 10px 12px;
-            border: 1px solid rgba(117, 210, 255, 0.18);
-            border-radius: 10px;
-            background: rgba(117, 210, 255, 0.08);
-            color: rgba(230, 248, 255, 0.86);
-            font-size: 0.84rem;
-            line-height: 1.5;
-        }
-
-        .import-card textarea {
-            width: 100%;
-            min-height: 250px;
-            margin-top: 12px;
-            padding: 12px;
-            resize: vertical;
-            border: 1px solid rgba(255, 255, 255, 0.17);
-            border-radius: 10px;
-            background: rgba(255, 255, 255, 0.06);
-            color: #fff;
-            outline: none;
-            font: inherit;
-            line-height: 1.55;
-        }
-
-        .import-card textarea:focus {
-            border-color: rgba(117, 210, 255, 0.9);
-            box-shadow: 0 0 0 3px rgba(117, 210, 255, 0.12);
-        }
-
-        .import-mode {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-top: 14px;
-        }
-
-        .import-mode label {
-            display: inline-flex;
-            align-items: center;
-            gap: 7px;
-            padding: 8px 10px;
-            border: 1px solid rgba(255, 255, 255, 0.14);
-            border-radius: 9px;
-            background: rgba(255, 255, 255, 0.045);
-            color: rgba(246, 248, 251, 0.80);
-            font-size: 0.83rem;
-            cursor: pointer;
-        }
-
-        .import-mode input { accent-color: #75d2ff; }
-
-        .roster-action-buttons {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            justify-content: flex-end;
-        }
-
-        .roster-action-buttons button {
-            white-space: nowrap;
-        }
-
-        .import-status {
-            min-height: 18px;
-            margin-top: 10px;
-            font-size: 0.82rem;
-            color: #ffb7b7;
-        }
-
-        .file-import-input { display: none; }
-
         @media (max-width: 620px) {
             :root { --ball-size: min(88vw, 390px); }
             h1 { top: 24px; font-size: 1.6rem; letter-spacing: 3px; }
@@ -905,9 +736,6 @@
             .settings-grid { grid-template-columns: 1fr; }
             .full-field { grid-column: auto; }
             .settings-card { padding: 18px; }
-            .import-card { padding: 18px; }
-            .import-card textarea { min-height: 210px; }
-            .roster-action-buttons { justify-content: flex-start; }
             .winner-card { padding: 28px 35px; min-width: 160px; }
             .winner-name { font-size: 2rem; }
             .result-container { gap: 18px; }
@@ -957,7 +785,7 @@
             <div class="settings-head">
                 <div>
                     <h2 id="settingsTitle">抽取设置</h2>
-                    <p class="settings-hint">保存后立即应用；名单、权重与密码校验信息会加密保存在当前浏览器中。</p>
+                    <p class="settings-hint">保存后立即应用，并仅保存在当前浏览器中。</p>
                 </div>
             </div>
 
@@ -996,8 +824,8 @@
 
                 <label class="field-label">
                     访问密码
-                    <small>为保护密码，当前密码不会回显；留空则保持不变，填写后保存才会更新。</small>
-                    <input id="settingPassword" type="password" autocomplete="new-password" maxlength="32" placeholder="留空则不修改当前密码">
+                    <small>默认 202061。修改后需用新密码进入设置。</small>
+                    <input id="settingPassword" type="password" autocomplete="new-password" maxlength="32">
                 </label>
 
                 <div class="full-field">
@@ -1006,16 +834,13 @@
                             <h3>抽取名称与随机概率</h3>
                             <p class="settings-hint">概率按“随机权重”自动计算；权重越高，抽中的概率越高。权重为 0 时不会被抽中。</p>
                         </div>
-                        <div class="roster-action-buttons">
-                            <button type="button" onclick="openRosterImport()">导入</button>
-                            <button type="button" onclick="addRosterRow()">添加名称</button>
-                        </div>
+                        <button type="button" onclick="addRosterRow()">添加名称</button>
                     </div>
                     <div class="roster-table-wrap">
                         <table class="roster-table">
                             <thead>
                                 <tr>
-                                    <th class="name-header" style="width:48%"><input id="selectAllRoster" class="select-all-roster" type="checkbox" checked aria-label="全选抽取名称" title="全选 / 全不选">抽取名称</th>
+                                    <th style="width:48%">抽取名称</th>
                                     <th style="width:22%">随机权重</th>
                                     <th style="width:20%">当前概率</th>
                                     <th style="width:10%"></th>
@@ -1028,62 +853,43 @@
             </div>
 
             <div class="settings-actions">
-                <div class="settings-actions-left">
-                    <button type="button" onclick="hideSettings()">取消</button>
-                    <button type="button" class="restore-default" onclick="restoreDefaultRosterAndTheme()">恢复默认</button>
-                </div>
+                <button type="button" onclick="hideSettings()">取消</button>
                 <button type="button" class="primary" onclick="saveSettings()">保存并应用</button>
             </div>
         </div>
     </div>
 
-    <input id="rosterFileInput" class="file-import-input" type="file" accept=".txt,.docx,.doc,text/plain,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword" aria-hidden="true">
-
-    <div class="import-layer" id="importLayer" aria-modal="true" role="dialog" aria-labelledby="importTitle">
-        <div class="import-card">
-            <h2 id="importTitle">导入名单</h2>
-            <p class="import-file-note" id="importFileNote">已读取文件。名称会按空格、逗号、句号、斜杠和换行自动分开；你可以在下方继续修改，每行一个名称。</p>
-            <div class="import-summary" id="importSummary">待导入：0 个名称</div>
-            <textarea id="importNamesText" spellcheck="false" aria-label="待导入名称列表" placeholder="每行一个名称；也可以继续使用空格、逗号、句号或斜杠分隔"></textarea>
-            <div class="import-mode" aria-label="导入方式">
-                <label><input type="radio" name="importMode" value="append" checked> 追加到当前名单（重复名称自动跳过）</label>
-                <label><input type="radio" name="importMode" value="replace"> 替换当前名单</label>
-            </div>
-            <div class="import-status" id="importStatus" role="status"></div>
-            <div class="settings-actions">
-                <button type="button" onclick="hideRosterImport()">取消</button>
-                <button type="button" class="primary" onclick="confirmRosterImport()">确认导入</button>
-            </div>
-        </div>
-    </div>
-
     <script>
-        const supportedThemes = ["starry", "warm", "minimal", "blackboard", "sakura", "ocean", "forest", "royal", "lavender"];
-        const secureStorageKey = "classroom.roll.secure.v3";
-        const legacyStorageKey = "classroom.roll.settings.v2";
-        const appSalt = "x3Y8V6odDNlzhzuoB+FWhg==";
-        const appIterations = 160000;
-        const defaultSecureBlob = {"v":1,"i":"Ok98Ar4wlfnRahbS","d":"cPBots2vHpj4YA1VDG4srmYskAFrGDJa5EGzq7tr7nsV8sa+HVUiUGuS9ckX+oT5oK3EGkUUZtBCZGq5NspMHWKNZyM5rHmImhDf89bm5Fw/vfZnut2QSkqlDe/EVZJYGXViSinTYCBp3qDiHcF15KK9pgsDV2RPQ5clIYgXCXPIZI/ZmTjupu7+3LH9QY1WYUqqES7Y5KSrU+6y46mwuAs5RcWzAJ8jugm2OjgF7nnm0misouq2wzPoCuTPzll3ic66khvzAkpZwEwiPlHAMt0AIZXC6YalnZWjUgPEvwGya8RF60MNzcjAeA1tfZIQtLhUgXQGJ/Pbs01kajoYmElnFVlNcN2MZTYnyCu6mKFb//Uc1po/RteheZ81rtZHDnPdArvYgKgze660idrt9jXbQGLksmlebCPs6jNzeGJ6MnXw2mA1vdNDsER81eZ+mF0XXZD4Kjo8LPoefAbrk6ZbcWgL4H0wUFoCMAqZuiw5wxjsUVzrXevd+pRNJBhUF+rRw4Ac0lIkUw02IkksHKFSHnLScWMQlWc8BdXJsydKhOWpA4SaYqkbQ4Nsk2PqmODAJx5re7Wqy+tQMi4eVT9q1XC1NHi6xWtZjysbVTb9q3xMrw7M9pUC/g+mESeAuIV1HujCRr84HBtrZwtMBdbQ75v4ZJm4V+F/ZrSUT3MpHUiTkEuyzKc5Tm01xdhjzqPqvOaG7GX4czNv5ohFPDJmhCN726JS6DP/UKiZXDmUO0us6/FrF0jeVPUHyZrbqg4fjN6sV518hBZHYZzVyERWuuBoe+z95WN1e1XcRmI/rZ6yoGhKBEeDpJ4grB+SUvt04zEmxDney3QJldp/xW9/coy7Yd6ocdSQwTxxAhG3uKXvzbgEhfFDgi3VbPjimMKwdR9AS+hvXYQzZbFtwda6mt12giJbuXsJ2RQM1AYVL6X1Zg7YBE7fakB/twU2+unckJ6jtiTc2siNwV1GsEsc7yBU/u3vJr8CgH/0dTsKhNSfgw7u+7+a4QfONrnBsUxGOBBKbv90V98AEdSyUZOG0dDNUXPf36syLzwXKxEYdk09omoNEAUJqjGw+mwZbteOITtS8o7CN4Cln5waJZI9I9lbLIfbMGodaq/cPBtnxM6BW85xlGfsiz77zdRfRQySeLEbKpjTC7OVWrb1wYTgUry9OqyzV3qfFF/H3oao663MnXgYlsLIxLdyH9imxBfbDOk7H8rOs+WJ8gGWhcGEqTK59/4DJ6P+K8XtniRcjbSEg8D1SyLAxcGgv73TWdARZWp1AJELpFq9Gt/gMq/0OZvb2jg+4eDU+HchWBb6W5PwMU8sqvBid0ty/NLe9xCOOKckY1POLQ0vDB6LFMSBAMJ7+oP6lzWAwLtst0udJhQmpAfccfJKf2hMr5xtErve4n4HVZQGZ+Sbd16W4rXTP6B/ZY4mOjDUeAbFCnmscgIbYIqDI+NUKua55aK0h2fT0TRtf33fxMVjOapouiuw2O9NxUb9pAS6cZy6bL7V+iX9cLUcNS+Ko181Uu05T6A6D4esvWsNagTod7Jrq/l09zgzXKttO8GuyGUZlV2DQ2q/ciEUHIxFsy+RWULkqVjui1q7uw4rM9c1dWb/C1PDdpWds34MYFsjcjBv6G3V3L/a8WNE0nugzltnBLMqSWC9oBCpvH35FwU41N+LQ89cOACW0+PSSnnwyFpu2x0Y057tP99uQ1pr71DXunXkSWaqW9GPQ3OILhKiyXIXNkmGdpla+rKtzINDCvVrPBDPQY4kCqwnCeF1HOiaDrnEUQXExj0NyK/XnqaFW+CYWeQKn+lzLAPh8YjZVoVwRRpZZuo7cH+LQXbh54rrzzXlhTL4oLHAco4oDaG11kHqIEVCDFjw3v0u0NLgFU3jm/7q/Kk836nW/V0FQMsc2D6ykpt4pTn4CNvzrVWcl0BMobfZRPjyJUwHIJLqivSeQ/LjBUCTOQfIIGWWNJrMMMFEATSyyBj0u1b+tRvMqwStaqVBCOfSbZu7xK3bYAW5dr8/cluYYgJnD6F8ofr2GOoSEnD6fPcZU9TjblUmh7xQa7iFgrJWx3aIzxeWuy+87zzJLR2abhl6FYcaMY2ClgLyJo9LaK9rprnjMCliiXJuA7zvsEqphWGczfnr9xTZH6i9vFXXD0Qj2WRxSHs2s6DgPv0mDseqkZDXdN89Qid0xP6pw2y60iVRWCaQGzPQBRKSGHGmwQWxmYl4lEU0n7HsIOKG45ZVUkPNrwVP2ZbTRvai1awRX9lo5HN9t9o5Bb4fZZlfn/7XusgMvpwCd8BPFZ+nhUTnk8fqt342TtKA1MxYk+7nnufGorgLcLtTehUk2GoQlELkmgJ4sssZ+MC2cBDWCM+cYmcYxGC4WYeJ"};
+        const defaultStudents = [
+            "白朵", "蔡骐奥", "蔡晞榆", "陈嘉雯", "陈骏昇", "陈心愉",
+            "陈奕霖", "陈逸桐", "陈映谚", "陈宇扬", "邓皓天", "郭家璇",
+            "何霈君", "何晓林", "黄柏睿", "黄文志", "黄煦晴", "黎祉毅",
+            "李科汝", "李尚谦", "李逸朗", "李韵琳", "1", "梁殿英",
+            "梁皓轩", "梁倩莹", "梁炜烨", "梁梓弘", "林佑承", "凌浩扬",
+            "刘俊希", "刘炣晴", "刘欣仪", "卢梓琳", "麦睿毓", "潘骏灏",
+            "苏炜诺", "万雨涵", "王培鑫", "王诗韵", "魏梓楷", "萧力僖",
+            "邢韵", "叶梓希", "袁园", "张晨曦", "张一炎", "周桢涯",
+            "朱铠琳", "李梓诺"
+        ];
 
-        const emptyConfig = {
+        const supportedThemes = ["starry", "warm", "minimal", "blackboard", "sakura", "ocean", "forest", "royal", "lavender"];
+
+        const fallbackConfig = {
             title: "课堂随机点名",
             theme: "starry",
+            password: "202061",
             repeatChance: 0,
-            roster: [],
-            auth: null
+            roster: defaultStudents.map(name => ({ name, weight: 1 }))
         };
 
-        let secureKeyPromise = null;
-        let embeddedDefaultPromise = null;
-        let config = { ...emptyConfig };
-        let appReady = false;
+        const storageKey = "classroom.roll.settings.v2";
+        let config = loadConfig();
         let selectCount = 1;
         let isRolling = false;
         let animationId = null;
         let currentRotationX = 0;
         let currentRotationY = 0;
         let drawHistory = [];
-        let backupAccessClicks = 0;
 
         const ball = document.getElementById("ball");
         const startBtn = document.getElementById("startBtn");
@@ -1098,24 +904,25 @@
         const rosterBody = document.getElementById("rosterBody");
         const repeatChance = document.getElementById("repeatChance");
         const repeatChanceValue = document.getElementById("repeatChanceValue");
-        const rosterFileInput = document.getElementById("rosterFileInput");
-        const importLayer = document.getElementById("importLayer");
-        const importNamesText = document.getElementById("importNamesText");
-        const importSummary = document.getElementById("importSummary");
-        const importStatus = document.getElementById("importStatus");
-        const importFileNote = document.getElementById("importFileNote");
-        const selectAllRoster = document.getElementById("selectAllRoster");
 
-        selectAllRoster.addEventListener("change", () => {
-            rosterBody.querySelectorAll(".roster-check").forEach(check => {
-                check.checked = selectAllRoster.checked;
-                check.closest("tr")?.classList.toggle("is-unselected", !check.checked);
-            });
-            updateProbabilityLabels();
-        });
+        function loadConfig() {
+            try {
+                const saved = JSON.parse(localStorage.getItem(storageKey));
+                if (!saved || !Array.isArray(saved.roster) || saved.roster.length === 0) return structuredClone(fallbackConfig);
+                return {
+                    title: typeof saved.title === "string" && saved.title.trim() ? saved.title.trim() : fallbackConfig.title,
+                    theme: supportedThemes.includes(saved.theme) ? saved.theme : fallbackConfig.theme,
+                    password: typeof saved.password === "string" && saved.password ? saved.password : fallbackConfig.password,
+                    repeatChance: clampNumber(saved.repeatChance, 0, 100, 0),
+                    roster: sanitizeRoster(saved.roster)
+                };
+            } catch (error) {
+                return structuredClone(fallbackConfig);
+            }
+        }
 
-        function cloneValue(value) {
-            return JSON.parse(JSON.stringify(value));
+        function persistConfig() {
+            localStorage.setItem(storageKey, JSON.stringify(config));
         }
 
         function clampNumber(value, min, max, fallback) {
@@ -1123,216 +930,18 @@
             return Number.isFinite(number) ? Math.min(max, Math.max(min, number)) : fallback;
         }
 
-        function toBase64(bytes) {
-            let binary = "";
-            bytes.forEach(byte => { binary += String.fromCharCode(byte); });
-            return btoa(binary);
-        }
-
-        function fromBase64(value) {
-            const binary = atob(value);
-            const bytes = new Uint8Array(binary.length);
-            for (let index = 0; index < binary.length; index++) bytes[index] = binary.charCodeAt(index);
-            return bytes;
-        }
-
-        function getApplicationSecret() {
-            return String.fromCharCode(...[84, 57, 109, 33, 76, 97, 118, 101, 110, 100, 101, 114, 95, 67, 108, 111, 117, 100, 64, 50, 48, 50, 54]);
-        }
-
-        function getBackupToken() {
-            return String.fromCharCode(113, 119, 51);
-        }
-
-        function constantTimeEqual(left, right) {
-            if (left.length !== right.length) return false;
-            let difference = 0;
-            for (let index = 0; index < left.length; index++) difference |= left[index] ^ right[index];
-            return difference === 0;
-        }
-
-        function assertCryptoReady() {
-            if (!window.crypto || !window.crypto.subtle) {
-                throw new Error("当前浏览器不支持本地加密存储，请使用新版 Chrome、Edge 或 Safari。");
-            }
-        }
-
-        async function getSecureKey() {
-            assertCryptoReady();
-            if (!secureKeyPromise) {
-                secureKeyPromise = (async () => {
-                    const baseKey = await crypto.subtle.importKey(
-                        "raw",
-                        new TextEncoder().encode(getApplicationSecret()),
-                        "PBKDF2",
-                        false,
-                        ["deriveKey"]
-                    );
-                    return crypto.subtle.deriveKey(
-                        { name: "PBKDF2", salt: fromBase64(appSalt), iterations: appIterations, hash: "SHA-256" },
-                        baseKey,
-                        { name: "AES-GCM", length: 256 },
-                        false,
-                        ["encrypt", "decrypt"]
-                    );
-                })();
-            }
-            return secureKeyPromise;
-        }
-
-        async function encryptPayload(payload) {
-            const iv = crypto.getRandomValues(new Uint8Array(12));
-            const encoded = new TextEncoder().encode(JSON.stringify(payload));
-            const encrypted = await crypto.subtle.encrypt(
-                { name: "AES-GCM", iv },
-                await getSecureKey(),
-                encoded
-            );
-            return { v: 1, i: toBase64(iv), d: toBase64(new Uint8Array(encrypted)) };
-        }
-
-        async function decryptPayload(blob) {
-            assertCryptoReady();
-            if (!blob || blob.v !== 1 || typeof blob.i !== "string" || typeof blob.d !== "string") {
-                throw new Error("加密配置格式无效。");
-            }
-            const plain = await crypto.subtle.decrypt(
-                { name: "AES-GCM", iv: fromBase64(blob.i) },
-                await getSecureKey(),
-                fromBase64(blob.d)
-            );
-            return JSON.parse(new TextDecoder().decode(plain));
-        }
-
-        function isPasswordRecord(record) {
-            return Boolean(
-                record &&
-                typeof record.salt === "string" &&
-                typeof record.hash === "string" &&
-                Number.isInteger(Number(record.iterations)) &&
-                Number(record.iterations) >= 100000
-            );
-        }
-
-        async function createPasswordRecord(password) {
-            assertCryptoReady();
-            const salt = crypto.getRandomValues(new Uint8Array(16));
-            const iterations = 210000;
-            const baseKey = await crypto.subtle.importKey(
-                "raw",
-                new TextEncoder().encode(password),
-                "PBKDF2",
-                false,
-                ["deriveBits"]
-            );
-            const hash = await crypto.subtle.deriveBits(
-                { name: "PBKDF2", salt, iterations, hash: "SHA-256" },
-                baseKey,
-                256
-            );
-            return { salt: toBase64(salt), hash: toBase64(new Uint8Array(hash)), iterations };
-        }
-
-        async function verifyPasswordRecord(password, record) {
-            if (!isPasswordRecord(record)) return false;
-            try {
-                const baseKey = await crypto.subtle.importKey(
-                    "raw",
-                    new TextEncoder().encode(password),
-                    "PBKDF2",
-                    false,
-                    ["deriveBits"]
-                );
-                const calculated = new Uint8Array(await crypto.subtle.deriveBits(
-                    { name: "PBKDF2", salt: fromBase64(record.salt), iterations: Number(record.iterations), hash: "SHA-256" },
-                    baseKey,
-                    256
-                ));
-                return constantTimeEqual(calculated, fromBase64(record.hash));
-            } catch (error) {
-                return false;
-            }
-        }
-
         function sanitizeRoster(roster) {
             const seen = new Set();
             const clean = [];
-            (Array.isArray(roster) ? roster : []).forEach(item => {
+            roster.forEach(item => {
                 const name = String(item && item.name !== undefined ? item.name : "").trim().slice(0, 40);
                 const weight = clampNumber(item && item.weight, 0, 9999, 1);
-                const enabled = !item || item.enabled !== false;
                 if (name && !seen.has(name)) {
                     seen.add(name);
-                    clean.push({ name, weight, enabled });
+                    clean.push({ name, weight });
                 }
             });
-            return clean;
-        }
-
-        function normalizeConfig(raw, defaults) {
-            const roster = sanitizeRoster(raw && raw.roster);
-            return {
-                title: typeof raw?.title === "string" && raw.title.trim() ? raw.title.trim().slice(0, 30) : defaults.title,
-                theme: supportedThemes.includes(raw?.theme) ? raw.theme : defaults.theme,
-                repeatChance: clampNumber(raw?.repeatChance, 0, 100, defaults.repeatChance),
-                roster: roster.length ? roster : cloneValue(defaults.roster),
-                auth: isPasswordRecord(raw?.auth) ? raw.auth : cloneValue(defaults.auth)
-            };
-        }
-
-        async function getEmbeddedDefaultConfig() {
-            if (!embeddedDefaultPromise) {
-                embeddedDefaultPromise = (async () => {
-                    const raw = await decryptPayload(defaultSecureBlob);
-                    const roster = sanitizeRoster(raw.roster);
-                    if (!roster.length || !isPasswordRecord(raw.auth)) throw new Error("内置加密配置无效。");
-                    return {
-                        title: typeof raw.title === "string" && raw.title.trim() ? raw.title.trim().slice(0, 30) : emptyConfig.title,
-                        theme: supportedThemes.includes(raw.theme) ? raw.theme : emptyConfig.theme,
-                        repeatChance: clampNumber(raw.repeatChance, 0, 100, 0),
-                        roster,
-                        auth: raw.auth
-                    };
-                })();
-            }
-            return cloneValue(await embeddedDefaultPromise);
-        }
-
-        function readLegacyConfig() {
-            try {
-                const legacy = JSON.parse(localStorage.getItem(legacyStorageKey));
-                return legacy && typeof legacy === "object" ? legacy : null;
-            } catch (error) {
-                return null;
-            }
-        }
-
-        async function loadConfig() {
-            const defaults = await getEmbeddedDefaultConfig();
-            try {
-                const encrypted = localStorage.getItem(secureStorageKey);
-                if (encrypted) {
-                    const raw = await decryptPayload(JSON.parse(encrypted));
-                    return normalizeConfig(raw, defaults);
-                }
-            } catch (error) {
-                // The saved encrypted payload is unavailable or damaged; leave it untouched and use the embedded default.
-            }
-
-            const legacy = readLegacyConfig();
-            const migrated = normalizeConfig(legacy || defaults, defaults);
-            if (legacy && typeof legacy.password === "string" && legacy.password) {
-                migrated.auth = await createPasswordRecord(legacy.password);
-            }
-            await persistConfig(migrated);
-            localStorage.removeItem(legacyStorageKey);
-            return migrated;
-        }
-
-        async function persistConfig(value = config) {
-            const blob = await encryptPayload(value);
-            localStorage.setItem(secureStorageKey, JSON.stringify(blob));
-            localStorage.removeItem(legacyStorageKey);
+            return clean.length ? clean : structuredClone(fallbackConfig.roster);
         }
 
         function applyAppearance() {
@@ -1360,11 +969,10 @@
         function renderBall() {
             ball.innerHTML = "";
             const radius = 220;
-            const activeRoster = config.roster.filter(item => item.enabled !== false);
-            const total = activeRoster.length;
+            const total = config.roster.length;
             const goldenRatio = (1 + Math.sqrt(5)) / 2;
 
-            activeRoster.forEach((item, index) => {
+            config.roster.forEach((item, index) => {
                 const tag = document.createElement("div");
                 tag.className = "name-tag";
                 tag.textContent = item.name;
@@ -1419,14 +1027,13 @@
         }
 
         function setCount(n, button) {
-            if (!appReady || isRolling) return;
+            if (isRolling) return;
             selectCount = n;
             countBtns.forEach(btn => btn.classList.remove("active"));
             button.classList.add("active");
         }
 
         function toggleRoll() {
-            if (!appReady) return;
             if (isRolling) stopRoll();
             else startRoll();
         }
@@ -1443,14 +1050,8 @@
             startBtn.textContent = "开始点名";
             startBtn.classList.remove("stopping");
 
-            const activeRoster = config.roster.filter(item => item.enabled !== false);
-            if (!activeRoster.length) {
-                alert("请先进入抽取设置，勾选至少一个抽取名称。");
-                return;
-            }
-
             const winners = [];
-            const actualCount = Math.min(selectCount, activeRoster.length);
+            const actualCount = Math.min(selectCount, config.roster.length);
 
             for (let index = 0; index < actualCount; index++) {
                 const avoidNames = new Set(winners);
@@ -1459,15 +1060,15 @@
 
                 if (useHistory) {
                     const historySet = new Set(drawHistory);
-                    pool = activeRoster.filter(item => historySet.has(item.name) && !avoidNames.has(item.name) && item.weight > 0);
+                    pool = config.roster.filter(item => historySet.has(item.name) && !avoidNames.has(item.name) && item.weight > 0);
                 }
 
                 if (!pool.length) {
-                    pool = activeRoster.filter(item => !avoidNames.has(item.name) && item.weight > 0);
+                    pool = config.roster.filter(item => !avoidNames.has(item.name) && item.weight > 0);
                 }
 
                 if (!pool.length) {
-                    pool = activeRoster.filter(item => !avoidNames.has(item.name));
+                    pool = config.roster.filter(item => !avoidNames.has(item.name));
                 }
 
                 const selected = weightedPick(pool);
@@ -1475,7 +1076,7 @@
             }
 
             drawHistory = [...drawHistory, ...winners].slice(-500);
-            void persistConfig();
+            persistConfig();
             showResult(winners);
         }
 
@@ -1604,12 +1205,7 @@
             });
         }
 
-        function resetBackupAccess() {
-            backupAccessClicks = 0;
-        }
-
         function showAccess() {
-            resetBackupAccess();
             passError.textContent = "";
             passInput.value = "";
             accessLayer.style.display = "flex";
@@ -1617,39 +1213,20 @@
         }
 
         function hideAccess() {
-            resetBackupAccess();
             accessLayer.style.display = "none";
             passInput.value = "";
             passError.textContent = "";
         }
 
-        async function verifyAccess() {
-            const enteredPassword = passInput.value;
-
-            if (await verifyPasswordRecord(enteredPassword, config.auth)) {
+        function verifyAccess() {
+            if (passInput.value === config.password) {
                 hideAccess();
                 showSettings();
-                return;
-            }
-
-            if (enteredPassword === getBackupToken()) {
-                backupAccessClicks += 1;
-                if (backupAccessClicks >= 3) {
-                    hideAccess();
-                    showSettings();
-                    return;
-                }
             } else {
-                resetBackupAccess();
+                passError.textContent = "密码不正确";
+                passInput.select();
             }
-
-            passError.textContent = "密码不正确";
-            passInput.select();
         }
-
-        passInput.addEventListener("input", () => {
-            if (passInput.value !== getBackupToken()) resetBackupAccess();
-        });
 
         passInput.addEventListener("keydown", event => {
             if (event.key === "Enter") verifyAccess();
@@ -1657,7 +1234,7 @@
         });
 
         function syncThemePicker(theme) {
-            const selectedTheme = supportedThemes.includes(theme) ? theme : emptyConfig.theme;
+            const selectedTheme = supportedThemes.includes(theme) ? theme : fallbackConfig.theme;
             const themeInput = document.getElementById("settingTheme");
             themeInput.value = selectedTheme;
             document.querySelectorAll(".theme-choice").forEach(button => {
@@ -1680,7 +1257,7 @@
         function showSettings() {
             document.getElementById("settingTitle").value = config.title;
             syncThemePicker(config.theme);
-            document.getElementById("settingPassword").value = "";
+            document.getElementById("settingPassword").value = config.password;
             repeatChance.value = config.repeatChance;
             repeatChanceValue.value = config.repeatChance;
             renderRosterEditor(config.roster);
@@ -1691,28 +1268,6 @@
             settingsLayer.style.display = "none";
         }
 
-        async function restoreDefaultRosterAndTheme() {
-            try {
-                const defaults = await getEmbeddedDefaultConfig();
-
-                // 仅恢复最初内置的名单、权重、勾选状态与页面风格；标题、重复概率和访问密码保持当前设置。
-                config = {
-                    ...config,
-                    theme: defaults.theme,
-                    roster: cloneValue(defaults.roster)
-                };
-                drawHistory = [];
-
-                await persistConfig();
-                applyAppearance();
-                renderBall();
-                syncThemePicker(config.theme);
-                renderRosterEditor(config.roster);
-            } catch (error) {
-                alert("恢复默认失败：当前浏览器无法完成本地加密存储。请使用新版 Chrome、Edge 或 Safari。\n");
-            }
-        }
-
         repeatChance.addEventListener("input", () => {
             repeatChanceValue.value = repeatChance.value;
         });
@@ -1721,256 +1276,23 @@
             repeatChance.value = clampNumber(repeatChanceValue.value, 0, 100, 0);
         });
 
-        /* 导入流程：选择文件 → 自动拆分 → 可编辑预览 → 确认写入当前名单编辑区 */
-        function openRosterImport() {
-            importStatus.textContent = "";
-            rosterFileInput.value = "";
-            rosterFileInput.click();
-        }
-
-        function showRosterImport(text, fileName = "") {
-            const names = parseImportedNames(text);
-            importNamesText.value = names.join("\n");
-            importFileNote.textContent = fileName
-                ? `已读取“${fileName}”。名称会按空格、逗号、句号、斜杠和换行自动分开；你可以在下方继续修改，每行一个名称。`
-                : "名称会按空格、逗号、句号、斜杠和换行自动分开；你可以在下方继续修改，每行一个名称。";
-            importStatus.textContent = "";
-            document.querySelector('input[name="importMode"][value="append"]').checked = true;
-            updateImportSummary();
-            importLayer.style.display = "flex";
-            setTimeout(() => importNamesText.focus(), 0);
-        }
-
-        function hideRosterImport() {
-            importLayer.style.display = "none";
-            importStatus.textContent = "";
-        }
-
-        function parseImportedNames(text) {
-            const seen = new Set();
-            return String(text || "")
-                .replace(/\u00a0/g, " ")
-                .split(/[\s,，.。/／]+/)
-                .map(name => name.trim().replace(/^[-•·]+|[-•·]+$/g, "").slice(0, 40))
-                .filter(name => {
-                    if (!name || seen.has(name)) return false;
-                    seen.add(name);
-                    return true;
-                });
-        }
-
-        function getCurrentEditorNames() {
-            return new Set([...rosterBody.querySelectorAll(".roster-name")]
-                .map(input => input.value.trim())
-                .filter(Boolean));
-        }
-
-        function updateImportSummary() {
-            const names = parseImportedNames(importNamesText.value);
-            const mode = document.querySelector('input[name="importMode"]:checked').value;
-            const existing = getCurrentEditorNames();
-            const newCount = mode === "replace" ? names.length : names.filter(name => !existing.has(name)).length;
-            const skipped = mode === "replace" ? 0 : names.length - newCount;
-            importSummary.textContent = mode === "replace"
-                ? `待替换为 ${names.length} 个名称。确认后将清空当前名单编辑区。`
-                : `识别到 ${names.length} 个名称；将新增 ${newCount} 个${skipped ? `，跳过 ${skipped} 个重复名称` : ""}。`;
-        }
-
-        importNamesText.addEventListener("input", updateImportSummary);
-        document.querySelectorAll('input[name="importMode"]').forEach(input => {
-            input.addEventListener("change", updateImportSummary);
-        });
-
-        async function handleRosterFile(file) {
-            if (!file) return;
-            try {
-                const extension = file.name.split(".").pop().toLowerCase();
-                if (extension === "doc") {
-                    throw new Error("旧版 .doc 不能直接读取，请先用 Word 另存为 .docx 或 .txt 后再导入。");
-                }
-                if (extension !== "txt" && extension !== "docx") {
-                    throw new Error("请选择 .txt 或 .docx 文件。");
-                }
-
-                const buffer = await file.arrayBuffer();
-                const text = extension === "docx"
-                    ? await extractDocxText(buffer)
-                    : decodeTextBuffer(buffer);
-
-                if (!parseImportedNames(text).length) {
-                    throw new Error("没有识别到可导入的名称，请确认文件内容或在导入界面中手动修改。");
-                }
-                showRosterImport(text, file.name);
-            } catch (error) {
-                importNamesText.value = "";
-                importFileNote.textContent = "导入失败。你可以重新选择文件。";
-                importSummary.textContent = "待导入：0 个名称";
-                importStatus.textContent = error && error.message ? error.message : "文件读取失败，请检查文件后重试。";
-                importLayer.style.display = "flex";
-            }
-        }
-
-        rosterFileInput.addEventListener("change", event => {
-            handleRosterFile(event.target.files && event.target.files[0]);
-        });
-
-        function decodeTextBuffer(buffer) {
-            const bytes = new Uint8Array(buffer);
-            if (bytes[0] === 0xFF && bytes[1] === 0xFE) return new TextDecoder("utf-16le").decode(bytes);
-            if (bytes[0] === 0xFE && bytes[1] === 0xFF) return new TextDecoder("utf-16be").decode(bytes);
-            if (bytes[0] === 0xEF && bytes[1] === 0xBB && bytes[2] === 0xBF) return new TextDecoder("utf-8").decode(bytes);
-
-            const utf8 = new TextDecoder("utf-8", { fatal: false }).decode(bytes);
-            const brokenChars = (utf8.match(/\uFFFD/g) || []).length;
-            if (brokenChars) {
-                try { return new TextDecoder("gb18030", { fatal: false }).decode(bytes); } catch (error) { return utf8; }
-            }
-            return utf8;
-        }
-
-        async function extractDocxText(buffer) {
-            const xmlBytes = await readDocxZipEntry(new Uint8Array(buffer), "word/document.xml");
-            if (!xmlBytes) throw new Error("未在该 Word 文件中找到正文内容。");
-
-            const xml = new TextDecoder("utf-8").decode(xmlBytes);
-            const documentXml = new DOMParser().parseFromString(xml, "application/xml");
-            if (documentXml.querySelector("parsererror")) throw new Error("Word 文档内容无法解析。");
-
-            const wordNs = "http://schemas.openxmlformats.org/wordprocessingml/2006/main";
-            const paragraphs = [...documentXml.getElementsByTagNameNS(wordNs, "p")];
-            const text = paragraphs.map(paragraph => {
-                const fragments = [...paragraph.getElementsByTagNameNS(wordNs, "t")];
-                return fragments.map(node => node.textContent || "").join("");
-            }).join("\n");
-
-            return text || [...documentXml.getElementsByTagNameNS(wordNs, "t")]
-                .map(node => node.textContent || "")
-                .join("\n");
-        }
-
-        function readUint16(bytes, offset) {
-            return bytes[offset] | (bytes[offset + 1] << 8);
-        }
-
-        function readUint32(bytes, offset) {
-            return (bytes[offset]
-                | (bytes[offset + 1] << 8)
-                | (bytes[offset + 2] << 16)
-                | (bytes[offset + 3] << 24)) >>> 0;
-        }
-
-        async function readDocxZipEntry(bytes, targetName) {
-            const endSignature = 0x06054B50;
-            let endOffset = -1;
-            const searchStart = Math.max(0, bytes.length - 65557);
-            for (let offset = bytes.length - 22; offset >= searchStart; offset--) {
-                if (readUint32(bytes, offset) === endSignature) {
-                    endOffset = offset;
-                    break;
-                }
-            }
-            if (endOffset < 0) throw new Error("该文件不是有效的 .docx 文档。");
-
-            const entryCount = readUint16(bytes, endOffset + 10);
-            let centralOffset = readUint32(bytes, endOffset + 16);
-            const centralSignature = 0x02014B50;
-            const localSignature = 0x04034B50;
-            const nameDecoder = new TextDecoder("utf-8");
-
-            for (let index = 0; index < entryCount; index++) {
-                if (readUint32(bytes, centralOffset) !== centralSignature) throw new Error("Word 文档压缩目录异常。");
-
-                const flags = readUint16(bytes, centralOffset + 8);
-                const compression = readUint16(bytes, centralOffset + 10);
-                const compressedSize = readUint32(bytes, centralOffset + 20);
-                const nameLength = readUint16(bytes, centralOffset + 28);
-                const extraLength = readUint16(bytes, centralOffset + 30);
-                const commentLength = readUint16(bytes, centralOffset + 32);
-                const localOffset = readUint32(bytes, centralOffset + 42);
-                const nameBytes = bytes.slice(centralOffset + 46, centralOffset + 46 + nameLength);
-                const entryName = nameDecoder.decode(nameBytes);
-
-                if (entryName === targetName) {
-                    if (readUint32(bytes, localOffset) !== localSignature) throw new Error("Word 文档正文位置异常。");
-                    const localNameLength = readUint16(bytes, localOffset + 26);
-                    const localExtraLength = readUint16(bytes, localOffset + 28);
-                    const dataStart = localOffset + 30 + localNameLength + localExtraLength;
-                    const compressed = bytes.slice(dataStart, dataStart + compressedSize);
-
-                    if (compression === 0) return compressed;
-                    if (compression !== 8) throw new Error("该 Word 文件使用了不支持的压缩格式。");
-                    if (!("DecompressionStream" in window)) {
-                        throw new Error("当前浏览器不支持 .docx 解压，请使用最新版 Chrome、Edge 或 Safari，或先另存为 .txt。\n");
-                    }
-                    const stream = new Blob([compressed]).stream().pipeThrough(new DecompressionStream("deflate-raw"));
-                    return new Uint8Array(await new Response(stream).arrayBuffer());
-                }
-
-                centralOffset += 46 + nameLength + extraLength + commentLength;
-            }
-            return null;
-        }
-
-        function confirmRosterImport() {
-            const imported = parseImportedNames(importNamesText.value);
-            const mode = document.querySelector('input[name="importMode"]:checked').value;
-            if (!imported.length) {
-                importStatus.textContent = "请至少保留一个可导入的名称。";
-                importNamesText.focus();
-                return;
-            }
-
-            if (mode === "replace") {
-                renderRosterEditor(imported.map(name => ({ name, weight: 1 })));
-                hideRosterImport();
-                return;
-            }
-
-            const existing = getCurrentEditorNames();
-            const toAdd = imported.filter(name => !existing.has(name));
-            if (!toAdd.length) {
-                importStatus.textContent = "没有可新增的名称，导入内容均已在当前名单中。";
-                return;
-            }
-
-            toAdd.forEach(name => rosterBody.appendChild(createRosterRow(name, 1)));
-            updateProbabilityLabels();
-            hideRosterImport();
-        }
-
         function renderRosterEditor(roster) {
             rosterBody.innerHTML = "";
-            roster.forEach(item => rosterBody.appendChild(createRosterRow(item.name, item.weight, item.enabled !== false)));
+            roster.forEach(item => rosterBody.appendChild(createRosterRow(item.name, item.weight)));
             updateProbabilityLabels();
         }
 
-        function createRosterRow(name = "", weight = 1, enabled = true) {
+        function createRosterRow(name = "", weight = 1) {
             const row = document.createElement("tr");
 
             const nameCell = document.createElement("td");
-            nameCell.className = "roster-name-cell";
-
-            const checkInput = document.createElement("input");
-            checkInput.type = "checkbox";
-            checkInput.checked = enabled;
-            checkInput.className = "roster-check";
-            checkInput.setAttribute("aria-label", `选择 ${name || "此抽取名称"}`);
-            checkInput.title = "勾选后参与抽取";
-            checkInput.addEventListener("change", () => {
-                row.classList.toggle("is-unselected", !checkInput.checked);
-                updateProbabilityLabels();
-            });
-
             const nameInput = document.createElement("input");
             nameInput.type = "text";
             nameInput.value = name;
             nameInput.maxLength = 40;
             nameInput.className = "roster-name";
             nameInput.setAttribute("aria-label", "抽取名称");
-            nameInput.addEventListener("input", () => {
-                checkInput.setAttribute("aria-label", `选择 ${nameInput.value.trim() || "此抽取名称"}`);
-            });
-            nameCell.append(checkInput, nameInput);
+            nameCell.appendChild(nameInput);
 
             const weightCell = document.createElement("td");
             const weightInput = document.createElement("input");
@@ -1998,98 +1320,64 @@
             });
             actionCell.appendChild(removeButton);
 
-            row.classList.toggle("is-unselected", !enabled);
             row.append(nameCell, weightCell, probabilityCell, actionCell);
             return row;
         }
 
         function addRosterRow() {
-            const row = createRosterRow("", 1, true);
+            const row = createRosterRow("", 1);
             rosterBody.appendChild(row);
             updateProbabilityLabels();
             row.querySelector(".roster-name").focus();
         }
 
-        function updateSelectAllRosterState() {
-            const checks = [...rosterBody.querySelectorAll(".roster-check")];
-            const selectedCount = checks.filter(check => check.checked).length;
-            selectAllRoster.checked = checks.length > 0 && selectedCount === checks.length;
-            selectAllRoster.indeterminate = selectedCount > 0 && selectedCount < checks.length;
-            selectAllRoster.title = selectAllRoster.checked ? "取消全选" : "全选";
-        }
-
         function updateProbabilityLabels() {
             const rows = [...rosterBody.querySelectorAll("tr")];
-            const enabledRows = rows.filter(row => row.querySelector(".roster-check")?.checked);
-            const total = enabledRows.reduce((sum, row) => {
-                return sum + clampNumber(row.querySelector(".weight-input").value, 0, 9999, 0);
-            }, 0);
-
-            rows.forEach(row => {
-                const isEnabled = row.querySelector(".roster-check")?.checked;
-                const weight = clampNumber(row.querySelector(".weight-input").value, 0, 9999, 0);
+            const weights = rows.map(row => clampNumber(row.querySelector(".weight-input").value, 0, 9999, 0));
+            const total = weights.reduce((sum, weight) => sum + weight, 0);
+            rows.forEach((row, index) => {
                 const cell = row.querySelector(".probability-cell");
-                const percent = isEnabled && total > 0 ? (weight / total) * 100 : 0;
-                cell.textContent = isEnabled ? `${percent.toFixed(percent >= 10 ? 1 : 2)}%` : "—";
-                row.classList.toggle("is-unselected", !isEnabled);
+                const percent = total > 0 ? (weights[index] / total) * 100 : 0;
+                cell.textContent = `${percent.toFixed(percent >= 10 ? 1 : 2)}%`;
             });
-
-            updateSelectAllRosterState();
         }
 
         function collectRoster() {
             return sanitizeRoster([...rosterBody.querySelectorAll("tr")].map(row => ({
                 name: row.querySelector(".roster-name").value,
-                weight: row.querySelector(".weight-input").value,
-                enabled: row.querySelector(".roster-check").checked
+                weight: row.querySelector(".weight-input").value
             })));
         }
 
-        async function saveSettings() {
+        function saveSettings() {
             const roster = collectRoster();
-            const enabledRoster = roster.filter(item => item.enabled !== false);
-            if (enabledRoster.length && !enabledRoster.some(item => item.weight > 0)) enabledRoster[0].weight = 1;
-            const title = document.getElementById("settingTitle").value.trim().slice(0, 30) || emptyConfig.title;
-            const requestedPassword = document.getElementById("settingPassword").value;
+            if (!roster.some(item => item.weight > 0)) roster[0].weight = 1;
+            const title = document.getElementById("settingTitle").value.trim().slice(0, 30) || fallbackConfig.title;
+            const password = document.getElementById("settingPassword").value || fallbackConfig.password;
             const theme = document.getElementById("settingTheme").value;
-
-            let auth = config.auth;
-            if (requestedPassword) auth = await createPasswordRecord(requestedPassword);
 
             config = {
                 ...config,
                 title,
-                auth,
-                theme: supportedThemes.includes(theme) ? theme : emptyConfig.theme,
+                password,
+                theme: supportedThemes.includes(theme) ? theme : fallbackConfig.theme,
                 repeatChance: clampNumber(repeatChanceValue.value, 0, 100, 0),
                 roster
             };
 
-            drawHistory = drawHistory.filter(name => config.roster.some(item => item.name === name && item.enabled !== false));
-            try {
-                await persistConfig();
-            } catch (error) {
-                alert("保存失败：当前浏览器无法完成本地加密存储。请使用新版 Chrome、Edge 或 Safari。\n");
-                return;
-            }
+            drawHistory = drawHistory.filter(name => config.roster.some(item => item.name === name));
+            persistConfig();
             applyAppearance();
             renderBall();
             hideSettings();
         }
 
-        window.onload = async function() {
-            try {
-                config = await loadConfig();
-                appReady = true;
-                applyAppearance();
-                initStars();
-                initBall();
-                bindHiddenAccess();
-                bindThemePicker();
-            } catch (error) {
-                pageTitle.textContent = "浏览器不支持加密存储";
-                startBtn.disabled = true;
-            }
+        window.onload = function() {
+            applyAppearance();
+            initStars();
+            initBall();
+            bindHiddenAccess();
+            bindThemePicker();
         };
     </script>
 </body>
