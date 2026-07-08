@@ -1895,78 +1895,106 @@
     }
 
   
-    /* 登录验证显示修复：高级验证卡片高度不再被 max-height:410px 裁切 */
+    /* 稳定交互修复：按钮、协议、滑块、验证码全部可点可拖 */
+    #loginForm,
+    .field,
+    .input-wrap,
+    .password-toggle,
+    .human-check,
+    .extra-human-check,
+    .verification-card,
+    .agreement,
+    .agreement *,
+    .login-btn,
+    .slider-handle,
+    .speed-slider-handle,
+    .challenge-submit,
+    .challenge-secondary,
+    .file-option,
+    .app-nav-btn{
+      pointer-events:auto !important;
+    }
+    .password-toggle,
+    .human-check,
+    .extra-human-check,
+    .agreement,
+    .login-btn,
+    .slider-handle,
+    .speed-slider-handle,
+    .challenge-submit,
+    .challenge-secondary{
+      position:relative;
+      z-index:5;
+      touch-action:manipulation;
+      cursor:pointer;
+    }
+    .secondary-checks{
+      position:relative;
+      z-index:2;
+    }
     .secondary-checks.is-unlocked{
       max-height:9999px !important;
       overflow:visible !important;
+      pointer-events:auto !important;
     }
-    .verification-card{
-      position:relative;
-      z-index:1;
-    }
-    .agreement{
-      position:relative;
-      z-index:0;
+    .extra-human-check[hidden],
+    .verification-card[hidden],
+    .advanced-step[hidden]{
+      display:none !important;
     }
 
-  
-    
-    /* 新增 3 个长方形伪人验证卡片：分别模拟 3 种不同样式 */
+    /* 3 个长方形验证显示协调 */
     .extra-human-check{
-      position:relative;
       width:100%;
-      min-height:94px;
+      min-height:82px;
       margin-top:14px;
-      padding:14px 16px;
-      border:1.5px solid #d8d8d8;
-      border-radius:4px;
+      padding:12px 16px;
+      border:1.5px solid #b7dcd8;
+      border-radius:6px;
       display:flex;
       align-items:center;
       gap:16px;
-      background:#fff;
+      background:#fbffff;
       box-shadow:none;
     }
-    .secondary-checks.is-unlocked .extra-human-check{
-      display:flex;
-    }
     .extra-human-check .human-box{
-      flex:0 0 32px;
-      width:32px;
-      height:32px;
-      border:2px solid #a8a8a8;
-      border-radius:2px;
+      flex:0 0 34px;
+      width:34px;
+      height:34px;
+      border:2px solid #9aa9ad;
+      border-radius:4px;
       background:#fff;
       position:relative;
     }
     .extra-human-check .human-copy{
-      min-width:0;
       flex:1 1 auto;
+      min-width:0;
       display:flex;
       flex-direction:column;
-      gap:2px;
+      justify-content:center;
       align-items:flex-start;
+      gap:4px;
       text-align:left;
     }
-    .extra-human-check .human-copy-single{
-      justify-content:center;
-      min-height:56px;
-    }
     .extra-human-check .provider-text{
-      color:#393939;
-      font-size:20px;
+      color:#30383b;
+      font-size:18px;
+      font-weight:600;
+      line-height:1.18;
+    }
+    .provider-hcaptcha .provider-text{
+      font-size:22px;
       font-weight:400;
-      line-height:1.1;
-      letter-spacing:0;
     }
     .extra-human-check .provider-status{
-      color:#1f7e7a;
+      color:#148076;
       font-size:12px;
-      font-weight:700;
-      line-height:1.2;
-      opacity:.96;
+      font-weight:800;
+      min-height:14px;
     }
     .extra-human-check .provider-brand{
-      flex:0 0 132px;
+      flex:0 0 126px;
+      min-width:126px;
       display:flex;
       flex-direction:column;
       align-items:center;
@@ -1975,197 +2003,35 @@
       gap:2px;
     }
     .extra-human-check .provider-brand-name{
-      color:#5b5b5b;
+      color:#3a3a3a;
       font-size:12px;
       line-height:1.05;
-      letter-spacing:.02em;
-      font-weight:700;
+      font-weight:800;
     }
     .extra-human-check .provider-brand-sub{
-      color:#9a9a9a;
+      color:#8a8a8a;
       font-size:9px;
       line-height:1.05;
-      letter-spacing:.01em;
       font-weight:500;
     }
-    .extra-human-check .provider-mark{
-      position:relative;
-      flex:0 0 auto;
-    }
-
-    /* 1) reCAPTCHA 样式 */
-    .provider-recaptcha{
-      min-height:78px;
-      padding:12px 14px;
-      border-color:#dadce0;
-      background:#fff;
-    }
-    .provider-recaptcha .provider-text{
-      font-size:16px;
-      color:#3c4043;
-    }
-    .provider-recaptcha .provider-brand{
-      flex-basis:92px;
-      gap:1px;
-      margin-left:auto;
-    }
-    .provider-recaptcha .provider-brand-name{
-      font-size:11px;
-      color:#7c7c7c;
-      font-weight:600;
-    }
-    .provider-recaptcha .provider-brand-sub{
-      font-size:8px;
-      color:#a0a0a0;
-    }
-    .recaptcha-mark{
-      width:28px;
-      height:28px;
-      margin-bottom:2px;
-    }
-    .recaptcha-arrow{
-      position:absolute;
-      inset:0;
-      border-radius:50%;
-      border:5px solid transparent;
-    }
-    .recaptcha-arrow-a{
-      border-top-color:#4285f4;
-      border-right-color:#4285f4;
-      transform:rotate(-18deg);
-    }
-    .recaptcha-arrow-b{
-      border-bottom-color:#77a7ff;
-      border-left-color:#77a7ff;
-      transform:rotate(-18deg);
-    }
-    .recaptcha-arrow-a::after,
-    .recaptcha-arrow-b::after{
-      content:"";
-      position:absolute;
-      width:0;
-      height:0;
-      border-style:solid;
-    }
-    .recaptcha-arrow-a::after{
-      top:-4px;
-      right:-2px;
-      border-width:5px 0 5px 7px;
-      border-color:transparent transparent transparent #4285f4;
-      transform:rotate(18deg);
-    }
-    .recaptcha-arrow-b::after{
-      bottom:-4px;
-      left:-2px;
-      border-width:5px 7px 5px 0;
-      border-color:transparent #77a7ff transparent transparent;
-      transform:rotate(18deg);
-    }
-
-    /* 2) hCaptcha 样式 */
-    .provider-hcaptcha{
-      min-height:112px;
-      padding:16px 18px;
-      border-color:#dddddf;
-      background:#fff;
-    }
-    .provider-hcaptcha .human-box{
-      width:54px;
-      height:54px;
-      border-width:3px;
-      border-radius:10px;
-    }
-    .provider-hcaptcha .provider-text{
-      font-size:26px;
-      color:#474747;
-      letter-spacing:.01em;
-    }
-    .provider-hcaptcha .provider-brand{
-      flex-basis:170px;
-      gap:4px;
-    }
-    .provider-hcaptcha .provider-brand-name{
-      font-size:16px;
-      color:#404040;
-      font-weight:800;
-      letter-spacing:.01em;
-    }
-    .provider-hcaptcha .provider-brand-sub{
-      font-size:10px;
-      color:#8d8d8d;
-    }
-    .hcaptcha-mark{
-      width:74px;
-      height:58px;
-      margin-bottom:2px;
-    }
-    .hcaptcha-pixel{
-      position:absolute;
-      background:#65c0cb;
-      opacity:.56;
-      filter:blur(.15px);
-    }
-    .pixel-a{width:54px;height:54px;left:10px;top:2px;border-radius:6px;}
-    .pixel-b{width:34px;height:34px;left:0;top:12px;border-radius:4px;background:#77cbe0;}
-    .pixel-c{width:34px;height:34px;right:0;top:12px;border-radius:4px;background:#6db7ce;}
-    .pixel-d{width:48px;height:18px;left:13px;bottom:0;border-radius:4px;background:#6dc8d8;}
-    .hcaptcha-hand{
-      position:absolute;
-      left:20px;
-      top:7px;
-      font-size:32px;
-      line-height:1;
-      color:#fff;
-      text-shadow:0 1px 0 rgba(0,0,0,.04);
-    }
-
-    /* 3) Cloudflare 样式 */
-    .provider-cloudflare{
-      min-height:92px;
-      padding:12px 14px;
-      border-color:#dadada;
-      background:#fff;
-    }
-    .provider-cloudflare .provider-text{
-      font-size:18px;
-      color:#2d2d2d;
-      font-weight:600;
-    }
-    .provider-cloudflare .provider-brand{
-      flex-basis:138px;
-      gap:2px;
-    }
-    .provider-cloudflare .provider-brand-name{
-      font-size:12px;
-      color:#232323;
-      font-weight:800;
-      letter-spacing:.11em;
-    }
-    .provider-cloudflare .provider-brand-sub{
-      font-size:9px;
-      color:#8a8a8a;
-    }
-    .cloudflare-mark{
-      width:78px;
-      height:32px;
-      margin-bottom:3px;
-    }
-    .cloudflare-cloud{
-      position:absolute;
-      bottom:0;
-      border-radius:30px;
-      background:linear-gradient(180deg,#f8a53d,#ee7f18);
-      box-shadow:0 -1px 0 rgba(255,255,255,.55) inset;
-    }
-    .cloudflare-cloud-a{left:11px;width:42px;height:17px;}
-    .cloudflare-cloud-b{left:26px;bottom:8px;width:26px;height:18px;}
-    .cloudflare-cloud-c{left:43px;width:21px;height:12px;}
-
-    /* 成功、失败、运行状态 */
-    .extra-human-check.is-running{
-      border-color:#99cfc8;
-      background:#fbfefe;
-    }
+    .provider-mark{position:relative;flex:0 0 auto}
+    .recaptcha-mark{width:30px;height:30px;margin-bottom:2px}
+    .recaptcha-arrow{position:absolute;inset:0;border-radius:50%;border:5px solid transparent}
+    .recaptcha-arrow-a{border-top-color:#4285f4;border-right-color:#4285f4;transform:rotate(-18deg)}
+    .recaptcha-arrow-b{border-bottom-color:#77a7ff;border-left-color:#77a7ff;transform:rotate(-18deg)}
+    .hcaptcha-mark{width:58px;height:46px;margin-bottom:0}
+    .hcaptcha-pixel{position:absolute;background:#65c0cb;opacity:.56;filter:blur(.15px)}
+    .pixel-a{width:43px;height:43px;left:8px;top:2px;border-radius:6px}
+    .pixel-b{width:28px;height:28px;left:0;top:10px;border-radius:4px;background:#77cbe0}
+    .pixel-c{width:28px;height:28px;right:0;top:10px;border-radius:4px;background:#6db7ce}
+    .pixel-d{width:38px;height:15px;left:10px;bottom:0;border-radius:4px;background:#6dc8d8}
+    .hcaptcha-hand{position:absolute;left:16px;top:5px;font-size:27px;line-height:1;color:#fff}
+    .cloudflare-mark{width:64px;height:28px;margin-bottom:2px}
+    .cloudflare-cloud{position:absolute;bottom:0;border-radius:30px;background:linear-gradient(180deg,#f8a53d,#ee7f18)}
+    .cloudflare-cloud-a{left:9px;width:35px;height:15px}
+    .cloudflare-cloud-b{left:22px;bottom:7px;width:22px;height:16px}
+    .cloudflare-cloud-c{left:36px;width:18px;height:11px}
+    .extra-human-check.is-running{border-color:#99cfc8;background:#fbfefe}
     .extra-human-check.is-success .human-box{
       border-color:#178f81;
       background:#178f81;
@@ -2199,29 +2065,626 @@
     }
     @media (max-width:640px){
       .extra-human-check{
-        gap:12px;
-        padding:12px 12px;
+        min-height:76px;
+        padding:11px 12px;
+        gap:10px;
+      }
+      .extra-human-check .provider-brand{
+        flex-basis:92px;
+        min-width:92px;
       }
       .extra-human-check .provider-text{
         font-size:15px;
       }
       .provider-hcaptcha .provider-text{
-        font-size:22px;
+        font-size:19px;
       }
-      .provider-hcaptcha .provider-brand{
-        flex-basis:130px;
-      }
-      .provider-cloudflare .provider-brand,
-      .provider-recaptcha .provider-brand{
-        flex-basis:90px;
-      }
-      .extra-human-check .provider-brand-name{
-        font-size:10px;
-      }
-      .provider-hcaptcha .provider-brand-name{
-        font-size:14px;
-      }
+      .hcaptcha-mark{width:48px;height:39px}
+      .hcaptcha-hand{font-size:23px;left:13px;top:4px}
+      .cloudflare-mark{width:54px;height:24px}
     }
+
+  
+  /* ===== 显示修复补丁：密码显示按钮、两种滑块布局、长方形验证移动端显示 ===== */
+  *, *::before, *::after { box-sizing: border-box; }
+
+  .login-shell{
+    overflow-x:hidden !important;
+  }
+
+  /* 密码输入框与“显示”按钮 */
+  .field,
+  .input-wrap{
+    width:100%;
+  }
+  .input-wrap{
+    position:relative !important;
+    display:block !important;
+  }
+  .input-wrap .input,
+  #password{
+    display:block !important;
+    width:100% !important;
+    padding-right:88px !important;
+  }
+  .password-toggle,
+  #passwordToggle{
+    position:absolute !important;
+    top:50% !important;
+    right:18px !important;
+    left:auto !important;
+    transform:translateY(-50%) !important;
+    margin:0 !important;
+    min-height:0 !important;
+    min-width:52px !important;
+    height:32px !important;
+    padding:0 8px !important;
+    border:0 !important;
+    border-radius:8px !important;
+    display:inline-flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    white-space:nowrap !important;
+    line-height:1 !important;
+    background:transparent !important;
+    color:#6b7d85 !important;
+    font-size:15px !important;
+    font-weight:700 !important;
+    z-index:8 !important;
+  }
+
+  /* 通用验证卡片防溢出 */
+  .verification-card,
+  .secondary-checks,
+  .slider-captcha,
+  .speed-slider-box{
+    width:100%;
+    max-width:100%;
+    overflow:hidden;
+  }
+
+  /* 从头滑到尾：视觉排版修复 */
+  .speed-slider-box{
+    position:relative !important;
+    margin-top:4px !important;
+    padding:16px 16px 86px !important;
+    border:1.5px solid #d9e4e6 !important;
+    border-radius:22px !important;
+    background:linear-gradient(180deg,#f9fbfb,#f3f7f7) !important;
+    min-height:180px !important;
+  }
+  .speed-slider-track{
+    position:relative !important;
+    height:84px !important;
+    border:1.5px solid #cfdde0 !important;
+    border-radius:22px !important;
+    overflow:hidden !important;
+    background:
+      linear-gradient(90deg,rgba(209,235,234,.65),rgba(248,245,235,.8)),
+      linear-gradient(90deg,#edf6f6,#f5f1e7) !important;
+  }
+  .speed-slider-fill{
+    border-radius:22px !important;
+  }
+  .speed-slider-finish{
+    right:18px !important;
+    font-size:18px !important;
+    font-weight:800 !important;
+    letter-spacing:0 !important;
+  }
+  .speed-slider-handle{
+    position:absolute !important;
+    left:18px !important;
+    top:auto !important;
+    bottom:14px !important;
+    z-index:4 !important;
+    width:58px !important;
+    height:58px !important;
+    transform:none !important;
+    display:grid !important;
+    place-items:center !important;
+    border:1.5px solid #c8d6d9 !important;
+    border-radius:18px !important;
+    color:#1d6463 !important;
+    background:#fff !important;
+    box-shadow:0 6px 14px rgba(28,77,78,.12) !important;
+    font-size:26px !important;
+    font-weight:900 !important;
+    cursor:grab !important;
+    touch-action:none !important;
+    user-select:none !important;
+    -webkit-user-select:none !important;
+  }
+  .speed-slider-handle:active{ cursor:grabbing !important; }
+  .speed-slider-handle span{
+    display:block !important;
+    line-height:1 !important;
+    transform:translateY(-1px) !important;
+  }
+  .speed-slider-tip{
+    position:absolute !important;
+    left:92px !important;
+    right:18px !important;
+    bottom:31px !important;
+    margin:0 !important;
+    display:block !important;
+    color:#6f8288 !important;
+    font-size:15px !important;
+    line-height:1.25 !important;
+    text-align:center !important;
+  }
+
+  /* 缺口滑块：修复按钮垂直位置与盒子对齐 */
+  .slider-captcha{
+    display:flex !important;
+    flex-direction:column !important;
+    gap:16px !important;
+  }
+  .slider-art{
+    width:100% !important;
+    min-height:138px !important;
+    border-radius:18px !important;
+    overflow:hidden !important;
+  }
+  .slider-track{
+    position:relative !important;
+    display:flex !important;
+    align-items:center !important;
+    width:100% !important;
+    min-height:76px !important;
+    margin-top:0 !important;
+    padding:0 86px 0 18px !important;
+    overflow:hidden !important;
+    border:1px solid #d3dcdf !important;
+    border-radius:20px !important;
+    background:#f8fbfb !important;
+  }
+  .slider-text{
+    display:block !important;
+    width:100% !important;
+    text-align:center !important;
+    color:#70848a !important;
+    font-size:16px !important;
+    line-height:1.3 !important;
+    pointer-events:none !important;
+  }
+  .slider-handle{
+    position:absolute !important;
+    left:0 !important;
+    top:50% !important;
+    z-index:4 !important;
+    width:54px !important;
+    height:54px !important;
+    transform:translateY(-50%) !important;
+    display:grid !important;
+    place-items:center !important;
+    border:1px solid #d3dcdf !important;
+    border-radius:16px !important;
+    background:#fff !important;
+    box-shadow:0 4px 12px rgba(16,33,38,.14) !important;
+    cursor:grab !important;
+    touch-action:none !important;
+    user-select:none !important;
+    -webkit-user-select:none !important;
+  }
+  .slider-handle:active{ cursor:grabbing !important; }
+  .slider-handle::before{
+    content:"III" !important;
+    color:#4e7180 !important;
+    font-size:18px !important;
+    font-weight:800 !important;
+    letter-spacing:1px !important;
+  }
+
+  /* 三个长方形验证：修复手机端截断/溢出 */
+  .extra-human-check{
+    width:100% !important;
+    max-width:100% !important;
+    display:grid !important;
+    grid-template-columns:54px minmax(0,1fr) 120px !important;
+    align-items:center !important;
+    gap:16px !important;
+    padding:14px 16px !important;
+    margin-top:14px !important;
+    border:1.5px solid #b7dcd8 !important;
+    border-radius:14px !important;
+    background:#fbffff !important;
+    overflow:hidden !important;
+  }
+  .extra-human-check .human-box{
+    width:48px !important;
+    height:48px !important;
+    flex:none !important;
+  }
+  .extra-human-check .human-copy{
+    min-width:0 !important;
+    width:100% !important;
+    display:flex !important;
+    flex-direction:column !important;
+    align-items:flex-start !important;
+    justify-content:center !important;
+    gap:4px !important;
+    text-align:left !important;
+  }
+  .extra-human-check .provider-text{
+    display:block !important;
+    width:100% !important;
+    min-width:0 !important;
+    word-break:break-word !important;
+    overflow-wrap:anywhere !important;
+    line-height:1.15 !important;
+  }
+  .extra-human-check .provider-status{
+    min-height:14px !important;
+    line-height:1.1 !important;
+  }
+  .extra-human-check .provider-brand{
+    min-width:0 !important;
+    width:100% !important;
+    flex:none !important;
+  }
+
+  @media (max-width: 640px){
+    .login-shell{
+      width:min(100%, 100vw - 20px) !important;
+      padding:18px 14px 24px !important;
+    }
+    .field{ margin-bottom:16px !important; }
+    .input, #password{
+      height:72px !important;
+      font-size:18px !important;
+      border-radius:22px !important;
+      padding-left:18px !important;
+      padding-right:76px !important;
+    }
+    .password-toggle, #passwordToggle{
+      right:14px !important;
+      min-width:44px !important;
+      height:28px !important;
+      font-size:14px !important;
+    }
+
+    .verification-card{
+      padding:14px !important;
+      border-radius:20px !important;
+    }
+    .verification-title{
+      gap:8px !important;
+      margin-bottom:12px !important;
+      font-size:16px !important;
+      align-items:flex-start !important;
+    }
+    .mini-status{
+      font-size:12px !important;
+      text-align:right !important;
+    }
+
+    .speed-slider-box{
+      padding:12px 12px 76px !important;
+      min-height:162px !important;
+      border-radius:18px !important;
+    }
+    .speed-slider-track{
+      height:74px !important;
+      border-radius:18px !important;
+    }
+    .speed-slider-finish{
+      right:14px !important;
+      font-size:14px !important;
+    }
+    .speed-slider-handle{
+      left:12px !important;
+      bottom:12px !important;
+      width:52px !important;
+      height:52px !important;
+      border-radius:16px !important;
+      font-size:22px !important;
+    }
+    .speed-slider-tip{
+      left:74px !important;
+      right:12px !important;
+      bottom:27px !important;
+      font-size:13px !important;
+    }
+
+    .slider-art{
+      min-height:124px !important;
+      border-radius:16px !important;
+    }
+    .slider-track{
+      min-height:70px !important;
+      padding:0 74px 0 12px !important;
+      border-radius:18px !important;
+    }
+    .slider-text{
+      font-size:14px !important;
+      line-height:1.25 !important;
+    }
+    .slider-handle{
+      width:48px !important;
+      height:48px !important;
+      border-radius:14px !important;
+    }
+    .slider-handle::before{
+      font-size:16px !important;
+    }
+
+    .extra-human-check{
+      grid-template-columns:46px minmax(0,1fr) 82px !important;
+      gap:10px !important;
+      padding:12px !important;
+      border-radius:12px !important;
+    }
+    .extra-human-check .human-box{
+      width:40px !important;
+      height:40px !important;
+    }
+    .extra-human-check .provider-text{
+      font-size:14px !important;
+    }
+    .provider-hcaptcha .provider-text{
+      font-size:18px !important;
+    }
+    .extra-human-check .provider-status{
+      font-size:11px !important;
+    }
+    .extra-human-check .provider-brand-name{
+      font-size:10px !important;
+    }
+    .extra-human-check .provider-brand-sub{
+      font-size:8px !important;
+    }
+    .recaptcha-mark{ width:24px !important; height:24px !important; }
+    .hcaptcha-mark{ width:40px !important; height:34px !important; }
+    .hcaptcha-hand{ font-size:20px !important; left:10px !important; top:4px !important; }
+    .cloudflare-mark{ width:46px !important; height:20px !important; }
+  }
+
+
+  /* 账号123456登录后的使用须知悬浮层 */
+  .visitor-notice-overlay[hidden]{
+    display:none !important;
+  }
+  .visitor-notice-overlay{
+    position:fixed;
+    inset:0;
+    z-index:100000;
+    display:grid;
+    place-items:center;
+    padding:20px;
+    background:rgba(18,32,36,.28);
+    backdrop-filter:blur(4px);
+  }
+  .visitor-notice-box{
+    width:min(92vw, 580px);
+    max-height:min(86vh, 720px);
+    overflow:auto;
+    border:1.5px solid #d7e3e6;
+    border-radius:24px;
+    background:#fff;
+    box-shadow:0 26px 80px rgba(7,24,30,.24);
+    padding:30px 32px 26px;
+    color:#143039;
+  }
+  .visitor-notice-box h2{
+    margin:0 0 18px;
+    text-align:center;
+    color:#0d2c35;
+    font-size:30px;
+    line-height:1.15;
+    font-weight:900;
+    letter-spacing:-.8px;
+  }
+  .visitor-notice-content{
+    display:grid;
+    gap:10px;
+    color:#425b64;
+    font-size:16px;
+    line-height:1.72;
+  }
+  .visitor-notice-content p{
+    margin:0;
+  }
+  .visitor-contact{
+    margin-top:2px;
+    padding:14px 16px;
+    border:1px solid #dce8ea;
+    border-radius:14px;
+    background:#f7fbfb;
+    color:#173944;
+    font-weight:700;
+  }
+  .visitor-notice-actions{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:12px;
+    margin-top:24px;
+  }
+  .visitor-notice-confirm{
+    min-width:220px;
+    height:48px;
+    border:0;
+    border-radius:10px;
+    padding:0 24px;
+    color:#fff;
+    background:#b4c0c6;
+    font-size:17px;
+    font-weight:900;
+    letter-spacing:.02em;
+    cursor:not-allowed;
+    transition:background .2s ease, transform .15s ease, box-shadow .2s ease;
+  }
+  .visitor-notice-confirm.is-ready{
+    background:#2563eb;
+    cursor:pointer;
+    box-shadow:0 10px 22px rgba(37,99,235,.24);
+  }
+  .visitor-notice-confirm.is-ready:hover{
+    background:#1d4ed8;
+    transform:translateY(-1px);
+  }
+  .visitor-countdown{
+    min-width:54px;
+    height:40px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:10px;
+    color:#52656e;
+    background:#eef3f4;
+    font-size:18px;
+    font-weight:900;
+  }
+  .visitor-countdown.is-ready{
+    color:#1d4ed8;
+    background:#e8f0ff;
+    font-size:14px;
+  }
+  @media (max-width:520px){
+    .visitor-notice-overlay{
+      padding:14px;
+    }
+    .visitor-notice-box{
+      width:100%;
+      max-height:88vh;
+      padding:24px 20px 22px;
+      border-radius:20px;
+    }
+    .visitor-notice-box h2{
+      font-size:26px;
+    }
+    .visitor-notice-content{
+      font-size:15px;
+      line-height:1.68;
+    }
+    .visitor-notice-actions{
+      flex-direction:column;
+      align-items:stretch;
+      gap:9px;
+    }
+    .visitor-notice-confirm{
+      width:100%;
+      min-width:0;
+    }
+    .visitor-countdown{
+      width:100%;
+    }
+  }
+
+
+  /* 滑块跟随拖动修复：JS 写入 inline left!important，保证按钮位置实时变化 */
+  .speed-slider-handle,
+  .slider-handle{
+    will-change:left !important;
+  }
+  .speed-slider-track,
+  .slider-track{
+    touch-action:none !important;
+  }
+
+
+  /* 滑块终点文字位置修复 */
+  .speed-slider-track{
+    position:relative !important;
+  }
+  .speed-slider-finish{
+    position:absolute !important;
+    top:50% !important;
+    right:26px !important;
+    transform:translateY(-50%) !important;
+    display:inline-flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    height:1.2em !important;
+    line-height:1 !important;
+    margin:0 !important;
+    white-space:nowrap !important;
+    pointer-events:none !important;
+    z-index:3 !important;
+  }
+  @media (max-width:520px){
+    .speed-slider-finish{
+      right:18px !important;
+      font-size:16px !important;
+    }
+  }
+
+
+  /* 服务协议弹窗滚动修复 */
+  #agreementModal{
+    overflow:auto !important;
+    padding:18px !important;
+    align-items:center !important;
+    justify-content:center !important;
+    overscroll-behavior:contain !important;
+    pointer-events:auto !important;
+  }
+  #agreementModal.show{
+    display:flex !important;
+  }
+  #agreementModal .modal-box{
+    width:min(94vw, 640px) !important;
+    max-height:min(82vh, 760px) !important;
+    overflow-y:auto !important;
+    overflow-x:hidden !important;
+    -webkit-overflow-scrolling:touch !important;
+    overscroll-behavior:contain !important;
+    touch-action:pan-y !important;
+    pointer-events:auto !important;
+    padding:0 !important;
+    border-radius:24px !important;
+  }
+  #agreementModal .modal-head{
+    position:sticky !important;
+    top:0 !important;
+    z-index:3 !important;
+    padding:24px 26px 16px !important;
+    background:#fff !important;
+    border-bottom:1px solid #edf2f3 !important;
+  }
+  #agreementModal .modal-box > p{
+    margin:0 !important;
+    padding:0 26px 14px !important;
+    color:#52636a !important;
+    line-height:1.85 !important;
+    font-size:15px !important;
+  }
+  #agreementModal .modal-box > p:first-of-type{
+    padding-top:20px !important;
+  }
+  #agreementModal .modal-box > p:last-of-type{
+    padding-bottom:28px !important;
+  }
+  #agreementModal .modal-close{
+    flex:0 0 auto !important;
+    pointer-events:auto !important;
+  }
+  @media (max-width:520px){
+    #agreementModal{
+      padding:12px !important;
+      align-items:center !important;
+    }
+    #agreementModal .modal-box{
+      width:100% !important;
+      max-height:84vh !important;
+      border-radius:20px !important;
+    }
+    #agreementModal .modal-head{
+      padding:20px 18px 14px !important;
+    }
+    #agreementModal .modal h2,
+    #agreementModal h2{
+      font-size:22px !important;
+    }
+    #agreementModal .modal-box > p{
+      padding-left:18px !important;
+      padding-right:18px !important;
+      font-size:14px !important;
+      line-height:1.8 !important;
+    }
+  }
+
 </style>
 </head>
 <body>
@@ -2246,14 +2709,14 @@
       <button class="human-check" type="button" id="humanCheck" aria-live="polite">
         <span class="human-box" aria-hidden="true"></span>
         <span class="human-copy">
-          <span class="human-main" id="humanMain">你是伪人吗？</span>
+          <span class="human-main" id="humanMain">验证你是人类</span>
           <span class="human-status" id="humanStatus">点击开始验证</span>
         </span>
         <span class="human-icon" aria-hidden="true"><span class="human-icon-label">HUMAN&nbsp;&nbsp;CHECK</span></span>
       </button>
 
       <section class="secondary-checks" id="secondaryChecks" aria-label="附加验证">
-        <button class="human-check extra-human-check provider-recaptcha" type="button" id="extraHumanCheck1" aria-live="polite">
+        <button class="human-check extra-human-check provider-recaptcha" type="button" id="extraHumanCheck1" aria-live="polite" hidden>
           <span class="human-box" aria-hidden="true"></span>
           <span class="human-copy human-copy-single">
             <span class="human-main provider-text">I'm not a robot</span>
@@ -2269,7 +2732,7 @@
           </span>
         </button>
 
-        <button class="human-check extra-human-check provider-hcaptcha" type="button" id="extraHumanCheck2" aria-live="polite">
+        <button class="human-check extra-human-check provider-hcaptcha" type="button" id="extraHumanCheck2" aria-live="polite" hidden>
           <span class="human-box" aria-hidden="true"></span>
           <span class="human-copy human-copy-single">
             <span class="human-main provider-text">I am human</span>
@@ -2288,7 +2751,7 @@
           </span>
         </button>
 
-        <button class="human-check extra-human-check provider-cloudflare" type="button" id="extraHumanCheck3" aria-live="polite">
+        <button class="human-check extra-human-check provider-cloudflare" type="button" id="extraHumanCheck3" aria-live="polite" hidden>
           <span class="human-box" aria-hidden="true"></span>
           <span class="human-copy human-copy-single">
             <span class="human-main provider-text">确认您是真人</span>
@@ -2474,7 +2937,7 @@
             <span>连线验证</span>
             <span class="mini-status idle" id="lineStatus">点击两侧配对</span>
           </div>
-          <p class="challenge-note" id="linePrompt">点击左侧物体，再点击右侧对应物体完成连线。</p>
+          <p class="challenge-note" id="linePrompt">点击左侧物体，再点击右侧对应物体完成连线。当前版本代码内置 100 种不同连线任务。</p>
           <div class="line-match-wrap" id="lineWrap">
             <svg class="line-svg" id="lineSvg" aria-hidden="true"></svg>
             <div class="line-column" id="lineLeft"></div>
@@ -2599,8 +3062,36 @@
         <h2 id="agreementTitle">Flore 服务协议</h2>
         <button class="modal-close" type="button" id="modalClose" aria-label="关闭">×</button>
       </div>
-      <p>本页面用于展示 Flore 的账号登录与验证流程。用户应如实填写账号信息，并在完成验证后提交登录请求。请勿绕过验证、伪造登录信息或将账户用于未授权用途。</p>
-      <p>请妥善保管个人账号信息，并遵守系统的使用规范。</p>
+            <p>本页面专为 Flore 平台用户提供专属账号登录、身份核验全套流程服务，是进入 Flore 平台系统的唯一合规登录渠道，承载账号身份校验、权限准入、安全风控识别等核心功能，所有用户访问平台均需通过本页面完成标准化登录验证步骤。</p>
+      <p>所有使用本页面进行操作的用户，均需严格按照页面提示规范、真实、完整填写对应账号身份信息，包含账号名称、登录密码、绑定手机号 / 邮箱、二次验证码等全部必填核验项，填报内容必须与本人实名注册备案的账号资料保持完全一致，不得隐瞒、篡改个人真实信息，确保平台可精准核验账号归属权，保障账号使用安全。</p>
+      <p>用户完整填写账号资料后，需按系统指引完成图像验证、短信验证码、邮箱校验、设备识别等任意一项或多项身份验证环节，全部验证步骤通过后，方可点击提交按钮发起正式登录请求；系统将依据验证结果判定是否授予平台访问权限，未走完完整验证流程的登录提交申请，系统将直接拦截不予放行。</p>
+      <p>在此郑重告知全体用户，严禁出现以下违规操作行为：</p>
+      <p>采用插件、脚本、第三方工具等各类手段跳过、屏蔽、篡改页面内置身份验证环节，绕过系统风控校验直接发起登录；</p>
+      <p>编造、盗用、仿制他人账号密码、实名资料、验证码等登录核验信息，伪造虚假身份数据提交登录申请；</p>
+      <p>将本人 Flore 账号转借、出租、售卖予第三方，或使用本账号开展平台规则、法律法规明确禁止的未授权商业、违规操作及各类非法活动。</p>
+      <p>若用户违反上述任一规范，平台有权直接拒绝本次登录请求、临时冻结账号登录权限，情节严重者将永久封禁对应 Flore 账号，并保留依据平台用户协议与相关法律规定追究对应责任的权利。</p>
+    </div>
+  </div>
+
+
+  <div class="visitor-notice-overlay" id="visitorNoticeOverlay" hidden role="dialog" aria-modal="true" aria-labelledby="visitorNoticeTitle">
+    <div class="visitor-notice-box">
+      <h2 id="visitorNoticeTitle">使用须知</h2>
+      <div class="visitor-notice-content">
+        <p>1. 欢迎访客登录使用该程序</p>
+        <p>2. 因为一些原因我们暂时不开放“个人简介，中心介绍，视频抽帧”的使用及控制界面，请理解</p>
+        <p>3. 如果你需要访问“个人简介，中心介绍，视频抽帧”，请联系管理员</p>
+        <p>4. 联系方式如下：</p>
+        <div class="visitor-contact">
+          <p>邮箱：408018525@qq.com</p>
+          <p>QQ：408018525</p>
+          <p>微信号：l13902256031</p>
+        </div>
+      </div>
+      <div class="visitor-notice-actions">
+        <button class="visitor-notice-confirm" id="visitorNoticeConfirm" type="button" disabled>已了解须知</button>
+        <span class="visitor-countdown" id="visitorNoticeCountdown">4</span>
+      </div>
     </div>
   </div>
 
@@ -2809,6 +3300,9 @@
       agreementLink: document.getElementById("agreementLink"),
       agreementModal: document.getElementById("agreementModal"),
       modalClose: document.getElementById("modalClose"),
+      visitorNoticeOverlay: document.getElementById("visitorNoticeOverlay"),
+      visitorNoticeConfirm: document.getElementById("visitorNoticeConfirm"),
+      visitorNoticeCountdown: document.getElementById("visitorNoticeCountdown"),
       sectionGateModal: document.getElementById("sectionGateModal"),
       sectionGateTitle: document.getElementById("sectionGateTitle"),
       sectionGateCopy: document.getElementById("sectionGateCopy"),
@@ -3212,11 +3706,68 @@
     window.addEventListener("orientationchange", syncAppResponsiveLayout);
     window.visualViewport?.addEventListener("resize", syncAppResponsiveLayout);
 
+
+    let visitorNoticePending = false;
+    let visitorNoticeTimer = null;
+    let visitorNoticeCountdownValue = 4;
+
+    function resetVisitorNotice() {
+      window.clearInterval(visitorNoticeTimer);
+      visitorNoticeTimer = null;
+      visitorNoticePending = false;
+      visitorNoticeCountdownValue = 4;
+
+      if (!els.visitorNoticeOverlay) return;
+      els.visitorNoticeOverlay.hidden = true;
+      els.visitorNoticeConfirm.disabled = true;
+      els.visitorNoticeConfirm.classList.remove("is-ready");
+      els.visitorNoticeCountdown.classList.remove("is-ready");
+      els.visitorNoticeCountdown.textContent = "4";
+    }
+
+    function openVisitorNotice() {
+      window.clearInterval(visitorNoticeTimer);
+      visitorNoticeCountdownValue = 4;
+
+      els.visitorNoticeOverlay.hidden = false;
+      els.visitorNoticeConfirm.disabled = true;
+      els.visitorNoticeConfirm.classList.remove("is-ready");
+      els.visitorNoticeCountdown.classList.remove("is-ready");
+      els.visitorNoticeCountdown.textContent = "4";
+
+      visitorNoticeTimer = window.setInterval(() => {
+        visitorNoticeCountdownValue -= 1;
+
+        if (visitorNoticeCountdownValue >= 1) {
+          els.visitorNoticeCountdown.textContent = String(visitorNoticeCountdownValue);
+          return;
+        }
+
+        window.clearInterval(visitorNoticeTimer);
+        visitorNoticeTimer = null;
+        els.visitorNoticeConfirm.disabled = false;
+        els.visitorNoticeConfirm.classList.add("is-ready");
+        els.visitorNoticeCountdown.classList.add("is-ready");
+        els.visitorNoticeCountdown.textContent = "可按";
+      }, 1000);
+    }
+
+    function closeVisitorNotice() {
+      if (els.visitorNoticeConfirm.disabled) return;
+      els.visitorNoticeOverlay.hidden = true;
+      window.clearInterval(visitorNoticeTimer);
+      visitorNoticeTimer = null;
+    }
+
     function enterApp() {
       els.loginShell.style.display = "none";
       els.appShell.classList.add("show");
       els.appShell.setAttribute("aria-hidden", "false");
       renderFileActions("personal");
+      if (visitorNoticePending) {
+        visitorNoticePending = false;
+        window.setTimeout(openVisitorNotice, 120);
+      }
       requestAnimationFrame(syncAppResponsiveLayout);
       window.setTimeout(syncAppResponsiveLayout, 80);
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -3227,6 +3778,7 @@
       pendingGateSection = "";
       unlockedGateSections.clear();
       closeSectionGate();
+      resetVisitorNotice();
       document.body.classList.remove("mobile-viewer-fullscreen");
       els.appShell.classList.remove("show", "download-mode");
       els.appShell.setAttribute("aria-hidden", "true");
@@ -3721,14 +4273,7 @@
       return {target, cells:[target,other,target,third,other,target], seed:i};
     });
 
-    const relationPairs = [
-      ["狗","骨头"],["猫","鱼"],["鸟","鸟巢"],["汽车","道路"],["船","水面"],["飞机","天空"],
-      ["书","书包"],["钥匙","门"],["雨伞","下雨"],["牙刷","牙齿"],["铅笔","纸"],["医生","医院"]
-    ];
-    const lineTasks = Array.from({length:100},(_,i)=>{
-      const pairs = Array.from({length:4},(_,j)=>relationPairs[(i+j*3)%relationPairs.length]);
-      return {pairs, seed:i};
-    });
+    const lineTasks = [{"pairs":[["狗","骨头"],["火车","铁轨"],["橡皮","铅笔字"],["水杯","喝水"]],"seed":0},{"pairs":[["熊猫","竹子"],["书","书包"],["水杯","喝水"],["灯泡","台灯"]],"seed":1},{"pairs":[["自行车","头盔"],["闹钟","起床"],["运动员","奖牌"],["米饭","饭碗"]],"seed":2},{"pairs":[["铅笔","纸"],["画家","画笔"],["苹果","果树"],["羽毛球","球拍"]],"seed":3},{"pairs":[["电话","通话"],["遥控器","电视"],["山","登山杖"],["菜单","餐厅"]],"seed":4},{"pairs":[["医生","听诊器"],["面包","烤箱"],["体温计","体温"],["洗衣机","衣服"]],"seed":5},{"pairs":[["司机","方向盘"],["桥","河流"],["护照","出境"],["火车","铁轨"]],"seed":6},{"pairs":[["筷子","米饭"],["跑步","跑鞋"],["锅铲","炒菜"],["黑板","粉笔"]],"seed":7},{"pairs":[["面包","烤箱"],["耳机","音乐"],["汽车","道路"],["老师","教室"]],"seed":8},{"pairs":[["月亮","夜晚"],["跑步","跑鞋"],["菜单","餐厅"],["雷","闪电"]],"seed":9},{"pairs":[["游泳","泳镜"],["地图","路线"],["锅铲","炒菜"],["船","水面"]],"seed":10},{"pairs":[["邮箱","邮件"],["云","雨滴"],["汽车","道路"],["键盘","电脑"]],"seed":11},{"pairs":[["票据","收银台"],["蜜蜂","花蜜"],["铅笔","纸"],["画家","画笔"]],"seed":12},{"pairs":[["钟表","时间"],["飞机","天空"],["棉衣","寒冷"],["针","线"]],"seed":13},{"pairs":[["猫","鱼"],["橡皮","铅笔字"],["护士","药箱"],["星星","银河"]],"seed":14},{"pairs":[["猴子","香蕉"],["太阳镜","阳光"],["扫帚","灰尘"],["体温计","体温"]],"seed":15},{"pairs":[["公交车","站台"],["邮递员","信件"],["桥","河流"],["蜡烛","生日"]],"seed":16},{"pairs":[["橡皮","铅笔字"],["筷子","米饭"],["口罩","防护"],["兔子","胡萝卜"]],"seed":17},{"pairs":[["闹钟","起床"],["邮递员","信件"],["针","线"],["贝壳","海滩"]],"seed":18},{"pairs":[["厨师","锅"],["筷子","米饭"],["贝壳","海滩"],["药片","药瓶"]],"seed":19},{"pairs":[["灯泡","台灯"],["风筝","天空"],["口罩","防护"],["礼物","丝带"]],"seed":20},{"pairs":[["刷子","颜料"],["足球","球门"],["票据","收银台"],["蜜蜂","花蜜"]],"seed":21},{"pairs":[["雪人","雪地"],["安全帽","工地"],["洗衣机","衣服"],["救护车","医院"]],"seed":22},{"pairs":[["树","树叶"],["护照","出境"],["羊","毛线"],["雨伞","下雨"]],"seed":23},{"pairs":[["跑步","跑鞋"],["冰箱","食物"],["书","书包"],["护士","药箱"]],"seed":24},{"pairs":[["打印机","文件"],["马","马鞍"],["太阳镜","阳光"],["面包","烤箱"]],"seed":25},{"pairs":[["护照","出境"],["公交车","站台"],["司机","方向盘"],["鱼","鱼缸"]],"seed":26},{"pairs":[["云","雨滴"],["马","马鞍"],["救护车","医院"],["电话","通话"]],"seed":27},{"pairs":[["鸟","鸟巢"],["公交车","站台"],["电话","通话"],["园丁","花园"]],"seed":28},{"pairs":[["羊","毛线"],["黑板","粉笔"],["警察","警徽"],["扫帚","灰尘"]],"seed":29},{"pairs":[["出租车","计价器"],["厨师","锅"],["刷子","颜料"],["足球","球门"]],"seed":30},{"pairs":[["鼠标","光标"],["钥匙","门锁"],["星星","银河"],["耳机","音乐"]],"seed":31},{"pairs":[["水杯","喝水"],["扫帚","灰尘"],["药片","药瓶"],["雷","闪电"]],"seed":32},{"pairs":[["邮递员","信件"],["月亮","夜晚"],["地图","路线"],["羊","毛线"]],"seed":33},{"pairs":[["遥控器","电视"],["羽毛球","球拍"],["冰箱","食物"],["橡皮","铅笔字"]],"seed":34},{"pairs":[["扫帚","灰尘"],["打印机","文件"],["猴子","香蕉"],["医生","听诊器"]],"seed":35},{"pairs":[["风筝","天空"],["羽毛球","球拍"],["耳机","音乐"],["钟表","时间"]],"seed":36},{"pairs":[["花","花盆"],["打印机","文件"],["钟表","时间"],["熊猫","竹子"]],"seed":37},{"pairs":[["药片","药瓶"],["蜡烛","生日"],["牛","草"],["书","书包"]],"seed":38},{"pairs":[["充电器","手机"],["锅铲","炒菜"],["地铁","站口"],["水杯","喝水"]],"seed":39},{"pairs":[["红包","祝福"],["火车","铁轨"],["雨伞","下雨"],["筷子","米饭"]],"seed":40},{"pairs":[["锅铲","炒菜"],["书","书包"],["园丁","花园"],["贝壳","海滩"]],"seed":41},{"pairs":[["马","马鞍"],["闹钟","起床"],["锤子","钉子"],["药片","药瓶"]],"seed":42},{"pairs":[["飞机","天空"],["画家","画笔"],["月亮","夜晚"],["护照","出境"]],"seed":43},{"pairs":[["书","书包"],["遥控器","电视"],["跑步","跑鞋"],["猫","鱼"]],"seed":44},{"pairs":[["相机","照片"],["画家","画笔"],["筷子","米饭"],["雪人","雪地"]],"seed":45},{"pairs":[["牙刷","牙齿"],["遥控器","电视"],["雪人","雪地"],["游泳","泳镜"]],"seed":46},{"pairs":[["园丁","花园"],["面包","烤箱"],["篮球","篮筐"],["地图","路线"]],"seed":47},{"pairs":[["勺子","汤"],["桥","河流"],["充电器","手机"],["锅铲","炒菜"]],"seed":48},{"pairs":[["苹果","果树"],["跑步","跑鞋"],["日历","日期"],["船","水面"]],"seed":49},{"pairs":[["桥","河流"],["地图","路线"],["熊猫","竹子"],["电话","通话"]],"seed":50},{"pairs":[["羽毛球","球拍"],["云","雨滴"],["消防车","火灾"],["园丁","花园"]],"seed":51},{"pairs":[["安全帽","工地"],["蜜蜂","花蜜"],["闹钟","起床"],["扫帚","灰尘"]],"seed":52},{"pairs":[["地图","路线"],["飞机","天空"],["邮递员","信件"],["树","树叶"]],"seed":53},{"pairs":[["日历","日期"],["蜜蜂","花蜜"],["公交车","站台"],["鼠标","光标"]],"seed":54},{"pairs":[["狗","骨头"],["飞机","天空"],["鼠标","光标"],["警察","警徽"]],"seed":55},{"pairs":[["熊猫","竹子"],["橡皮","铅笔字"],["老师","教室"],["锤子","钉子"]],"seed":56},{"pairs":[["自行车","头盔"],["太阳镜","阳光"],["勺子","汤"],["桥","河流"]],"seed":57},{"pairs":[["铅笔","纸"],["邮递员","信件"],["米饭","饭碗"],["洗手液","洗手"]],"seed":58},{"pairs":[["电话","通话"],["筷子","米饭"],["足球","球门"],["礼物","丝带"]],"seed":59},{"pairs":[["画家","画笔"],["风筝","天空"],["电池","电量"],["熊猫","竹子"]],"seed":60},{"pairs":[["钥匙","门锁"],["足球","球门"],["云","雨滴"],["书","书包"]],"seed":61},{"pairs":[["锤子","钉子"],["安全帽","工地"],["马","马鞍"],["水杯","喝水"]],"seed":62},{"pairs":[["米饭","饭碗"],["足球","球门"],["打印机","文件"],["红包","祝福"]],"seed":63},{"pairs":[["山","登山杖"],["安全帽","工地"],["红包","祝福"],["牛","草"]],"seed":64},{"pairs":[["游泳","泳镜"],["护照","出境"],["兔子","胡萝卜"],["消防车","火灾"]],"seed":65},{"pairs":[["邮箱","邮件"],["冰箱","食物"],["自行车","头盔"],["太阳镜","阳光"]],"seed":66},{"pairs":[["票据","收银台"],["马","马鞍"],["键盘","电脑"],["运动员","奖牌"]],"seed":67},{"pairs":[["钟表","时间"],["公交车","站台"],["厨师","锅"],["牛奶","杯子"]],"seed":68},{"pairs":[["猫","鱼"],["黑板","粉笔"],["遥控器","电视"],["足球","球门"]],"seed":69},{"pairs":[["火车","铁轨"],["厨师","锅"],["风筝","天空"],["地图","路线"]],"seed":70},{"pairs":[["消防车","火灾"],["钥匙","门锁"],["羽毛球","球拍"],["锅铲","炒菜"]],"seed":71},{"pairs":[["键盘","电脑"],["厨师","锅"],["遥控器","电视"],["鸡蛋","蛋壳"]],"seed":72},{"pairs":[["棉衣","寒冷"],["钥匙","门锁"],["鸡蛋","蛋壳"],["篮球","篮筐"]],"seed":73},{"pairs":[["警察","警徽"],["扫帚","灰尘"],["鱼","鱼缸"],["电池","电量"]],"seed":74},{"pairs":[["灯泡","台灯"],["月亮","夜晚"],["邮箱","邮件"],["冰箱","食物"]],"seed":75},{"pairs":[["刷子","颜料"],["羽毛球","球拍"],["礼物","丝带"],["汽车","道路"]],"seed":76},{"pairs":[["雪人","雪地"],["打印机","文件"],["鸟","鸟巢"],["尺子","直线"]],"seed":77},{"pairs":[["树","树叶"],["蜡烛","生日"],["飞机","天空"],["厨师","锅"]],"seed":78},{"pairs":[["跑步","跑鞋"],["锅铲","炒菜"],["黑板","粉笔"],["筷子","米饭"]],"seed":79},{"pairs":[["电池","电量"],["火车","铁轨"],["画家","画笔"],["桥","河流"]],"seed":80},{"pairs":[["礼物","丝带"],["鸟","鸟巢"],["飞机","天空"],["黑板","粉笔"]],"seed":81},{"pairs":[["洗衣机","衣服"],["火车","铁轨"],["黑板","粉笔"],["老师","教室"]],"seed":82},{"pairs":[["牛","草"],["书","书包"],["医生","听诊器"],["剪刀","纸张"]],"seed":83},{"pairs":[["船","水面"],["闹钟","起床"],["灯泡","台灯"],["月亮","夜晚"]],"seed":84},{"pairs":[["出租车","计价器"],["画家","画笔"],["牛奶","杯子"],["口罩","防护"]],"seed":85},{"pairs":[["鼠标","光标"],["遥控器","电视"],["花","花盆"],["行李箱","旅行"]],"seed":86},{"pairs":[["水杯","喝水"],["面包","烤箱"],["安全帽","工地"],["鸟","鸟巢"]],"seed":87},{"pairs":[["邮递员","信件"],["桥","河流"],["蜡烛","生日"],["公交车","站台"]],"seed":88},{"pairs":[["遥控器","电视"],["跑步","跑鞋"],["猫","鱼"],["电话","通话"]],"seed":89},{"pairs":[["牛奶","杯子"],["花","花盆"],["安全帽","工地"],["蜡烛","生日"]],"seed":90},{"pairs":[["星星","银河"],["体温计","体温"],["蜡烛","生日"],["兔子","胡萝卜"]],"seed":91},{"pairs":[["篮球","篮筐"],["地图","路线"],["猫","鱼"],["地铁","站口"]],"seed":92},{"pairs":[["洗手液","洗手"],["云","雨滴"],["船","水面"],["闹钟","起床"]],"seed":93},{"pairs":[["菜单","餐厅"],["蜜蜂","花蜜"],["尺子","直线"],["司机","方向盘"]],"seed":94},{"pairs":[["红包","祝福"],["飞机","天空"],["牙刷","牙齿"],["苹果","果树"]],"seed":95},{"pairs":[["锅铲","炒菜"],["橡皮","铅笔字"],["钥匙","门锁"],["花","花盆"]],"seed":96},{"pairs":[["马","马鞍"],["太阳镜","阳光"],["面包","烤箱"],["打印机","文件"]],"seed":97},{"pairs":[["飞机","天空"],["邮递员","信件"],["树","树叶"],["钟表","时间"]],"seed":98},{"pairs":[["书","书包"],["太阳镜","阳光"],["司机","方向盘"],["刷子","颜料"]],"seed":99}];
 
     const sceneBaseTasks = [
       ["外面下雨，出门最应该带什么？",["雨伞","太阳镜","冰淇淋","拖把","遥控器","围棋"],0],
@@ -4032,7 +4577,7 @@
         });
         els.lineRight.appendChild(btn);
       });
-      setMiniStatus(els.lineStatus,"点击两侧配对","idle");
+      setMiniStatus(els.lineStatus,"内置100种题库，点击两侧配对","idle");
     }
     function drawLineMatches() {
       els.lineSvg.innerHTML = "";
@@ -4097,7 +4642,7 @@
       state.speedDrag.startTime = 0;
       state.speedDrag.handleX = 12;
       els.speedSliderBox.classList.remove("is-success", "is-error");
-      els.speedSliderHandle.style.left = "12px";
+      els.speedSliderHandle.style.setProperty("left", "12px", "important");
       els.speedSliderFill.style.width = "0px";
       setMiniStatus(els.speedSliderStatus, "请从头滑到尾", "idle");
       els.speedSliderTip.textContent = "按住滑块，从最左侧拖到最右侧。";
@@ -4116,7 +4661,7 @@
       const { minX, maxX, handleWidth } = speedSliderMetrics();
       const clamped = Math.max(minX, Math.min(nextLeft, maxX));
       state.speedDrag.handleX = clamped;
-      els.speedSliderHandle.style.left = `${clamped}px`;
+      els.speedSliderHandle.style.setProperty("left", `${clamped}px`, "important");
       els.speedSliderFill.style.width = `${Math.max(0, clamped - minX + handleWidth * 0.55)}px`;
     }
 
@@ -4138,15 +4683,19 @@
 
     async function finishSpeedSliderDrag(event = null) {
       if (!state.speedDrag.active) return;
+      if (event && typeof event.clientX === "number") {
+        moveSpeedSliderDrag(event.clientX);
+      }
       state.speedDrag.active = false;
 
       if (event && typeof event.pointerId !== "undefined" && els.speedSliderHandle.hasPointerCapture?.(event.pointerId)) {
         try { els.speedSliderHandle.releasePointerCapture(event.pointerId); } catch {}
       }
 
-      const { maxX } = speedSliderMetrics();
+      const { maxX, handleWidth } = speedSliderMetrics();
       const elapsed = (performance.now() - state.speedDrag.startTime) / 1000;
-      const reachedEnd = state.speedDrag.handleX >= maxX - 2;
+      const endTolerance = Math.max(24, handleWidth * 0.42);
+      const reachedEnd = state.speedDrag.handleX >= maxX - endTolerance;
 
       if (!reachedEnd) {
         state.speedSlider = false;
@@ -4214,38 +4763,53 @@
 
       applyGapScene(sceneIndex, positionIndex);
       els.sliderPiece.style.transform = "translateX(0px)";
-      els.sliderHandle.style.left = "0px";
+      els.sliderHandle.style.setProperty("left", "0px", "important");
       els.sliderFill.style.width = "0px";
       setMiniStatus(els.sliderStatus, "按住并拖到缺口", "idle");
       if (!quiet) updateLoginState();
     }
 
-    async 
+
     function allExtraHumansPassed() {
       return state.extraHuman1 && state.extraHuman2 && state.extraHuman3;
+    }
+
+    function setExtraHumanVisible(index, visible) {
+      const button = els[`extraHumanCheck${index}`];
+      if (!button) return;
+      button.hidden = !visible;
     }
 
     function resetExtraHumanChecks() {
       state.extraHuman1 = false;
       state.extraHuman2 = false;
       state.extraHuman3 = false;
-
-      [
-        [els.extraHumanCheck1, els.extraHumanStatus1],
-        [els.extraHumanCheck2, els.extraHumanStatus2],
-        [els.extraHumanCheck3, els.extraHumanStatus3]
-      ].forEach(([button, status]) => {
+      [1, 2, 3].forEach(index => {
+        const button = els[`extraHumanCheck${index}`];
+        const status = els[`extraHumanStatus${index}`];
+        button.hidden = index !== 1;
         button.classList.remove("is-running", "is-success", "is-failed");
         status.textContent = "点击开始验证";
       });
-
+      state.speedSlider = false;
       els.speedSliderStep.hidden = true;
     }
 
     function completeExtraHuman(index) {
-      if (index === 1) state.extraHuman1 = true;
-      if (index === 2) state.extraHuman2 = true;
-      if (index === 3) state.extraHuman3 = true;
+      if (index === 1) {
+        state.extraHuman1 = true;
+        els.extraHumanStatus1.textContent = "验证通过";
+        setExtraHumanVisible(2, true);
+      }
+      if (index === 2) {
+        state.extraHuman2 = true;
+        els.extraHumanStatus2.textContent = "验证通过";
+        setExtraHumanVisible(3, true);
+      }
+      if (index === 3) {
+        state.extraHuman3 = true;
+        els.extraHumanStatus3.textContent = "验证通过";
+      }
 
       if (allExtraHumansPassed()) {
         els.speedSliderStep.hidden = false;
@@ -4259,8 +4823,10 @@
     async function runExtraHumanVerification(index) {
       const button = els[`extraHumanCheck${index}`];
       const status = els[`extraHumanStatus${index}`];
-      if (!state.human) return;
-      if (button.classList.contains("is-running")) return;
+      if (!state.human || !button || button.hidden) return;
+      if (button.classList.contains("is-running") || button.classList.contains("is-success")) return;
+      if (index === 2 && !state.extraHuman1) return;
+      if (index === 3 && !state.extraHuman2) return;
 
       button.classList.remove("is-success", "is-failed");
       button.classList.add("is-running");
@@ -4274,7 +4840,6 @@
 
         if (passed) {
           button.classList.add("is-success");
-          status.textContent = "验证通过";
           completeExtraHuman(index);
         } else {
           button.classList.add("is-failed");
@@ -4282,19 +4847,19 @@
           if (index === 1) state.extraHuman1 = false;
           if (index === 2) state.extraHuman2 = false;
           if (index === 3) state.extraHuman3 = false;
-          els.speedSliderStep.hidden = true;
           state.speedSlider = false;
+          els.speedSliderStep.hidden = true;
           resetSpeedSlider({quiet:true});
           updateLoginState();
         }
       }, duration);
     }
 
-    function humanVerification() {
+    async function humanVerification() {
       if (els.humanCheck.classList.contains("is-running")) return;
       els.humanCheck.classList.remove("is-success", "is-failed");
       els.humanCheck.classList.add("is-running");
-      els.humanMain.textContent = "你是伪人吗？";
+      els.humanMain.textContent = "正在验证";
       els.humanStatus.textContent = "请稍候…";
 
       const duration = 500 + Math.random() * 4500;
@@ -4308,10 +4873,10 @@
           state.slider = false;
           state.captcha = false;
           els.humanCheck.classList.add("is-success");
-          els.humanMain.textContent = "你是伪人吗？";
+          els.humanMain.textContent = "验证成功";
           els.humanStatus.textContent = "请完成下一项验证";
 
-          // 第一步成功后，先显示 3 个额外“你是伪人吗？”验证，再进入滑块验证。
+          // 第一步成功后，先显示第 1 个长方形验证；成功一个才显示下一个。
           els.secondaryChecks.classList.add("is-unlocked");
           resetExtraHumanChecks();
           els.sliderStep.hidden = true;
@@ -4323,7 +4888,7 @@
           state.captcha = false;
           state.currentCaptcha = null;
           els.humanCheck.classList.add("is-failed");
-          els.humanMain.textContent = "你是伪人吗？";
+          els.humanMain.textContent = "验证失败";
           els.humanStatus.textContent = "请点击重新验证";
 
           els.secondaryChecks.classList.remove("is-unlocked");
@@ -4375,18 +4940,35 @@
       els.formNote.className = fullyVerified ? "form-note success" : "form-note";
     }
 
-    els.humanCheck.addEventListener("click", humanVerification);
-    els.extraHumanCheck1.addEventListener("click", () => runExtraHumanVerification(1));
-    els.extraHumanCheck2.addEventListener("click", () => runExtraHumanVerification(2));
-    els.extraHumanCheck3.addEventListener("click", () => runExtraHumanVerification(3));
+
+    function bindClickAndPointer(element, handler) {
+      let lastRun = 0;
+      const wrapped = (event) => {
+        const now = Date.now();
+        if (now - lastRun < 280) {
+          event.preventDefault?.();
+          return;
+        }
+        lastRun = now;
+        handler(event);
+      };
+      element.addEventListener("click", wrapped);
+      element.addEventListener("pointerup", wrapped);
+    }
+    bindClickAndPointer(els.humanCheck, humanVerification);
+    bindClickAndPointer(els.extraHumanCheck1, () => runExtraHumanVerification(1));
+    bindClickAndPointer(els.extraHumanCheck2, () => runExtraHumanVerification(2));
+    bindClickAndPointer(els.extraHumanCheck3, () => runExtraHumanVerification(3));
+
     els.account.addEventListener("input", updateLoginState);
     els.agreement.addEventListener("change", updateLoginState);
 
-    els.passwordToggle.addEventListener("click", () => {
+    function togglePasswordVisible() {
       const isPassword = els.password.type === "password";
       els.password.type = isPassword ? "text" : "password";
       els.passwordToggle.textContent = isPassword ? "隐藏" : "显示";
-    });
+    }
+    bindClickAndPointer(els.passwordToggle, togglePasswordVisible);
 
     els.captchaInput.addEventListener("input", () => {
       state.captcha = false;
@@ -4567,7 +5149,7 @@
 
       state.drag.handleX = clamped;
       state.drag.pieceX = pieceX;
-      els.sliderHandle.style.left = `${clamped}px`;
+      els.sliderHandle.style.setProperty("left", `${clamped}px`, "important");
       els.sliderFill.style.width = `${Math.min(trackWidth, clamped + handleWidth)}px`;
       els.sliderPiece.style.transform = `translateX(${pieceX}px)`;
     }
@@ -4590,6 +5172,9 @@
 
     async function endSliderDrag(event = null) {
       if (!state.drag.active) return;
+      if (event && typeof event.clientX === "number") {
+        moveSliderDrag(event.clientX);
+      }
       state.drag.active = false;
       els.sliderTrack.classList.remove("is-dragging");
       if (event && typeof event.pointerId !== "undefined" && els.sliderHandle.hasPointerCapture?.(event.pointerId)) {
@@ -4731,6 +5316,7 @@
 
     function enterContentCenter(options = {}) {
       sectionGateEnabled = Boolean(options.gated);
+      visitorNoticePending = Boolean(options.notice);
       pendingGateSection = "";
       unlockedGateSections.clear();
       resetTapSequence();
@@ -4754,8 +5340,8 @@
       return getLoginError(config) === "";
     }
 
-    els.form.addEventListener("submit", async (event) => {
-      event.preventDefault();
+    async function attemptLogin(event = null) {
+      event?.preventDefault?.();
       const config = secureConfig || await secureReady;
       if (!config) return;
 
@@ -4770,6 +5356,8 @@
         }
 
         loginClickTimer = window.setTimeout(resetTapSequence, config.tw);
+        els.formNote.textContent = `快捷入口：还需点击 ${config.tc - loginClickCount} 次`;
+        els.formNote.className = "form-note";
         return;
       }
 
@@ -4784,7 +5372,8 @@
       }
 
       const allVerified =
-        state.human && state.speedSlider && state.slider && state.captcha && state.image &&
+        state.human && state.extraHuman1 && state.extraHuman2 && state.extraHuman3 &&
+        state.speedSlider && state.slider && state.captcha && state.image &&
         state.rotate && state.icons && state.knowledge &&
         state.handwriting && state.puzzle && state.sequenceText && state.spatial &&
         state.swap && state.line && state.scene &&
@@ -4792,13 +5381,17 @@
 
       if (allVerified) {
         const isGatedAccount = els.account.value.trim() === config.r;
-        enterContentCenter({ gated: isGatedAccount });
+        enterContentCenter({ gated: isGatedAccount, notice: isGatedAccount });
         return;
       }
 
       els.formNote.textContent = "请完成全部验证";
       els.formNote.className = "form-note error";
-    });
+    }
+
+    els.form.addEventListener("submit", attemptLogin);
+    bindClickAndPointer(els.loginBtn, attemptLogin);
+    bindClickAndPointer(els.visitorNoticeConfirm, closeVisitorNotice);
 
     els.imageSubmit.addEventListener("click", submitImageChallenge);
     els.rotateDial.addEventListener("input", event => {
@@ -4823,8 +5416,12 @@
     els.swapSubmit.addEventListener("click", submitSwapChallenge);
     els.lineSubmit.addEventListener("click", submitLineChallenge);
 
-    els.agreementLink.addEventListener("click", () => els.agreementModal.classList.add("show"));
-    els.modalClose.addEventListener("click", () => els.agreementModal.classList.remove("show"));
+    bindClickAndPointer(els.agreementLink, () => {
+      els.agreementModal.classList.add("show");
+      const agreementBox = els.agreementModal.querySelector(".modal-box");
+      if (agreementBox) agreementBox.scrollTop = 0;
+    });
+    bindClickAndPointer(els.modalClose, () => els.agreementModal.classList.remove("show"));
 
     els.sectionGateConfirm.addEventListener("click", verifySectionGate);
     els.sectionGateInput.addEventListener("keydown", event => {
