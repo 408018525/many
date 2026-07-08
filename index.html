@@ -1671,7 +1671,7 @@
       <button class="human-check" type="button" id="humanCheck" aria-live="polite">
         <span class="human-box" aria-hidden="true"></span>
         <span class="human-copy">
-          <span class="human-main" id="humanMain">你是人吗</span>
+          <span class="human-main" id="humanMain">你是伪人吗?</span>
           <span class="human-status" id="humanStatus">点击开始验证</span>
         </span>
         <span class="human-icon" aria-hidden="true"><span class="human-icon-label">HUMAN&nbsp;&nbsp;CHECK</span></span>
@@ -1890,7 +1890,15 @@
         <h2 id="agreementTitle">Flore 服务协议</h2>
         <button class="modal-close" type="button" id="modalClose" aria-label="关闭">×</button>
       </div>
-      <p>本页面用于展示 Flore 的账号登录与验证流程。用户应如实填写账号信息，并在完成验证后提交登录请求。请勿绕过验证、伪造登录信息或将账户用于未授权用途。</p>
+      <p>本页面专为 Flore 平台用户提供专属账号登录、身份核验全套流程服务，是进入 Flore 平台系统的唯一合规登录渠道，承载账号身份校验、权限准入、安全风控识别等核心功能，所有用户访问平台均需通过本页面完成标准化登录验证步骤。
+所有使用本页面进行操作的用户，均需严格按照页面提示规范、真实、完整填写对应账号身份信息，包含账号名称、登录密码、绑定手机号 / 邮箱、二次验证码等全部必填核验项，填报内容必须与本人实名注册备案的账号资料保持完全一致，不得隐瞒、篡改个人真实信息，确保平台可精准核验账号归属权，保障账号使用安全。
+用户完整填写账号资料后，需按系统指引完成图像验证、短信验证码、邮箱校验、设备识别等任意一项或多项身份验证环节，全部验证步骤通过后，方可点击提交按钮发起正式登录请求；系统将依据验证结果判定是否授予平台访问权限，未走完完整验证流程的登录提交申请，系统将直接拦截不予放行。
+在此郑重告知全体用户，严禁出现以下违规操作行为：
+采用插件、脚本、第三方工具等各类手段跳过、屏蔽、篡改页面内置身份验证环节，绕过系统风控校验直接发起登录；
+编造、盗用、仿制他人账号密码、实名资料、验证码等登录核验信息，伪造虚假身份数据提交登录申请；
+将本人 Flore 账号转借、出租、售卖予第三方，或使用本账号开展平台规则、法律法规明确禁止的未授权商业、违规操作及各类非法活动。
+若用户违反上述任一规范，平台有权直接拒绝本次登录请求、临时冻结账号登录权限，情节严重者将永久封禁对应 Flore 账号，并保留依据平台用户协议与相关法律规定追究对应责任的权利。
+</p>
       <p>请妥善保管个人账号信息，并遵守系统的使用规范。</p>
     </div>
   </div>
@@ -2819,7 +2827,7 @@
       const angle = randomOther(rotateAngles, state.rotateTask && state.rotateTask.angle);
       state.rotateTask = { angle };
       state.rotate = false; state.rotateValue = 0; els.rotateDial.value = "0";
-      setMiniStatus(els.rotateStatus,"拖动转盘转正","idle");
+      setMiniStatus(els.rotateStatus,"拖动滑条转正","idle");
       updateRotateVisual();
     }
     function submitRotateChallenge() {
