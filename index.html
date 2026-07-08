@@ -865,7 +865,7 @@
     @media (max-width:430px){.image-choice{min-height:66px;font-size:27px}.icon-choice-grid{gap:7px}.icon-choice{min-height:52px;font-size:23px}.rotate-layout{grid-template-columns:1fr 108px;gap:10px}.rotate-stage{min-height:126px}.knowledge-answer-row{grid-template-columns:1fr 101px;gap:8px}.knowledge-prompt{font-size:14px}}
 
   
-    /* 最终下载页：只显示下载卡片，不存在左栏、文件预览框或“请选择一个版本”。 */
+    /* 最终下载页：只显示下载卡片，不存在左栏或文件预览框。 */
     .app-shell.download-mode{
       width:min(100%,1040px);
       min-height:auto;
@@ -1441,33 +1441,52 @@
     }
 
   
-    /* 代码上方的使用方法说明 */
-    .code-usage{
-      flex:0 0 auto;
-      padding:12px 17px 11px;
-      border-bottom:1px solid rgba(212,232,235,.16);
-      color:#d9ecee;
-      background:#142229;
+    /* 点名程序代码使用方法：放在上方白色空白区域，不放入代码显示界面 */
+    .code-usage-top[hidden]{
+      display:none !important;
     }
-    .code-usage strong{
+    .code-usage-top{
+      flex:0 0 auto;
+      margin:-2px 0 14px;
+      padding:14px 17px 13px;
+      border:1px solid #dbe6e8;
+      border-radius:15px;
+      color:#40565e;
+      background:#f7fbfb;
+      box-shadow:0 6px 16px rgba(16,33,38,.04);
+    }
+    .code-usage-top strong{
       display:block;
       margin-bottom:7px;
-      color:#eefbfc;
-      font-size:14px;
+      color:#14333a;
+      font-size:15px;
       letter-spacing:.03em;
     }
-    .code-usage ol{
+    .code-usage-top ol{
       margin:0;
-      padding-left:20px;
-      color:#b9d0d4;
-      font-size:12px;
-      line-height:1.65;
+      padding-left:21px;
+      color:#60747b;
+      font-size:13px;
+      line-height:1.7;
     }
-    .code-usage li + li{margin-top:1px}
+    .code-usage-top li + li{
+      margin-top:1px;
+    }
+    body.mobile-viewer-fullscreen .code-usage-top{
+      display:none !important;
+    }
     @media (max-width:520px){
-      .code-usage{padding:10px 13px}
-      .code-usage strong{font-size:13px}
-      .code-usage ol{font-size:11px;line-height:1.6}
+      .code-usage-top{
+        margin:0 0 12px;
+        padding:12px 13px;
+      }
+      .code-usage-top strong{
+        font-size:14px;
+      }
+      .code-usage-top ol{
+        font-size:12px;
+        line-height:1.65;
+      }
     }
 
   
@@ -1528,6 +1547,105 @@
       background:#1d6463;
     }
     .section-gate-confirm:hover{background:#155553}
+
+  
+    /* 栏目密码：直接覆盖内容中心下方工作区，不弹独立窗口 */
+    .app-workspace{
+      position:relative;
+    }
+    .section-workspace-gate[hidden]{
+      display:none !important;
+    }
+    .section-workspace-gate{
+      position:absolute;
+      inset:0;
+      z-index:80;
+      display:grid;
+      place-items:center;
+      padding:clamp(24px,5vw,54px);
+      background:
+        radial-gradient(circle at 50% 22%, rgba(244,248,248,.98), rgba(255,255,255,.98) 58%),
+        #fff;
+      border-top:1px solid #e2e8ea;
+    }
+    .section-workspace-gate.show{
+      display:grid;
+    }
+    .section-workspace-gate .section-gate-box{
+      width:min(100%,420px);
+      padding:28px 26px;
+      border:1.5px solid #d8e4e6;
+      border-radius:22px;
+      background:#fff;
+      box-shadow:0 18px 46px rgba(16,33,38,.10);
+    }
+    .section-workspace-gate h2{
+      margin:0;
+      color:#123039;
+      font-size:25px;
+      letter-spacing:-.8px;
+    }
+    .section-workspace-gate .section-gate-copy{
+      margin:10px 0 0;
+      color:#63757d;
+      font-size:15px;
+      line-height:1.65;
+    }
+    .section-workspace-gate .section-gate-input{
+      width:100%;
+      height:52px;
+      margin-top:17px;
+      border:1.5px solid #cbd7da;
+      border-radius:13px;
+      outline:none;
+      padding:0 14px;
+      color:#223a41;
+      background:#fff;
+      font-size:16px;
+    }
+    .section-workspace-gate .section-gate-input:focus{
+      border-color:#377f7d;
+      box-shadow:0 0 0 3px rgba(31,111,109,.12);
+    }
+    .section-workspace-gate .section-gate-error{
+      min-height:19px;
+      margin:8px 1px 0;
+      color:#bf4c4c;
+      font-size:13px;
+    }
+    .section-workspace-gate .section-gate-actions{
+      display:flex;
+      justify-content:flex-end;
+      margin-top:12px;
+    }
+    .section-workspace-gate .section-gate-confirm{
+      min-height:40px;
+      border:1px solid #1d6463;
+      border-radius:10px;
+      padding:0 18px;
+      color:#fff;
+      background:#1d6463;
+      font-size:14px;
+      font-weight:800;
+      cursor:pointer;
+    }
+    .section-workspace-gate .section-gate-confirm:hover{
+      background:#155553;
+    }
+    .app-shell.compact-layout .section-workspace-gate{
+      align-items:start;
+      padding-top:42px;
+    }
+    body.mobile-viewer-fullscreen .section-workspace-gate{
+      display:none !important;
+    }
+
+  
+    /* 未选择内容时，不显示右侧默认占位画面 */
+    .viewer-panel.empty-view .viewer-heading-copy,
+    .viewer-panel.empty-view .viewer-controls{
+      visibility:hidden;
+    }
 
   </style>
 </head>
@@ -1704,14 +1822,25 @@
       <section class="viewer-panel" id="viewerPanel" aria-label="文件展示区">
         <div class="viewer-heading">
           <div class="viewer-heading-copy">
-            <h2 id="viewerTitle">请选择文件版本</h2>
-            <span class="viewer-path" id="viewerPath">尚未加载文件</span>
+            <h2 id="viewerTitle"></h2>
+            <span class="viewer-path" id="viewerPath"></span>
           </div>
           <div class="viewer-controls">
             <button class="viewer-fullscreen-btn" id="viewerFullscreenBtn" type="button" aria-label="全屏显示当前程序">全屏显示</button>
           </div>
         </div>
-        <iframe id="fileViewer" class="file-viewer" title="内嵌程序展示区" srcdoc="<div style='height:100%;display:grid;place-items:center;background:#f8fafb;color:#65777e;font-family:Arial,&quot;Microsoft YaHei&quot;,sans-serif;text-align:center;padding:28px'><div><div style='font-size:38px;margin-bottom:15px'>⌁</div><strong style='font-size:20px'>请选择一个版本</strong><p style='font-size:14px;line-height:1.7'>点击左侧按钮后，对应程序会直接显示在这里。</p></div></div>"></iframe>
+
+        <section class="code-usage-top" id="codeUsageTop" hidden aria-label="点名程序代码使用方法">
+          <strong>使用方法</strong>
+          <ol>
+            <li>复制代码</li>
+            <li>粘贴到一个文本文档（.txt）</li>
+            <li>保持为（.html）格式文件</li>
+            <li>点击打开即可以使用，左下三点连点 5 次进入后台，默认密码 000</li>
+          </ol>
+        </section>
+
+        <iframe id="fileViewer" class="file-viewer" title="内嵌程序展示区" srcdoc="<div style='height:100%;background:#fff;'></div>"></iframe>
 
         <section class="code-viewer" id="codeViewer" hidden aria-label="点名程序代码">
           <div class="code-toolbar">
@@ -1721,24 +1850,26 @@
             </div>
             <button class="copy-code-btn" id="copyCodeBtn" type="button">复制代码</button>
           </div>
-          <div class="code-usage">
-            <strong>使用方法</strong>
-            <ol>
-              <li>复制代码</li>
-              <li>粘贴到一个文本文档（.txt）</li>
-              <li>保持为（.html）格式文件</li>
-              <li>点击打开即可以使用，左下三点连点 5 次进入后台，默认密码 000</li>
-            </ol>
-          </div>
           <pre class="code-content"><code id="rollcallCodeContent"></code></pre>
         </section>
 
         <div class="download-view" id="downloadView" hidden></div>
         <p class="file-hint">本地文件会嵌入在本程序内显示；点名程序“代码”可直接查看并复制完整源码。</p>
       </section>
+      <section class="section-workspace-gate" id="sectionGateModal" hidden aria-label="栏目访问验证">
+        <div class="section-gate-box">
+          <h2 id="sectionGateTitle">访问验证</h2>
+          <p class="section-gate-copy" id="sectionGateCopy">请输入访问密码后继续。</p>
+          <input class="section-gate-input" id="sectionGateInput" type="password" inputmode="numeric" autocomplete="off" placeholder="请输入访问密码" aria-label="访问密码">
+          <p class="section-gate-error" id="sectionGateError" aria-live="polite"></p>
+          <div class="section-gate-actions">
+            <button type="button" class="section-gate-confirm" id="sectionGateConfirm">进入</button>
+          </div>
+        </div>
+      </section>
     </div>
 
-    <!-- 下载页单独存在：不复用左侧栏目或右侧预览框，避免显示“请选择一个版本”。 -->
+    <!-- 下载页单独存在：不复用左侧栏目或右侧预览框。 -->
     <section class="download-page" id="downloadPage" hidden aria-label="文件下载中心">
       <div class="download-page-head">
         <div>
@@ -1761,22 +1892,6 @@
       </div>
       <p>本页面用于展示 Flore 的账号登录与验证流程。用户应如实填写账号信息，并在完成验证后提交登录请求。请勿绕过验证、伪造登录信息或将账户用于未授权用途。</p>
       <p>请妥善保管个人账号信息，并遵守系统的使用规范。</p>
-    </div>
-  </div>
-
-  <div class="modal section-gate-modal" id="sectionGateModal" role="dialog" aria-modal="true" aria-labelledby="sectionGateTitle">
-    <div class="modal-box section-gate-box">
-      <div class="modal-head">
-        <h2 id="sectionGateTitle">访问验证</h2>
-        <button class="modal-close" type="button" id="sectionGateClose" aria-label="关闭">×</button>
-      </div>
-      <p class="section-gate-copy" id="sectionGateCopy">请输入访问密码后继续。</p>
-      <input class="section-gate-input" id="sectionGateInput" type="password" inputmode="numeric" autocomplete="off" placeholder="请输入访问密码" aria-label="访问密码">
-      <p class="section-gate-error" id="sectionGateError" aria-live="polite"></p>
-      <div class="section-gate-actions">
-        <button type="button" class="section-gate-cancel" id="sectionGateCancel">取消</button>
-        <button type="button" class="section-gate-confirm" id="sectionGateConfirm">进入</button>
-      </div>
     </div>
   </div>
 
@@ -1925,8 +2040,6 @@
       sectionGateCopy: document.getElementById("sectionGateCopy"),
       sectionGateInput: document.getElementById("sectionGateInput"),
       sectionGateError: document.getElementById("sectionGateError"),
-      sectionGateClose: document.getElementById("sectionGateClose"),
-      sectionGateCancel: document.getElementById("sectionGateCancel"),
       sectionGateConfirm: document.getElementById("sectionGateConfirm"),
       toast: document.getElementById("toast"),
       loginShell: document.getElementById("loginShell"),
@@ -1939,6 +2052,7 @@
       viewerPath: document.getElementById("viewerPath"),
       fileViewer: document.getElementById("fileViewer"),
       codeViewer: document.getElementById("codeViewer"),
+      codeUsageTop: document.getElementById("codeUsageTop"),
       rollcallCodeContent: document.getElementById("rollcallCodeContent"),
       copyCodeBtn: document.getElementById("copyCodeBtn"),
       downloadView: document.getElementById("downloadView"),
@@ -1981,7 +2095,7 @@
           web:    { label: "网页版", file: "http://www.flore.cc.cd/" },
           local1: { label: "httpsyichenxie.com风格", file: "httpsyichenxie.com风格.html" },
           local2: { label: "httpswilliamle.design风格", file: "httpswilliamle.design风格.html" },
-          original: { label: "原版", file: "index.html" }
+          original: { label: "原版", file: "原版.html" }
         }
       },
       rollcall: {
@@ -2008,7 +2122,7 @@
       { name: "个人简介 · 本地1", file: "myIntroduction.html", type: "HTML" },
       { name: "中心简介 · httpsyichenxie.com风格", file: "httpsyichenxie.com风格.html", type: "HTML" },
       { name: "中心简介 · httpswilliamle.design风格", file: "httpswilliamle.design风格.html", type: "HTML" },
-      { name: "中心简介 · 原版", file: "index.html", type: "HTML" },
+      { name: "中心简介 · 原版", file: "原版.html", type: "HTML" },
       { name: "点名程序 · 修改版", file: "课堂随机点名.html", type: "HTML" }
     ];
 
@@ -2019,13 +2133,14 @@
     }
 
     function blankViewer() {
+      els.viewerPanel.classList.add("empty-view");
       els.downloadView.hidden = true;
       setCodeViewerVisible(false);
-      els.viewerFullscreenBtn.hidden = false;
-      els.viewerTitle.textContent = "请选择文件版本";
-      els.viewerPath.textContent = "尚未加载文件";
+      els.viewerFullscreenBtn.hidden = true;
+      els.viewerTitle.textContent = "";
+      els.viewerPath.textContent = "";
       els.fileViewer.removeAttribute("src");
-      els.fileViewer.srcdoc = "<div style='height:100%;display:grid;place-items:center;background:#f8fafb;color:#65777e;font-family:Arial,&quot;Microsoft YaHei&quot;,sans-serif;text-align:center;padding:28px'><div><div style='font-size:34px;margin-bottom:12px'>⌁</div><strong style='font-size:18px'>请选择一个版本</strong><p style='font-size:13px;line-height:1.7'>点击左侧按钮后，对应程序将直接嵌入在此处显示。</p></div></div>";
+      els.fileViewer.srcdoc = "<div style='height:100%;background:#fff;'></div>";
     }
 
 
@@ -2043,10 +2158,13 @@
     function setCodeViewerVisible(visible) {
       els.codeViewer.hidden = !visible;
       els.fileViewer.hidden = visible;
+      els.codeUsageTop.hidden = !visible;
     }
 
     function showRollcallCode(section, data) {
+      els.viewerPanel.classList.remove("empty-view");
       els.downloadView.hidden = true;
+      els.viewerFullscreenBtn.hidden = false;
       setCodeViewerVisible(true);
       els.viewerTitle.textContent = `${section.title} · ${data.label}`;
       els.viewerPath.textContent = "课堂随机点名完整代码";
@@ -2088,7 +2206,9 @@
     }
 
     function showViewerLoading(title, path) {
+      els.viewerPanel.classList.remove("empty-view");
       els.downloadView.hidden = true;
+      els.viewerFullscreenBtn.hidden = false;
       setCodeViewerVisible(false);
       els.fileViewer.hidden = false;
       els.viewerTitle.textContent = title;
@@ -2114,7 +2234,9 @@
       setCodeViewerVisible(false);
 
       if (!data.file) {
+        els.viewerPanel.classList.remove("empty-view");
         els.downloadView.hidden = true;
+        els.viewerFullscreenBtn.hidden = false;
         els.fileViewer.hidden = false;
         els.viewerTitle.textContent = `${section.title} · ${data.label}`;
         els.viewerPath.textContent = "暂未配置文件";
@@ -2224,12 +2346,14 @@
       els.sectionGateCopy.textContent = "请输入访问密码后继续。";
       els.sectionGateInput.value = "";
       els.sectionGateError.textContent = "";
+      els.sectionGateModal.hidden = false;
       els.sectionGateModal.classList.add("show");
       window.setTimeout(() => els.sectionGateInput.focus(), 50);
     }
 
     function closeSectionGate() {
       els.sectionGateModal.classList.remove("show");
+      els.sectionGateModal.hidden = true;
       els.sectionGateInput.value = "";
       els.sectionGateError.textContent = "";
       pendingGateSection = "";
@@ -2252,11 +2376,6 @@
     }
 
     function renderFileActions(sectionKey) {
-      if (needsSectionGate(sectionKey)) {
-        openSectionGate(sectionKey);
-        return;
-      }
-
       setActiveTab(sectionKey);
 
       if (sectionKey === "download") {
@@ -2287,6 +2406,12 @@
       });
 
       blankViewer();
+
+      if (needsSectionGate(sectionKey)) {
+        openSectionGate(sectionKey);
+      } else {
+        closeSectionGate();
+      }
     }
 
 
@@ -3433,15 +3558,9 @@
     els.agreementLink.addEventListener("click", () => els.agreementModal.classList.add("show"));
     els.modalClose.addEventListener("click", () => els.agreementModal.classList.remove("show"));
 
-    els.sectionGateClose.addEventListener("click", closeSectionGate);
-    els.sectionGateCancel.addEventListener("click", closeSectionGate);
     els.sectionGateConfirm.addEventListener("click", verifySectionGate);
     els.sectionGateInput.addEventListener("keydown", event => {
       if (event.key === "Enter") verifySectionGate();
-      if (event.key === "Escape") closeSectionGate();
-    });
-    els.sectionGateModal.addEventListener("click", event => {
-      if (event.target === els.sectionGateModal) closeSectionGate();
     });
     els.agreementModal.addEventListener("click", (event) => {
       if (event.target === els.agreementModal) els.agreementModal.classList.remove("show");
