@@ -2834,6 +2834,57 @@
     }
   }
 
+
+  /* 手机端滑块显示与触控修复 */
+  #speedSliderStep .speed-slider-box,
+  #speedSliderStep .speed-slider-track,
+  #speedSliderStep .speed-slider-handle,
+  #sliderStep .slider-track,
+  #sliderStep .slider-handle,
+  #sliderStep .slider-captcha{
+    touch-action:none !important;
+    -webkit-user-select:none !important;
+    user-select:none !important;
+  }
+  #speedSliderStep .speed-slider-handle,
+  #sliderStep .slider-handle{
+    pointer-events:auto !important;
+    z-index:30 !important;
+    will-change:left, transform !important;
+  }
+  #speedSliderStep .speed-slider-box{
+    overflow:visible !important;
+  }
+  #speedSliderStep .speed-slider-track,
+  #sliderStep .slider-track{
+    overflow:hidden !important;
+  }
+  #sliderStep .slider-text{
+    pointer-events:none !important;
+  }
+  @media (max-width:520px){
+    #speedSliderStep .speed-slider-box{
+      padding-left:10px !important;
+      padding-right:10px !important;
+    }
+    #speedSliderStep .speed-slider-handle{
+      width:54px !important;
+      height:54px !important;
+    }
+    #sliderStep .slider-track{
+      height:58px !important;
+    }
+    #sliderStep .slider-handle{
+      width:58px !important;
+      height:58px !important;
+    }
+    #sliderStep .slider-text{
+      padding:0 64px !important;
+      font-size:14px !important;
+      line-height:1.3 !important;
+    }
+  }
+
 </style>
 </head>
 <body>
@@ -4841,8 +4892,7 @@
         slot.textContent = "";
         slot.addEventListener("click", ()=>{
           if (slot.dataset.pieceId) {
-            clearPuzzleSlot(slot);
-            setMiniStatus(els.puzzleStatus,"已撤回该碎片，可重新拖放","idle");
+            setMiniStatus(els.puzzleStatus,"碎片已放入，不会因点击消失；如需修改，请拖其它碎片覆盖该格","idle");
           }
         });
         slot.addEventListener("dragover", e=>e.preventDefault());
@@ -5126,7 +5176,7 @@
       state.speedDrag.startTime = 0;
       state.speedDrag.handleX = 12;
       els.speedSliderBox.classList.remove("is-success", "is-error");
-      els.speedSliderHandle.style.left = "12px";
+      els.speedSliderHandle.style.setProperty("left", "12px", "important");
       els.speedSliderFill.style.width = "0px";
       setMiniStatus(els.speedSliderStatus, "请从头滑到尾", "idle");
       els.speedSliderTip.textContent = "按住滑块，从最左侧拖到最右侧。";
@@ -5145,7 +5195,7 @@
       const { minX, maxX, handleWidth } = speedSliderMetrics();
       const clamped = Math.max(minX, Math.min(nextLeft, maxX));
       state.speedDrag.handleX = clamped;
-      els.speedSliderHandle.style.left = `${clamped}px`;
+      els.speedSliderHandle.style.setProperty("left", `${clamped}px`, "important");
       els.speedSliderFill.style.width = `${Math.max(0, clamped - minX + handleWidth * 0.55)}px`;
     }
 
@@ -5167,6 +5217,9 @@
 
     async function finishSpeedSliderDrag(event = null) {
       if (!state.speedDrag.active) return;
+      if (event && typeof event.clientX === "number") {
+        moveSpeedSliderDrag(event.clientX);
+      }
       state.speedDrag.active = false;
 
       if (event && typeof event.pointerId !== "undefined" && els.speedSliderHandle.hasPointerCapture?.(event.pointerId)) {
@@ -5201,6 +5254,7 @@
 
       if (Math.random() < 0.80) {
         state.speedSlider = true;
+        updateSpeedSliderHandle(maxX);
         els.speedSliderBox.classList.remove("is-error");
         els.speedSliderBox.classList.add("is-success");
         setMiniStatus(els.speedSliderStatus, "验证成功", "success");
@@ -5732,6 +5786,34 @@
       window.addEventListener("touchend", () => finishSpeedSliderDrag());
     }
 
+    // 手机端 touch 兜底：修复部分手机浏览器 PointerEvent 存在但滑块无法滑动的问题。
+    let speedTouchFallbackActive = false;
+    els.speedSliderHandle.addEventListener("touchstart", (event) => {
+      if (state.speedDrag.active) return;
+      const touch = event.touches && event.touches[0];
+      if (touch && startSpeedSliderDrag(touch.clientX, "touch")) {
+        speedTouchFallbackActive = true;
+        event.preventDefault();
+      }
+    }, { passive:false });
+    window.addEventListener("touchmove", (event) => {
+      if (!speedTouchFallbackActive || !state.speedDrag.active) return;
+      const touch = event.touches && event.touches[0];
+      if (!touch) return;
+      moveSpeedSliderDrag(touch.clientX);
+      event.preventDefault();
+    }, { passive:false });
+    window.addEventListener("touchend", async () => {
+      if (!speedTouchFallbackActive) return;
+      speedTouchFallbackActive = false;
+      await finishSpeedSliderDrag();
+    }, { passive:false });
+    window.addEventListener("touchcancel", async () => {
+      if (!speedTouchFallbackActive) return;
+      speedTouchFallbackActive = false;
+      await finishSpeedSliderDrag();
+    }, { passive:false });
+
     // Pointer Events：电脑鼠标、触屏、触控板均可使用。
     els.sliderHandle.addEventListener("pointerdown", (event) => {
       if (!startSliderDrag(event.clientX, event.pointerId)) return;
@@ -5780,6 +5862,34 @@
       }, { passive: false });
       window.addEventListener("touchend", () => endSliderDrag());
     }
+
+    // 缺口滑块手机端 touch 兜底。
+    let gapTouchFallbackActive = false;
+    els.sliderHandle.addEventListener("touchstart", (event) => {
+      if (state.drag.active) return;
+      const touch = event.touches && event.touches[0];
+      if (touch && startSliderDrag(touch.clientX, "touch")) {
+        gapTouchFallbackActive = true;
+        event.preventDefault();
+      }
+    }, { passive:false });
+    window.addEventListener("touchmove", (event) => {
+      if (!gapTouchFallbackActive || !state.drag.active) return;
+      const touch = event.touches && event.touches[0];
+      if (!touch) return;
+      moveSliderDrag(touch.clientX);
+      event.preventDefault();
+    }, { passive:false });
+    window.addEventListener("touchend", async () => {
+      if (!gapTouchFallbackActive) return;
+      gapTouchFallbackActive = false;
+      await endSliderDrag();
+    }, { passive:false });
+    window.addEventListener("touchcancel", async () => {
+      if (!gapTouchFallbackActive) return;
+      gapTouchFallbackActive = false;
+      await endSliderDrag();
+    }, { passive:false });
 
     window.addEventListener("resize", () => {
       if (state.human && !state.speedSlider && !els.speedSliderStep.hidden) resetSpeedSlider({quiet:true});
