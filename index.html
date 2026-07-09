@@ -2885,6 +2885,89 @@
     }
   }
 
+
+  /* Flore 服务协议弹窗：上下滑动修复 */
+  #agreementModal{
+    position:fixed !important;
+    inset:0 !important;
+    z-index:100001 !important;
+    overflow:auto !important;
+    -webkit-overflow-scrolling:touch !important;
+    overscroll-behavior:contain !important;
+    touch-action:pan-y !important;
+    pointer-events:auto !important;
+    padding:18px !important;
+    align-items:center !important;
+    justify-content:center !important;
+  }
+  #agreementModal.show{
+    display:flex !important;
+  }
+  #agreementModal .modal-box{
+    width:min(94vw, 680px) !important;
+    max-height:82vh !important;
+    display:block !important;
+    overflow-y:auto !important;
+    overflow-x:hidden !important;
+    -webkit-overflow-scrolling:touch !important;
+    overscroll-behavior:contain !important;
+    touch-action:pan-y !important;
+    pointer-events:auto !important;
+    padding:0 !important;
+    border-radius:24px !important;
+    background:#fff !important;
+  }
+  #agreementModal .modal-head{
+    position:sticky !important;
+    top:0 !important;
+    z-index:5 !important;
+    padding:24px 26px 16px !important;
+    background:#fff !important;
+    border-bottom:1px solid #edf2f3 !important;
+  }
+  #agreementModal .modal-box > p{
+    margin:0 !important;
+    padding:0 26px 14px !important;
+    color:#52636a !important;
+    line-height:1.85 !important;
+    font-size:15px !important;
+    text-align:left !important;
+  }
+  #agreementModal .modal-box > p:first-of-type{
+    padding-top:20px !important;
+  }
+  #agreementModal .modal-box > p:last-of-type{
+    padding-bottom:30px !important;
+  }
+  #agreementModal .modal-close{
+    flex:0 0 auto !important;
+    pointer-events:auto !important;
+    touch-action:manipulation !important;
+  }
+  @media (max-width:520px){
+    #agreementModal{
+      padding:12px !important;
+      align-items:center !important;
+    }
+    #agreementModal .modal-box{
+      width:100% !important;
+      max-height:84vh !important;
+      border-radius:20px !important;
+    }
+    #agreementModal .modal-head{
+      padding:20px 18px 14px !important;
+    }
+    #agreementModal h2{
+      font-size:22px !important;
+    }
+    #agreementModal .modal-box > p{
+      padding-left:18px !important;
+      padding-right:18px !important;
+      font-size:14px !important;
+      line-height:1.8 !important;
+    }
+  }
+
 </style>
 </head>
 <body>
@@ -5475,6 +5558,34 @@
     }
 
 
+
+    function bindAgreementTouchScrollFix() {
+      const modal = els.agreementModal;
+      if (!modal || modal.dataset.scrollFix === "1") return;
+      modal.dataset.scrollFix = "1";
+      let startY = 0;
+
+      modal.addEventListener("touchstart", (event) => {
+        const touch = event.touches && event.touches[0];
+        if (touch) startY = touch.clientY;
+      }, { passive:true });
+
+      modal.addEventListener("touchmove", (event) => {
+        const box = modal.querySelector(".modal-box");
+        if (!box || !modal.classList.contains("show")) return;
+        const touch = event.touches && event.touches[0];
+        if (!touch) return;
+
+        const deltaY = touch.clientY - startY;
+        const atTop = box.scrollTop <= 0;
+        const atBottom = box.scrollTop + box.clientHeight >= box.scrollHeight - 1;
+
+        if ((atTop && deltaY > 0) || (atBottom && deltaY < 0)) {
+          event.preventDefault();
+        }
+      }, { passive:false });
+    }
+
     function bindClickAndPointer(element, handler) {
       let lastRun = 0;
       const wrapped = (event) => {
@@ -6012,6 +6123,7 @@
       if (agreementBox) agreementBox.scrollTop = 0;
     });
     bindClickAndPointer(els.modalClose, () => els.agreementModal.classList.remove("show"));
+    bindAgreementTouchScrollFix();
 
     els.sectionGateConfirm.addEventListener("click", verifySectionGate);
     els.sectionGateInput.addEventListener("keydown", event => {
