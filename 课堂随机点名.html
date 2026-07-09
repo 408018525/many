@@ -1,0 +1,1513 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>课堂随机点名</title>
+    <style>
+        :root {
+            --ball-size: 450px;
+            --text-color: #00ffff;
+            --page-text: #ffffff;
+            --accent: #00ffff;
+            --accent-ink: #061216;
+            --accent-soft: rgba(0, 255, 255, 0.18);
+            --page-bg: radial-gradient(ellipse at center, #1b2735 0%, #090a0f 100%);
+            --title-shadow: #00ffff;
+            --button-grad-a: #ff00cc;
+            --button-grad-b: #3333ff;
+            --control-bg: rgba(255, 255, 255, 0.10);
+            --control-border: rgba(255, 255, 255, 0.20);
+            --control-shadow: rgba(0, 0, 0, 0.50);
+            --result-overlay: rgba(0, 0, 0, 0.85);
+            --result-bg: rgba(255, 255, 255, 0.05);
+            --result-border: #ffd700;
+            --result-text: #ffd700;
+            --result-shadow: rgba(255, 215, 0, 0.40);
+            --star-color: #ffffff;
+            --stars-opacity: 1;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: var(--page-bg);
+            height: 100vh;
+            overflow: hidden;
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--page-text);
+            perspective: 1000px;
+            user-select: none;
+        }
+
+        /* 内置主题 */
+        body[data-theme="warm"] {
+            --text-color: #fff0d7;
+            --page-text: #fff7ec;
+            --accent: #ffca7b;
+            --accent-ink: #382412;
+            --accent-soft: rgba(255, 202, 123, 0.18);
+            --page-bg: radial-gradient(ellipse at center, #6b4b36 0%, #251916 100%);
+            --title-shadow: #ffbd73;
+            --button-grad-a: #e98b52;
+            --button-grad-b: #a74a45;
+            --control-bg: rgba(72, 42, 28, 0.38);
+            --control-border: rgba(255, 225, 192, 0.22);
+            --control-shadow: rgba(28, 14, 8, 0.52);
+            --result-overlay: rgba(37, 25, 22, 0.87);
+            --result-bg: rgba(255, 235, 206, 0.08);
+            --result-border: #ffd69a;
+            --result-text: #ffd69a;
+            --result-shadow: rgba(255, 189, 115, 0.42);
+        }
+
+        body[data-theme="minimal"] {
+            --text-color: #30363d;
+            --page-text: #30363d;
+            --accent: #56616f;
+            --accent-ink: #ffffff;
+            --accent-soft: rgba(85, 95, 109, 0.14);
+            --page-bg: linear-gradient(135deg, #f7f6f2 0%, #dce3e7 100%);
+            --title-shadow: rgba(85, 95, 109, 0.35);
+            --button-grad-a: #66717e;
+            --button-grad-b: #3f4854;
+            --control-bg: rgba(255, 255, 255, 0.54);
+            --control-border: rgba(48, 54, 61, 0.16);
+            --control-shadow: rgba(48, 54, 61, 0.12);
+            --result-overlay: rgba(236, 240, 240, 0.84);
+            --result-bg: rgba(255, 255, 255, 0.72);
+            --result-border: #637180;
+            --result-text: #39434e;
+            --result-shadow: rgba(65, 75, 85, 0.24);
+            --star-color: #687482;
+            --stars-opacity: 0.16;
+        }
+
+        body[data-theme="blackboard"] {
+            --text-color: #f4f1df;
+            --page-text: #f4f1df;
+            --accent: #dbcf96;
+            --accent-ink: #25312a;
+            --accent-soft: rgba(219, 207, 150, 0.18);
+            --page-bg: radial-gradient(ellipse at center, #36433b 0%, #151e1a 100%);
+            --title-shadow: #dbcf96;
+            --button-grad-a: #8c9a73;
+            --button-grad-b: #53644c;
+            --control-bg: rgba(42, 57, 48, 0.55);
+            --control-border: rgba(231, 222, 178, 0.22);
+            --control-shadow: rgba(7, 14, 10, 0.55);
+            --result-overlay: rgba(19, 29, 24, 0.88);
+            --result-bg: rgba(245, 241, 218, 0.07);
+            --result-border: #e5d79b;
+            --result-text: #f5e6a9;
+            --result-shadow: rgba(229, 215, 155, 0.34);
+            --stars-opacity: 0.45;
+        }
+
+        body[data-theme="sakura"] {
+            --text-color: #9b4967;
+            --page-text: #6f3b51;
+            --accent: #ea8eae;
+            --accent-ink: #ffffff;
+            --accent-soft: rgba(234, 142, 174, 0.18);
+            --page-bg: radial-gradient(circle at 50% 32%, #fff8fa 0%, #fbdde7 47%, #eab3c4 100%);
+            --title-shadow: rgba(224, 112, 153, 0.42);
+            --button-grad-a: #f39ab9;
+            --button-grad-b: #cc6f96;
+            --control-bg: rgba(255, 255, 255, 0.56);
+            --control-border: rgba(188, 94, 133, 0.21);
+            --control-shadow: rgba(156, 70, 106, 0.17);
+            --result-overlay: rgba(253, 234, 241, 0.87);
+            --result-bg: rgba(255, 255, 255, 0.72);
+            --result-border: #dd7fa3;
+            --result-text: #b34470;
+            --result-shadow: rgba(205, 91, 137, 0.28);
+            --star-color: #e481aa;
+            --stars-opacity: 0.22;
+        }
+
+        body[data-theme="ocean"] {
+            --text-color: #7fe7ff;
+            --page-text: #e1f9ff;
+            --accent: #57d7ff;
+            --accent-ink: #062036;
+            --accent-soft: rgba(87, 215, 255, 0.18);
+            --page-bg: radial-gradient(ellipse at center, #123c5b 0%, #061421 66%, #03080f 100%);
+            --title-shadow: #3bd2ff;
+            --button-grad-a: #00bde6;
+            --button-grad-b: #315dcb;
+            --control-bg: rgba(12, 48, 72, 0.46);
+            --control-border: rgba(141, 231, 255, 0.22);
+            --control-shadow: rgba(0, 7, 17, 0.58);
+            --result-overlay: rgba(3, 19, 31, 0.89);
+            --result-bg: rgba(76, 198, 234, 0.08);
+            --result-border: #6de2ff;
+            --result-text: #89eaff;
+            --result-shadow: rgba(49, 210, 255, 0.36);
+            --star-color: #bdefff;
+            --stars-opacity: 0.66;
+        }
+
+        body[data-theme="forest"] {
+            --text-color: #2e5e49;
+            --page-text: #264535;
+            --accent: #6b9c72;
+            --accent-ink: #ffffff;
+            --accent-soft: rgba(107, 156, 114, 0.18);
+            --page-bg: radial-gradient(circle at 50% 20%, #f7fbef 0%, #dfead4 48%, #b8caa9 100%);
+            --title-shadow: rgba(87, 135, 91, 0.34);
+            --button-grad-a: #8bb07b;
+            --button-grad-b: #517b62;
+            --control-bg: rgba(255, 255, 251, 0.49);
+            --control-border: rgba(57, 105, 72, 0.18);
+            --control-shadow: rgba(47, 86, 56, 0.16);
+            --result-overlay: rgba(230, 243, 223, 0.86);
+            --result-bg: rgba(255, 255, 252, 0.70);
+            --result-border: #6a9c70;
+            --result-text: #3d7050;
+            --result-shadow: rgba(74, 126, 82, 0.26);
+            --star-color: #6a9b73;
+            --stars-opacity: 0.16;
+        }
+
+        body[data-theme="royal"] {
+            --text-color: #ffd98a;
+            --page-text: #fff2ce;
+            --accent: #efc96e;
+            --accent-ink: #4b0f15;
+            --accent-soft: rgba(239, 201, 110, 0.18);
+            --page-bg: radial-gradient(ellipse at center, #8b2233 0%, #4b0d18 60%, #21060b 100%);
+            --title-shadow: #efc96e;
+            --button-grad-a: #c7434d;
+            --button-grad-b: #7e1728;
+            --control-bg: rgba(97, 18, 31, 0.42);
+            --control-border: rgba(255, 222, 157, 0.24);
+            --control-shadow: rgba(30, 0, 6, 0.60);
+            --result-overlay: rgba(51, 7, 15, 0.89);
+            --result-bg: rgba(255, 229, 169, 0.07);
+            --result-border: #f1ce78;
+            --result-text: #ffe1a1;
+            --result-shadow: rgba(238, 184, 77, 0.38);
+            --star-color: #ffdb8a;
+            --stars-opacity: 0.52;
+        }
+
+        body[data-theme="lavender"] {
+            --text-color: #805ca7;
+            --page-text: #614582;
+            --accent: #9a7fc3;
+            --accent-ink: #ffffff;
+            --accent-soft: rgba(154, 127, 195, 0.18);
+            --page-bg: radial-gradient(circle at 50% 22%, #fcfaff 0%, #e8def4 50%, #c9b9dd 100%);
+            --title-shadow: rgba(133, 96, 177, 0.38);
+            --button-grad-a: #b094dd;
+            --button-grad-b: #7659a2;
+            --control-bg: rgba(255, 255, 255, 0.52);
+            --control-border: rgba(105, 74, 145, 0.20);
+            --control-shadow: rgba(93, 62, 125, 0.16);
+            --result-overlay: rgba(243, 237, 250, 0.88);
+            --result-bg: rgba(255, 255, 255, 0.72);
+            --result-border: #9875c1;
+            --result-text: #6e4d96;
+            --result-shadow: rgba(130, 92, 173, 0.26);
+            --star-color: #9a7bc1;
+            --stars-opacity: 0.18;
+        }
+
+        h1 {
+            position: absolute;
+            top: 30px;
+            font-size: 2.5rem;
+            color: var(--text-color);
+            text-shadow: 0 0 10px var(--title-shadow), 0 0 20px var(--title-shadow);
+            z-index: 100;
+            letter-spacing: 5px;
+            margin: 0;
+            pointer-events: none;
+        }
+
+        .stars {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .star {
+            position: absolute;
+            background: var(--star-color);
+            border-radius: 50%;
+            animation: twinkle var(--duration) infinite ease-in-out;
+            opacity: 0.8;
+        }
+
+        .stars { opacity: var(--stars-opacity); }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        .scene {
+            position: relative;
+            width: var(--ball-size);
+            height: var(--ball-size);
+            transform-style: preserve-3d;
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .ball {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            transform-style: preserve-3d;
+        }
+
+        .name-tag {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform-style: preserve-3d;
+            color: var(--text-color);
+            font-size: 16px;
+            font-weight: bold;
+            text-shadow: 0 0 5px color-mix(in srgb, var(--accent) 75%, transparent);
+            white-space: nowrap;
+            will-change: transform, opacity;
+            margin-left: -25px;
+            margin-top: -12px;
+        }
+
+        .controls {
+            position: absolute;
+            bottom: 8%;
+            display: flex;
+            gap: 20px;
+            z-index: 100;
+            background: var(--control-bg);
+            padding: 15px 30px;
+            border-radius: 50px;
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--control-border);
+            box-shadow: 0 10px 30px var(--control-shadow);
+        }
+
+        button {
+            padding: 10px 25px;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+            outline: none;
+            font-family: inherit;
+        }
+
+        .btn-count {
+            background: transparent;
+            border: 2px solid var(--accent);
+            color: var(--accent);
+        }
+
+        .btn-count.active {
+            background: var(--accent);
+            color: var(--accent-ink);
+            box-shadow: 0 0 15px var(--accent);
+        }
+
+        .btn-start {
+            background: linear-gradient(45deg, var(--button-grad-a), var(--button-grad-b));
+            color: white;
+            font-size: 1.3rem;
+            padding: 10px 40px;
+            box-shadow: 0 0 20px color-mix(in srgb, var(--button-grad-a) 45%, transparent);
+        }
+
+        .btn-start:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px color-mix(in srgb, var(--button-grad-a) 65%, transparent);
+        }
+
+        .btn-start:active { transform: scale(0.95); }
+
+        .btn-start.stopping {
+            background: linear-gradient(45deg, #ff3333, #cc0000);
+            box-shadow: 0 0 20px rgba(255, 51, 51, 0.4);
+        }
+
+        .result-overlay,
+        .access-layer,
+        .settings-layer {
+            position: fixed;
+            inset: 0;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            backdrop-filter: blur(5px);
+        }
+
+        .result-overlay {
+            background: var(--result-overlay);
+            z-index: 200;
+        }
+
+        .result-container {
+            display: flex;
+            gap: 60px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            max-width: 90%;
+        }
+
+        .winner-card {
+            background: var(--result-bg);
+            border: 2px solid var(--result-border);
+            border-radius: 20px;
+            padding: 40px 60px;
+            text-align: center;
+            animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 0 40px var(--result-shadow);
+            min-width: 200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .winner-name {
+            font-size: 3rem;
+            color: var(--result-text);
+            font-weight: bold;
+            text-shadow: 0 0 15px var(--result-text), 0 0 30px var(--result-shadow);
+            letter-spacing: 2px;
+            animation: glow 2s infinite alternate;
+        }
+
+        @keyframes popIn {
+            from { transform: scale(0.5); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 10px var(--result-text), 0 0 20px var(--result-shadow); }
+            to { text-shadow: 0 0 20px var(--result-text), 0 0 40px var(--result-shadow), 0 0 60px var(--result-shadow); }
+        }
+
+        #confetti-canvas {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 201;
+        }
+
+        .close-btn {
+            margin-top: 60px;
+            background: transparent;
+            border: 2px solid var(--result-text);
+            color: var(--result-text);
+            padding: 12px 35px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s;
+        }
+
+        .close-btn:hover {
+            background: var(--result-text);
+            color: var(--accent-ink);
+            box-shadow: 0 0 15px var(--result-text);
+        }
+
+        /* 极低存在感的页角标记：视觉仅为 3 个 4px 圆点，实际点击区为其约两倍 */
+        .footer-mark {
+            position: fixed;
+            left: 8px;
+            bottom: 8px;
+            width: 36px;
+            height: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            z-index: 4;
+            opacity: 0.15;
+        }
+
+        .footer-mark span {
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: currentColor;
+            display: block;
+        }
+
+        .access-layer,
+        .settings-layer {
+            background: rgba(7, 10, 14, 0.72);
+            z-index: 500;
+            padding: 18px;
+        }
+
+        .pass-card,
+        .settings-card {
+            width: min(94vw, 720px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            background: rgba(20, 25, 32, 0.95);
+            border-radius: 18px;
+            box-shadow: 0 20px 70px rgba(0, 0, 0, 0.5);
+            color: #f6f8fb;
+        }
+
+        .pass-card {
+            width: min(90vw, 340px);
+            padding: 28px;
+        }
+
+        .pass-card h2,
+        .settings-card h2 {
+            margin: 0;
+            font-size: 1.3rem;
+            letter-spacing: 0.04em;
+        }
+
+        .pass-card p,
+        .settings-hint {
+            margin: 10px 0 0;
+            font-size: 0.88rem;
+            line-height: 1.55;
+            color: rgba(246, 248, 251, 0.62);
+        }
+
+        .pass-card input,
+        .settings-card input,
+        .settings-card textarea {
+            width: 100%;
+            margin-top: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.17);
+            background: rgba(255, 255, 255, 0.06);
+            color: #fff;
+            border-radius: 10px;
+            padding: 11px 12px;
+            outline: none;
+            font: inherit;
+        }
+
+        .pass-card input:focus,
+        .settings-card input:focus,
+        .settings-card textarea:focus {
+            border-color: rgba(117, 210, 255, 0.9);
+            box-shadow: 0 0 0 3px rgba(117, 210, 255, 0.12);
+        }
+
+        /* 自定义风格选择器：避免浏览器原生 select 弹层在部分设备上被异常放大 */
+        .theme-picker {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 8px;
+            margin-top: 16px;
+        }
+
+        .theme-choice {
+            position: relative;
+            min-height: 42px;
+            padding: 8px 8px 8px 10px;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.055);
+            color: rgba(246, 248, 251, 0.88);
+            font: inherit;
+            font-size: 0.76rem;
+            line-height: 1.18;
+            text-align: left;
+            cursor: pointer;
+            transition: border-color 0.18s ease, background 0.18s ease, transform 0.18s ease;
+        }
+
+        .theme-choice:hover {
+            background: rgba(255, 255, 255, 0.10);
+            transform: translateY(-1px);
+        }
+
+        .theme-choice.is-selected {
+            border-color: #75d2ff;
+            background: rgba(117, 210, 255, 0.16);
+            box-shadow: 0 0 0 2px rgba(117, 210, 255, 0.12);
+            color: #ffffff;
+        }
+
+        .theme-dot {
+            width: 15px;
+            height: 15px;
+            flex: 0 0 15px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.26);
+            box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.12);
+        }
+
+        .theme-dot.starry { background: radial-gradient(circle at 32% 30%, #8affff 0 12%, #1b2735 34%, #090a0f 100%); }
+        .theme-dot.warm { background: radial-gradient(circle at 35% 28%, #ffd18a 0 12%, #6b4b36 35%, #251916 100%); }
+        .theme-dot.minimal { background: linear-gradient(135deg, #ffffff 0%, #dce3e7 100%); }
+        .theme-dot.blackboard { background: radial-gradient(circle at 42% 30%, #8f9b76 0 12%, #36433b 38%, #151e1a 100%); }
+        .theme-dot.sakura { background: radial-gradient(circle at 40% 25%, #fffafd 0 18%, #f6c4d4 52%, #db8ead 100%); }
+        .theme-dot.ocean { background: radial-gradient(circle at 38% 28%, #71e5ff 0 12%, #123c5b 36%, #03080f 100%); }
+        .theme-dot.forest { background: radial-gradient(circle at 42% 26%, #f7fbef 0 16%, #dfead4 45%, #719271 100%); }
+        .theme-dot.royal { background: radial-gradient(circle at 38% 30%, #ffd982 0 12%, #8b2233 39%, #21060b 100%); }
+        .theme-dot.lavender { background: radial-gradient(circle at 38% 27%, #ffffff 0 16%, #e8def4 48%, #9075b4 100%); }
+
+        @media (max-width: 560px) {
+            .theme-picker { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
+
+        .pass-error {
+            min-height: 18px;
+            margin-top: 8px;
+            font-size: 0.82rem;
+            color: #ff9b9b;
+        }
+
+        .pass-actions,
+        .settings-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        .pass-actions button,
+        .settings-actions button {
+            font-size: 0.9rem;
+            padding: 10px 16px;
+            color: #fff;
+            background: rgba(255, 255, 255, 0.09);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+        }
+
+        .pass-actions .primary,
+        .settings-actions .primary {
+            background: linear-gradient(45deg, #4776e6, #8e54e9);
+            border-color: transparent;
+        }
+
+        .settings-card {
+            max-height: min(86vh, 780px);
+            overflow: auto;
+            padding: 24px;
+        }
+
+        .settings-head {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 18px;
+        }
+
+        .settings-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .field-label {
+            display: block;
+            font-size: 0.86rem;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.82);
+        }
+
+        .field-label small {
+            display: block;
+            margin-top: 4px;
+            font-size: 0.76rem;
+            font-weight: normal;
+            color: rgba(255, 255, 255, 0.48);
+            line-height: 1.35;
+        }
+
+        .full-field { grid-column: 1 / -1; }
+
+        .range-field {
+            display: grid;
+            grid-template-columns: 1fr 64px;
+            align-items: center;
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .range-field input[type="range"] {
+            margin: 0;
+            padding: 0;
+            accent-color: #8e54e9;
+        }
+
+        .range-value {
+            margin: 0 !important;
+            text-align: center;
+        }
+
+        .roster-tools {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin: 22px 0 10px;
+        }
+
+        .roster-tools h3 {
+            margin: 0;
+            font-size: 1rem;
+        }
+
+        .roster-tools button,
+        .roster-table button {
+            padding: 7px 10px;
+            font-size: 0.8rem;
+            color: #fff;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+        }
+
+        .roster-table-wrap {
+            max-height: 260px;
+            overflow: auto;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+        }
+
+        .roster-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.88rem;
+        }
+
+        .roster-table th,
+        .roster-table td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .roster-table th {
+            position: sticky;
+            top: 0;
+            background: #1d242d;
+            color: rgba(255, 255, 255, 0.65);
+            font-weight: 600;
+            z-index: 1;
+        }
+
+        .roster-table tr:last-child td { border-bottom: 0; }
+
+        .roster-table input {
+            margin: 0;
+            padding: 7px 8px;
+            min-width: 88px;
+        }
+
+        .roster-table .weight-input { width: 92px; }
+        .roster-table .probability-cell { color: #9edfff; white-space: nowrap; }
+
+        .roster-header-check,
+        .roster-name-cell {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .roster-header-check {
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .roster-name-cell .roster-name {
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .roster-table input[type="checkbox"] {
+            width: 18px;
+            min-width: 18px;
+            height: 18px;
+            margin: 0;
+            padding: 0;
+            accent-color: #75d2ff;
+            cursor: pointer;
+        }
+
+        .settings-secondary-actions {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .settings-actions .reset-link {
+            margin: 0;
+            padding: 0;
+            border: 0;
+            border-radius: 0;
+            background: transparent;
+            color: #9edfff;
+            font-size: 0.84rem;
+            line-height: 1.2;
+            box-shadow: none;
+        }
+
+        .settings-actions .reset-link:hover {
+            background: transparent;
+            color: #c7f0ff;
+            text-decoration: underline;
+            box-shadow: none;
+        }
+
+        @media (max-width: 620px) {
+            :root { --ball-size: min(88vw, 390px); }
+            h1 { top: 24px; font-size: 1.6rem; letter-spacing: 3px; }
+            .controls { bottom: 5%; gap: 8px; padding: 10px; }
+            button { padding: 8px 12px; font-size: 0.92rem; }
+            .btn-start { padding: 8px 18px; font-size: 1rem; }
+            .settings-grid { grid-template-columns: 1fr; }
+            .full-field { grid-column: auto; }
+            .settings-card { padding: 18px; }
+            .winner-card { padding: 28px 35px; min-width: 160px; }
+            .winner-name { font-size: 2rem; }
+            .result-container { gap: 18px; }
+            .close-btn { margin-top: 32px; }
+        }
+    </style>
+</head>
+<body data-theme="starry">
+    <h1 id="pageTitle">课堂随机点名</h1>
+    <div class="stars" id="stars"></div>
+
+    <div class="scene">
+        <div class="ball" id="ball"></div>
+    </div>
+
+    <div class="controls">
+        <button class="btn-count active" onclick="setCount(1, this)">1 人</button>
+        <button class="btn-count" onclick="setCount(2, this)">2 人</button>
+        <button class="btn-count" onclick="setCount(3, this)">3 人</button>
+        <button class="btn-start" id="startBtn" onclick="toggleRoll()">开始点名</button>
+    </div>
+
+    <div class="result-overlay" id="resultOverlay">
+        <div class="result-container" id="resultContainer"></div>
+        <button class="close-btn" onclick="closeResult()">继续点名</button>
+    </div>
+
+    <canvas id="confetti-canvas"></canvas>
+
+    <div class="footer-mark" aria-hidden="true"><span></span><span></span><span></span></div>
+
+    <div class="access-layer" id="accessLayer" aria-modal="true" role="dialog" aria-labelledby="accessTitle">
+        <div class="pass-card">
+            <h2 id="accessTitle">访问验证</h2>
+            <p>请输入访问密码。</p>
+            <input id="passInput" type="password" inputmode="numeric" autocomplete="off" aria-label="访问密码">
+            <div class="pass-error" id="passError"></div>
+            <div class="pass-actions">
+                <button type="button" onclick="hideAccess()">取消</button>
+                <button type="button" class="primary" onclick="verifyAccess()">进入</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="settings-layer" id="settingsLayer" aria-modal="true" role="dialog" aria-labelledby="settingsTitle">
+        <div class="settings-card">
+            <div class="settings-head">
+                <div>
+                    <h2 id="settingsTitle">抽取设置</h2>
+                    <p class="settings-hint">保存后立即应用，并仅保存在当前浏览器中。</p>
+                </div>
+            </div>
+
+            <div class="settings-grid">
+                <label class="field-label">
+                    抽取名称
+                    <small>显示在页面顶部的标题。</small>
+                    <input id="settingTitle" type="text" maxlength="30" placeholder="课堂随机点名">
+                </label>
+
+                <div class="field-label">
+                    页面风格
+                    <small>点击下方卡片选择风格；不再调用浏览器原生下拉菜单。</small>
+                    <input id="settingTheme" type="hidden" value="starry">
+                    <div class="theme-picker" id="themePicker" role="radiogroup" aria-label="页面风格">
+                        <button type="button" class="theme-choice" data-theme-value="starry" role="radio" aria-checked="false"><span class="theme-dot starry"></span><span>星空霓虹</span></button>
+                        <button type="button" class="theme-choice" data-theme-value="warm" role="radio" aria-checked="false"><span class="theme-dot warm"></span><span>暖棕氛围</span></button>
+                        <button type="button" class="theme-choice" data-theme-value="minimal" role="radio" aria-checked="false"><span class="theme-dot minimal"></span><span>浅色极简</span></button>
+                        <button type="button" class="theme-choice" data-theme-value="blackboard" role="radio" aria-checked="false"><span class="theme-dot blackboard"></span><span>黑板课堂</span></button>
+                        <button type="button" class="theme-choice" data-theme-value="sakura" role="radio" aria-checked="false"><span class="theme-dot sakura"></span><span>樱花糖果</span></button>
+                        <button type="button" class="theme-choice" data-theme-value="ocean" role="radio" aria-checked="false"><span class="theme-dot ocean"></span><span>深海科技</span></button>
+                        <button type="button" class="theme-choice" data-theme-value="forest" role="radio" aria-checked="false"><span class="theme-dot forest"></span><span>清新森林</span></button>
+                        <button type="button" class="theme-choice" data-theme-value="royal" role="radio" aria-checked="false"><span class="theme-dot royal"></span><span>国潮红金</span></button>
+                        <button type="button" class="theme-choice" data-theme-value="lavender" role="radio" aria-checked="false"><span class="theme-dot lavender"></span><span>梦幻薰衣草</span></button>
+                    </div>
+                </div>
+
+                <label class="field-label">
+                    重复概率
+                    <small>每次抽取时，从历史已抽中过的人中再次抽取的概率。</small>
+                    <span class="range-field">
+                        <input id="repeatChance" type="range" min="0" max="100" step="1">
+                        <input id="repeatChanceValue" class="range-value" type="number" min="0" max="100" step="1">
+                    </span>
+                </label>
+
+                <label class="field-label">
+                    访问密码
+                    <small>默认 202061。修改后需用新密码进入设置。</small>
+                    <input id="settingPassword" type="password" autocomplete="new-password" maxlength="32">
+                </label>
+
+                <div class="full-field">
+                    <div class="roster-tools">
+                        <div>
+                            <h3>抽取名称与随机概率</h3>
+                            <p class="settings-hint">概率按“随机权重”自动计算；权重越高，抽中的概率越高。权重为 0 时不会被抽中。</p>
+                        </div>
+                        <button type="button" onclick="addRosterRow()">添加名称</button>
+                    </div>
+                    <div class="roster-table-wrap">
+                        <table class="roster-table">
+                            <thead>
+                                <tr>
+                                    <th style="width:48%">
+                                        <label class="roster-header-check">
+                                            <input id="selectAllRoster" type="checkbox" checked onchange="toggleAllRoster(this.checked)" aria-label="全选抽取名称">
+                                            <span>抽取名称</span>
+                                        </label>
+                                    </th>
+                                    <th style="width:22%">随机权重</th>
+                                    <th style="width:20%">当前概率</th>
+                                    <th style="width:10%"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="rosterBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings-actions">
+                <div class="settings-secondary-actions">
+                    <button type="button" onclick="hideSettings()">取消</button>
+                    <button type="button" class="reset-link" onclick="restoreDefaultSettings()">恢复默认</button>
+                </div>
+                <button type="button" class="primary" onclick="saveSettings()">保存并应用</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const defaultStudents = [
+            "白朵", "蔡骐奥", "蔡晞榆", "陈嘉雯", "陈骏昇", "陈心愉",
+            "陈奕霖", "陈逸桐", "陈映谚", "陈宇扬", "邓皓天", "郭家璇",
+            "何霈君", "何晓林", "黄柏睿", "黄文志", "黄煦晴", "黎祉毅",
+            "李科汝", "李尚谦", "李逸朗", "李韵琳", "1", "梁殿英",
+            "梁皓轩", "梁倩莹", "梁炜烨", "梁梓弘", "林佑承", "凌浩扬",
+            "刘俊希", "刘炣晴", "刘欣仪", "卢梓琳", "麦睿毓", "潘骏灏",
+            "苏炜诺", "万雨涵", "王培鑫", "王诗韵", "魏梓楷", "萧力僖",
+            "邢韵", "叶梓希", "袁园", "张晨曦", "张一炎", "周桢涯",
+            "朱铠琳", "李梓诺"
+        ];
+
+        const supportedThemes = ["starry", "warm", "minimal", "blackboard", "sakura", "ocean", "forest", "royal", "lavender"];
+
+        const fallbackConfig = {
+            title: "课堂随机点名",
+            theme: "starry",
+            password: "202061",
+            repeatChance: 0,
+            roster: defaultStudents.map(name => ({ name, weight: 1, selected: true }))
+        };
+
+        const storageKey = "classroom.roll.settings.v2";
+        let config = loadConfig();
+        let selectCount = 1;
+        let isRolling = false;
+        let animationId = null;
+        let currentRotationX = 0;
+        let currentRotationY = 0;
+        let drawHistory = [];
+
+        const ball = document.getElementById("ball");
+        const startBtn = document.getElementById("startBtn");
+        const resultOverlay = document.getElementById("resultOverlay");
+        const resultContainer = document.getElementById("resultContainer");
+        const countBtns = document.querySelectorAll(".btn-count");
+        const pageTitle = document.getElementById("pageTitle");
+        const accessLayer = document.getElementById("accessLayer");
+        const settingsLayer = document.getElementById("settingsLayer");
+        const passInput = document.getElementById("passInput");
+        const passError = document.getElementById("passError");
+        const rosterBody = document.getElementById("rosterBody");
+        const repeatChance = document.getElementById("repeatChance");
+        const repeatChanceValue = document.getElementById("repeatChanceValue");
+
+        function loadConfig() {
+            try {
+                const saved = JSON.parse(localStorage.getItem(storageKey));
+                if (!saved || !Array.isArray(saved.roster) || saved.roster.length === 0) return structuredClone(fallbackConfig);
+                return {
+                    title: typeof saved.title === "string" && saved.title.trim() ? saved.title.trim() : fallbackConfig.title,
+                    theme: supportedThemes.includes(saved.theme) ? saved.theme : fallbackConfig.theme,
+                    password: typeof saved.password === "string" && saved.password ? saved.password : fallbackConfig.password,
+                    repeatChance: clampNumber(saved.repeatChance, 0, 100, 0),
+                    roster: sanitizeRoster(saved.roster)
+                };
+            } catch (error) {
+                return structuredClone(fallbackConfig);
+            }
+        }
+
+        function persistConfig() {
+            localStorage.setItem(storageKey, JSON.stringify(config));
+        }
+
+        function clampNumber(value, min, max, fallback) {
+            const number = Number(value);
+            return Number.isFinite(number) ? Math.min(max, Math.max(min, number)) : fallback;
+        }
+
+        function sanitizeRoster(roster) {
+            const seen = new Set();
+            const clean = [];
+            roster.forEach(item => {
+                const name = String(item && item.name !== undefined ? item.name : "").trim().slice(0, 40);
+                const weight = clampNumber(item && item.weight, 0, 9999, 1);
+                const selected = item && item.selected === false ? false : true;
+                if (name && !seen.has(name)) {
+                    seen.add(name);
+                    clean.push({ name, weight, selected });
+                }
+            });
+            return clean.length ? structuredClone(clean) : structuredClone(fallbackConfig.roster);
+        }
+
+        function getActiveRoster() {
+            return config.roster.filter(item => item.selected !== false);
+        }
+
+        function applyAppearance() {
+            document.body.dataset.theme = config.theme;
+            pageTitle.textContent = config.title;
+            document.title = config.title;
+        }
+
+        function initStars() {
+            const starsContainer = document.getElementById("stars");
+            starsContainer.innerHTML = "";
+            for (let i = 0; i < 200; i++) {
+                const star = document.createElement("div");
+                star.className = "star";
+                star.style.left = Math.random() * 100 + "%";
+                star.style.top = Math.random() * 100 + "%";
+                const size = Math.random() * 3;
+                star.style.width = size + "px";
+                star.style.height = size + "px";
+                star.style.setProperty("--duration", (Math.random() * 3 + 2) + "s");
+                starsContainer.appendChild(star);
+            }
+        }
+
+        function renderBall() {
+            ball.innerHTML = "";
+            const radius = 220;
+            const activeRoster = getActiveRoster();
+            const total = activeRoster.length;
+            if (!total) return;
+            const goldenRatio = (1 + Math.sqrt(5)) / 2;
+
+            activeRoster.forEach((item, index) => {
+                const tag = document.createElement("div");
+                tag.className = "name-tag";
+                tag.textContent = item.name;
+
+                const theta = 2 * Math.PI * index / goldenRatio;
+                const phi = Math.acos(1 - 2 * (index + 0.5) / total);
+                const x = radius * Math.sin(phi) * Math.cos(theta);
+                const y = radius * Math.sin(phi) * Math.sin(theta);
+                const z = radius * Math.cos(phi);
+
+                tag.dataset.x = x;
+                tag.dataset.y = y;
+                tag.dataset.z = z;
+                ball.appendChild(tag);
+            });
+        }
+
+        function initBall() {
+            renderBall();
+            if (!animationId) animateBall();
+        }
+
+        function animateBall() {
+            if (!isRolling) {
+                currentRotationY += 0.2;
+                currentRotationX += 0.1;
+            } else {
+                currentRotationY += 15;
+                currentRotationX += 8;
+            }
+
+            const radX = currentRotationX * Math.PI / 180;
+            const radY = currentRotationY * Math.PI / 180;
+            const tags = document.querySelectorAll(".name-tag");
+            const radius = 220;
+
+            tags.forEach(tag => {
+                const x = parseFloat(tag.dataset.x);
+                const y = parseFloat(tag.dataset.y);
+                const z = parseFloat(tag.dataset.z);
+                const x1 = x * Math.cos(radY) - z * Math.sin(radY);
+                const z1 = z * Math.cos(radY) + x * Math.sin(radY);
+                const y2 = y * Math.cos(radX) - z1 * Math.sin(radX);
+                const z2 = z1 * Math.cos(radX) + y * Math.sin(radX);
+
+                tag.style.transform = `translate3d(${x1}px, ${y2}px, ${z2}px)`;
+                tag.style.opacity = Math.max(0.2, (z2 + radius) / (2 * radius));
+                tag.style.zIndex = Math.floor(z2);
+            });
+
+            animationId = requestAnimationFrame(animateBall);
+        }
+
+        function setCount(n, button) {
+            if (isRolling) return;
+            selectCount = n;
+            countBtns.forEach(btn => btn.classList.remove("active"));
+            button.classList.add("active");
+        }
+
+        function toggleRoll() {
+            if (isRolling) stopRoll();
+            else startRoll();
+        }
+
+        function startRoll() {
+            isRolling = true;
+            startBtn.textContent = "停止";
+            startBtn.classList.add("stopping");
+            resultOverlay.style.display = "none";
+        }
+
+        function stopRoll() {
+            isRolling = false;
+            startBtn.textContent = "开始点名";
+            startBtn.classList.remove("stopping");
+
+            const activeRoster = getActiveRoster();
+            if (!activeRoster.length) {
+                alert("请先勾选至少一个抽取名称");
+                return;
+            }
+
+            const winners = [];
+            const actualCount = Math.min(selectCount, activeRoster.length);
+
+            for (let index = 0; index < actualCount; index++) {
+                const avoidNames = new Set(winners);
+                const useHistory = drawHistory.length > 0 && Math.random() * 100 < config.repeatChance;
+                let pool = [];
+
+                if (useHistory) {
+                    const historySet = new Set(drawHistory);
+                    pool = activeRoster.filter(item => historySet.has(item.name) && !avoidNames.has(item.name) && item.weight > 0);
+                }
+
+                if (!pool.length) {
+                    pool = activeRoster.filter(item => !avoidNames.has(item.name) && item.weight > 0);
+                }
+
+                if (!pool.length) {
+                    pool = activeRoster.filter(item => !avoidNames.has(item.name));
+                }
+
+                const selected = weightedPick(pool);
+                if (selected) winners.push(selected.name);
+            }
+
+            drawHistory = [...drawHistory, ...winners].slice(-500);
+            persistConfig();
+            showResult(winners);
+        }
+
+        function weightedPick(pool) {
+            const totalWeight = pool.reduce((sum, item) => sum + Math.max(0, Number(item.weight) || 0), 0);
+            if (!pool.length) return null;
+            if (totalWeight <= 0) return pool[Math.floor(Math.random() * pool.length)];
+
+            let cursor = Math.random() * totalWeight;
+            for (const item of pool) {
+                cursor -= Math.max(0, Number(item.weight) || 0);
+                if (cursor <= 0) return item;
+            }
+            return pool[pool.length - 1];
+        }
+
+        function showResult(winners) {
+            resultContainer.innerHTML = "";
+            winners.forEach(name => {
+                const card = document.createElement("div");
+                card.className = "winner-card";
+                const winnerName = document.createElement("div");
+                winnerName.className = "winner-name";
+                winnerName.textContent = name;
+                card.appendChild(winnerName);
+                resultContainer.appendChild(card);
+            });
+            resultOverlay.style.display = "flex";
+            startConfetti();
+        }
+
+        function closeResult() {
+            resultOverlay.style.display = "none";
+            stopConfetti();
+        }
+
+        const canvas = document.getElementById("confetti-canvas");
+        const ctx = canvas.getContext("2d");
+        let confettiActive = false;
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        window.addEventListener("resize", resizeCanvas);
+        resizeCanvas();
+
+        const confettiPalettes = {
+            starry: ["#00ffff", "#ff00cc", "#7f7cff", "#ffffff"],
+            warm: ["#ffca7b", "#e98b52", "#f3dbb2", "#b95b50"],
+            minimal: ["#596575", "#aab4be", "#f4f3ef", "#6f7c88"],
+            blackboard: ["#dbcf96", "#8c9a73", "#f4f1df", "#afbf8f"],
+            sakura: ["#f39ab9", "#dd7fa3", "#fff8fa", "#c7628b"],
+            ocean: ["#57d7ff", "#00bde6", "#89eaff", "#315dcb"],
+            forest: ["#6b9c72", "#8bb07b", "#f7fbef", "#517b62"],
+            royal: ["#efc96e", "#c7434d", "#ffe1a1", "#8b2233"],
+            lavender: ["#9a7fc3", "#b094dd", "#fcfaff", "#7659a2"]
+        };
+
+        function getConfettiColor() {
+            const palette = confettiPalettes[config.theme] || confettiPalettes.starry;
+            return palette[Math.floor(Math.random() * palette.length)];
+        }
+
+        function startConfetti() {
+            confettiActive = true;
+            particles = [];
+            for (let i = 0; i < 300; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height - canvas.height,
+                    color: getConfettiColor(),
+                    size: Math.random() * 10 + 5,
+                    speedY: Math.random() * 3 + 2,
+                    speedX: Math.random() * 2 - 1,
+                    rotation: Math.random() * 360,
+                    rotationSpeed: Math.random() * 10 - 5
+                });
+            }
+            animateConfetti();
+        }
+
+        function stopConfetti() {
+            confettiActive = false;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function animateConfetti() {
+            if (!confettiActive) return;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(particle => {
+                particle.y += particle.speedY;
+                particle.x += particle.speedX;
+                particle.rotation += particle.rotationSpeed;
+                if (particle.y > canvas.height) particle.y = -10;
+
+                ctx.save();
+                ctx.translate(particle.x, particle.y);
+                ctx.rotate(particle.rotation * Math.PI / 180);
+                ctx.fillStyle = particle.color;
+                ctx.fillRect(-particle.size / 2, -particle.size / 2, particle.size, particle.size);
+                ctx.restore();
+            });
+            requestAnimationFrame(animateConfetti);
+        }
+
+        function bindHiddenAccess() {
+            const mark = document.querySelector(".footer-mark");
+            let clicks = [];
+            let lastClick = 0;
+
+            mark.addEventListener("click", () => {
+                const now = Date.now();
+                if (now - lastClick > 1200) clicks = [];
+                lastClick = now;
+
+                clicks.push(now);
+                clicks = clicks.filter(time => now - time <= 2000);
+
+                if (clicks.length >= 5) {
+                    clicks = [];
+                    showAccess();
+                }
+            });
+        }
+
+        function showAccess() {
+            passError.textContent = "";
+            passInput.value = "";
+            accessLayer.style.display = "flex";
+            setTimeout(() => passInput.focus(), 0);
+        }
+
+        function hideAccess() {
+            accessLayer.style.display = "none";
+            passInput.value = "";
+            passError.textContent = "";
+        }
+
+        function verifyAccess() {
+            if (passInput.value === config.password) {
+                hideAccess();
+                showSettings();
+            } else {
+                passError.textContent = "密码不正确";
+                passInput.select();
+            }
+        }
+
+        passInput.addEventListener("keydown", event => {
+            if (event.key === "Enter") verifyAccess();
+            if (event.key === "Escape") hideAccess();
+        });
+
+        function syncThemePicker(theme) {
+            const selectedTheme = supportedThemes.includes(theme) ? theme : fallbackConfig.theme;
+            const themeInput = document.getElementById("settingTheme");
+            themeInput.value = selectedTheme;
+            document.querySelectorAll(".theme-choice").forEach(button => {
+                const selected = button.dataset.themeValue === selectedTheme;
+                button.classList.toggle("is-selected", selected);
+                button.setAttribute("aria-checked", String(selected));
+            });
+        }
+
+        function selectTheme(theme) {
+            syncThemePicker(theme);
+        }
+
+        function bindThemePicker() {
+            document.querySelectorAll(".theme-choice").forEach(button => {
+                button.addEventListener("click", () => selectTheme(button.dataset.themeValue));
+            });
+        }
+
+        function showSettings() {
+            document.getElementById("settingTitle").value = config.title;
+            syncThemePicker(config.theme);
+            document.getElementById("settingPassword").value = config.password;
+            repeatChance.value = config.repeatChance;
+            repeatChanceValue.value = config.repeatChance;
+            renderRosterEditor(config.roster);
+            settingsLayer.style.display = "flex";
+        }
+
+        function hideSettings() {
+            settingsLayer.style.display = "none";
+        }
+
+        repeatChance.addEventListener("input", () => {
+            repeatChanceValue.value = repeatChance.value;
+        });
+
+        repeatChanceValue.addEventListener("input", () => {
+            repeatChance.value = clampNumber(repeatChanceValue.value, 0, 100, 0);
+        });
+
+        function renderRosterEditor(roster) {
+            rosterBody.innerHTML = "";
+            roster.forEach(item => rosterBody.appendChild(createRosterRow(item.name, item.weight, item.selected)));
+            updateSelectAllState();
+            updateProbabilityLabels();
+        }
+
+        function createRosterRow(name = "", weight = 1, selected = true) {
+            const row = document.createElement("tr");
+
+            const nameCell = document.createElement("td");
+            const nameWrap = document.createElement("div");
+            nameWrap.className = "roster-name-cell";
+            const selectInput = document.createElement("input");
+            selectInput.type = "checkbox";
+            selectInput.checked = selected !== false;
+            selectInput.className = "roster-selected";
+            selectInput.setAttribute("aria-label", "是否参与抽取");
+            selectInput.addEventListener("change", () => {
+                updateSelectAllState();
+                updateProbabilityLabels();
+            });
+            const nameInput = document.createElement("input");
+            nameInput.type = "text";
+            nameInput.value = name;
+            nameInput.maxLength = 40;
+            nameInput.className = "roster-name";
+            nameInput.setAttribute("aria-label", "抽取名称");
+            nameWrap.append(selectInput, nameInput);
+            nameCell.appendChild(nameWrap);
+
+            const weightCell = document.createElement("td");
+            const weightInput = document.createElement("input");
+            weightInput.type = "number";
+            weightInput.min = "0";
+            weightInput.max = "9999";
+            weightInput.step = "0.1";
+            weightInput.value = weight;
+            weightInput.className = "weight-input";
+            weightInput.setAttribute("aria-label", "随机权重");
+            weightInput.addEventListener("input", updateProbabilityLabels);
+            weightCell.appendChild(weightInput);
+
+            const probabilityCell = document.createElement("td");
+            probabilityCell.className = "probability-cell";
+            probabilityCell.textContent = "0%";
+
+            const actionCell = document.createElement("td");
+            const removeButton = document.createElement("button");
+            removeButton.type = "button";
+            removeButton.textContent = "删除";
+            removeButton.addEventListener("click", () => {
+                row.remove();
+                updateSelectAllState();
+                updateProbabilityLabels();
+            });
+            actionCell.appendChild(removeButton);
+
+            row.append(nameCell, weightCell, probabilityCell, actionCell);
+            return row;
+        }
+
+        function addRosterRow() {
+            const row = createRosterRow("", 1, true);
+            rosterBody.appendChild(row);
+            updateSelectAllState();
+            updateProbabilityLabels();
+            row.querySelector(".roster-name").focus();
+        }
+
+        function toggleAllRoster(checked) {
+            rosterBody.querySelectorAll(".roster-selected").forEach(checkbox => {
+                checkbox.checked = checked;
+            });
+            updateSelectAllState();
+            updateProbabilityLabels();
+        }
+
+        function updateSelectAllState() {
+            const selectAll = document.getElementById("selectAllRoster");
+            if (!selectAll) return;
+            const checks = [...rosterBody.querySelectorAll(".roster-selected")];
+            const checkedCount = checks.filter(checkbox => checkbox.checked).length;
+            selectAll.checked = checks.length > 0 && checkedCount === checks.length;
+            selectAll.indeterminate = checkedCount > 0 && checkedCount < checks.length;
+        }
+
+        function updateProbabilityLabels() {
+            const rows = [...rosterBody.querySelectorAll("tr")];
+            const weights = rows.map(row => row.querySelector(".roster-selected").checked ? clampNumber(row.querySelector(".weight-input").value, 0, 9999, 0) : 0);
+            const total = weights.reduce((sum, weight) => sum + weight, 0);
+            rows.forEach((row, index) => {
+                const cell = row.querySelector(".probability-cell");
+                const percent = total > 0 ? (weights[index] / total) * 100 : 0;
+                cell.textContent = `${percent.toFixed(percent >= 10 ? 1 : 2)}%`;
+            });
+        }
+
+        function collectRoster() {
+            return sanitizeRoster([...rosterBody.querySelectorAll("tr")].map(row => ({
+                name: row.querySelector(".roster-name").value,
+                weight: row.querySelector(".weight-input").value,
+                selected: row.querySelector(".roster-selected").checked
+            })));
+        }
+
+        function saveSettings() {
+            const roster = collectRoster();
+            const selectedWithWeight = roster.some(item => item.selected && item.weight > 0);
+            if (!selectedWithWeight) {
+                const firstSelected = roster.find(item => item.selected);
+                if (firstSelected) firstSelected.weight = 1;
+            }
+            const title = document.getElementById("settingTitle").value.trim().slice(0, 30) || fallbackConfig.title;
+            const password = document.getElementById("settingPassword").value || fallbackConfig.password;
+            const theme = document.getElementById("settingTheme").value;
+
+            config = {
+                ...config,
+                title,
+                password,
+                theme: supportedThemes.includes(theme) ? theme : fallbackConfig.theme,
+                repeatChance: clampNumber(repeatChanceValue.value, 0, 100, 0),
+                roster
+            };
+
+            drawHistory = drawHistory.filter(name => config.roster.some(item => item.name === name));
+            persistConfig();
+            applyAppearance();
+            renderBall();
+            hideSettings();
+        }
+
+        function restoreDefaultSettings() {
+            const keepPassword = document.getElementById("settingPassword").value || config.password || fallbackConfig.password;
+            config = structuredClone(fallbackConfig);
+            config.password = keepPassword;
+            drawHistory = [];
+
+            document.getElementById("settingTitle").value = config.title;
+            document.getElementById("settingPassword").value = config.password;
+            repeatChance.value = config.repeatChance;
+            repeatChanceValue.value = config.repeatChance;
+            syncThemePicker(config.theme);
+            renderRosterEditor(config.roster);
+
+            persistConfig();
+            applyAppearance();
+            renderBall();
+        }
+
+        window.onload = function() {
+            applyAppearance();
+            initStars();
+            initBall();
+            bindHiddenAccess();
+            bindThemePicker();
+        };
+    </script>
+</body>
+</html>
