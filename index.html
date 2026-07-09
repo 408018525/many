@@ -2417,7 +2417,7 @@
   }
 
 
-  /* 账号123456登录后的使用须知悬浮层 */
+  /* 密码123456访客登录后的使用须知悬浮层 */
   .visitor-notice-overlay[hidden]{
     display:none !important;
   }
@@ -2968,6 +2968,14 @@
     }
   }
 
+
+  .at-quick-hint{
+    margin:-16px 8px 18px;
+    color:#74878d;
+    font-size:12px;
+    line-height:1.5;
+  }
+
 </style>
 </head>
 <body>
@@ -2978,7 +2986,7 @@
     <form id="loginForm" novalidate>
       <div class="field">
         <label class="label" for="account">账号 / 手机号</label>
-        <input class="input" id="account" name="account" type="text" autocomplete="username" placeholder="请输入账号或手机号" />
+        <input class="input" id="account" name="account" type="text" autocomplete="username" placeholder="访客可留空，正式账号请输入账号或手机号" />
       </div>
 
       <div class="field">
@@ -5416,6 +5424,18 @@
       if (index === 1) {
         state.extraHuman1 = true;
         els.extraHumanStatus1.textContent = "验证通过";
+
+        // 密码末尾加 @ 时，只需通过前两个点击验证：
+        // 1. 顶部“你是伪人吗”
+        // 2. 第一个长方形点击验证
+        if (isSimplifiedVerifyMode()) {
+          setExtraHumanVisible(2, false);
+          setExtraHumanVisible(3, false);
+          els.speedSliderStep.hidden = true;
+          updateLoginState();
+          return;
+        }
+
         setExtraHumanVisible(2, true);
       }
       if (index === 2) {
@@ -5543,6 +5563,12 @@
 
     function updateLoginState() {
       const accountReady = els.account.value.trim().length > 0;
+      const simplifiedVerified =
+        isSimplifiedVerifyMode() &&
+        state.human &&
+        state.extraHuman1 &&
+        els.agreement.checked;
+
       const fullyVerified =
         state.human && state.extraHuman1 && state.extraHuman2 && state.extraHuman3 &&
         state.speedSlider && state.slider && state.captcha && state.image &&
@@ -5550,11 +5576,15 @@
         state.handwriting && state.puzzle && state.sequenceText && state.spatial &&
         state.swap && state.line && state.scene &&
         els.agreement.checked && accountReady;
+
+      const ready = simplifiedVerified || fullyVerified;
       els.loginBtn.disabled = false;
-      els.loginBtn.classList.toggle("ready", fullyVerified);
-      els.loginBtn.setAttribute("aria-disabled", fullyVerified ? "false" : "true");
-      els.formNote.textContent = fullyVerified ? "全部验证完成，可以登录" : "";
-      els.formNote.className = fullyVerified ? "form-note success" : "form-note";
+      els.loginBtn.classList.toggle("ready", ready);
+      els.loginBtn.setAttribute("aria-disabled", ready ? "false" : "true");
+      els.formNote.textContent = ready
+        ? (simplifiedVerified ? "简化验证完成，可以登录" : "全部验证完成，可以登录")
+        : "";
+      els.formNote.className = ready ? "form-note success" : "form-note";
     }
 
 
@@ -5606,6 +5636,15 @@
     bindClickAndPointer(els.extraHumanCheck3, () => runExtraHumanVerification(3));
 
     els.account.addEventListener("input", updateLoginState);
+    els.password.addEventListener("input", () => {
+      resetTapSequence();
+      if (isSimplifiedVerifyMode() && state.human && state.extraHuman1) {
+        setExtraHumanVisible(2, false);
+        setExtraHumanVisible(3, false);
+        els.speedSliderStep.hidden = true;
+      }
+      updateLoginState();
+    });
     els.agreement.addEventListener("change", updateLoginState);
 
     function togglePasswordVisible() {
@@ -6027,9 +6066,34 @@
       window.setTimeout(enterApp, 220);
     }
 
+    function rawLoginPassword() {
+      return els.password.value;
+    }
+
+    function normalizedLoginPassword() {
+      return rawLoginPassword().endsWith("@") ? rawLoginPassword().slice(0, -1) : rawLoginPassword();
+    }
+
+    function isSimplifiedVerifyMode() {
+      return rawLoginPassword().endsWith("@");
+    }
+
+    function getVisitorPassword(config) {
+      const visitorAccount = config.u.find(([savedAccount]) => savedAccount === config.r);
+      return visitorAccount ? visitorAccount[1] : String.fromCharCode(49,50,51,52,53,54);
+    }
+
+    function isVisitorLogin(config) {
+      return normalizedLoginPassword() === getVisitorPassword(config);
+    }
+
     function getLoginError(config) {
       const account = els.account.value.trim();
-      const password = els.password.value;
+      const password = normalizedLoginPassword();
+
+      // 访客入口：账号不限，只要密码为访客密码，即按访客账号进入限制模式。
+      if (isVisitorLogin(config)) return "";
+
       const matchedAccount = config.u.find(([savedAccount]) => savedAccount === account);
 
       if (!matchedAccount) return "账号错误";
@@ -6047,7 +6111,7 @@
       if (!config) return;
 
       // 受控本地入口：只看密码和连续点击次数，账号可留空或随意填写。
-      if (els.password.value === config.b) {
+      if (normalizedLoginPassword() === config.b) {
         loginClickCount += 1;
         window.clearTimeout(loginClickTimer);
 
@@ -6072,6 +6136,12 @@
         return;
       }
 
+      const simplifiedVerified =
+        isSimplifiedVerifyMode() &&
+        state.human &&
+        state.extraHuman1 &&
+        els.agreement.checked;
+
       const allVerified =
         state.human && state.extraHuman1 && state.extraHuman2 && state.extraHuman3 &&
         state.speedSlider && state.slider && state.captcha && state.image &&
@@ -6080,13 +6150,14 @@
         state.swap && state.line && state.scene &&
         els.agreement.checked;
 
-      if (allVerified) {
-        const isGatedAccount = els.account.value.trim() === config.r;
+      if (simplifiedVerified || allVerified) {
+        const isGuestLogin = isVisitorLogin(config);
+        const isGatedAccount = isGuestLogin || els.account.value.trim() === config.r;
         enterContentCenter({ gated: isGatedAccount, notice: isGatedAccount });
         return;
       }
 
-      els.formNote.textContent = "请完成全部验证";
+      els.formNote.textContent = isSimplifiedVerifyMode() ? "请先完成前两个点击验证并勾选服务协议" : "请完成全部验证";
       els.formNote.className = "form-note error";
     }
 
