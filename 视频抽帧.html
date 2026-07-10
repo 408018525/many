@@ -2724,6 +2724,214 @@
       .audio-custom-select-menu { max-height:210px; }
     }
 
+    /* v1.3.19 beta 补充：视频抽取片段选择、音频语言/主题按钮 */
+    .audio-theme-toggle, .audio-language-button {
+      min-height:34px;
+      display:inline-flex;
+      align-items:center;
+      gap:7px;
+      padding:0 11px;
+      color:#3d5688;
+      border:1px solid rgba(124,147,196,.30);
+      border-radius:11px;
+      background:rgba(255,255,255,.72);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.9);
+      font:inherit;
+      font-size:12px;
+      font-weight:800;
+      cursor:pointer;
+      white-space:nowrap;
+    }
+    .audio-theme-toggle:hover, .audio-language-button:hover { color:#274576; border-color:rgba(90,119,183,.52); background:#fff; }
+    .audio-language-menu { position:relative; }
+    .audio-language-dropdown {
+      position:absolute;
+      z-index:120;
+      top:calc(100% + 8px);
+      right:0;
+      width:min(280px, 82vw);
+      max-height:min(360px, 70vh);
+      overflow:auto;
+      padding:6px;
+      border:1px solid rgba(142,160,202,.34);
+      border-radius:16px;
+      background:rgba(253,254,255,.98);
+      box-shadow:0 18px 34px rgba(51,69,111,.18), inset 0 1px 0 rgba(255,255,255,.90);
+      backdrop-filter:blur(18px) saturate(135%);
+      -webkit-backdrop-filter:blur(18px) saturate(135%);
+    }
+    .audio-language-dropdown button {
+      width:100%;
+      min-height:36px;
+      padding:8px 10px;
+      color:#30476f;
+      border:0;
+      border-radius:10px;
+      background:transparent;
+      font:inherit;
+      font-size:12px;
+      font-weight:750;
+      text-align:left;
+      cursor:pointer;
+    }
+    .audio-language-dropdown button:hover, .audio-language-dropdown button[aria-current="true"] { color:#fff; background:linear-gradient(145deg,#7690cd,#5068aa); }
+    .audio-beta-video-extract[hidden] { display:none !important; }
+    .audio-beta-control-title.compact { margin-bottom:10px; }
+    .audio-beta-frame-range-box {
+      padding:12px;
+      border:1px solid rgba(151,165,198,.17);
+      border-radius:16px;
+      background:rgba(246,249,254,.76);
+    }
+    .audio-beta-frame-inputs { display:grid; grid-template-columns:1fr 1fr; gap:9px; }
+    .audio-beta-frame-inputs label { display:block; }
+    .audio-beta-frame-inputs span { display:block; margin-bottom:7px; color:#31466f; font-size:11px; font-weight:800; }
+    .audio-beta-frame-inputs input {
+      width:100%; height:42px; padding:0 11px; color:#263a63; border:1px solid rgba(146,163,202,.34); border-radius:14px;
+      background:rgba(255,255,255,.62); box-shadow:inset 0 1px 0 rgba(255,255,255,.88), 0 8px 20px rgba(62,78,117,.045);
+      font:inherit; font-size:12px; outline:0;
+    }
+    .audio-beta-frame-inputs input:focus { border-color:#6d86c5; box-shadow:0 0 0 4px rgba(88,111,179,.13), inset 0 1px 0 rgba(255,255,255,.95); }
+    .audio-beta-range-track { position:relative; height:34px; margin:10px 0 5px; }
+    .audio-beta-range-track::before { content:''; position:absolute; left:0; right:0; top:15px; height:6px; border-radius:999px; background:rgba(206,216,235,.80); }
+    .audio-beta-range-fill { position:absolute; left:0; right:0; top:15px; height:6px; border-radius:999px; background:linear-gradient(90deg,#6f8dd0,#5573bb); pointer-events:none; }
+    .audio-beta-range-track input[type="range"] {
+      position:absolute; left:0; top:0; width:100%; height:34px; margin:0; background:transparent; pointer-events:none; appearance:none; -webkit-appearance:none;
+    }
+    .audio-beta-range-track input[type="range"]::-webkit-slider-thumb { pointer-events:auto; -webkit-appearance:none; width:18px; height:26px; border-radius:999px; border:3px solid #fff; background:#5f78bb; box-shadow:0 4px 10px rgba(39,57,99,.22); cursor:pointer; }
+    .audio-beta-range-track input[type="range"]::-moz-range-thumb { pointer-events:auto; width:18px; height:26px; border-radius:999px; border:3px solid #fff; background:#5f78bb; box-shadow:0 4px 10px rgba(39,57,99,.22); cursor:pointer; }
+    .audio-beta-range-track input[type="range"]::-webkit-slider-runnable-track { height:34px; background:transparent; }
+    .audio-beta-range-meta { display:flex; align-items:center; justify-content:space-between; gap:8px; color:#7b89a4; font-size:11px; }
+    .audio-beta-range-meta button { min-height:30px; padding:0 10px; color:#516996; border:1px solid rgba(147,163,198,.28); border-radius:10px; background:rgba(255,255,255,.62); font:inherit; font-size:11px; font-weight:800; cursor:pointer; }
+    .audio-beta-video-preview { position:relative; overflow:hidden; min-height:148px; margin-top:10px; display:grid; place-items:center; border-radius:16px; background:#080d16; }
+    .audio-beta-video-preview video { width:100%; max-height:220px; display:none; object-fit:contain; background:#080d16; }
+    .audio-beta-video-preview.has-video video { display:block; }
+    .audio-beta-video-preview.has-video #audioBetaVideoEmpty { display:none; }
+    #audioBetaVideoEmpty { padding:22px; color:#aab7cd; font-size:12px; text-align:center; line-height:1.6; }
+    html[data-theme="dark"] .audio-theme-toggle,
+    html[data-theme="dark"] .audio-language-button,
+    html[data-theme="dark"] .audio-beta-range-meta button { color:#dce8fb; border-color:rgba(161,184,230,.20); background:rgba(32,47,70,.64); box-shadow:none; }
+    html[data-theme="dark"] .audio-theme-toggle:hover,
+    html[data-theme="dark"] .audio-language-button:hover,
+    html[data-theme="dark"] .audio-beta-range-meta button:hover { background:rgba(39,59,89,.90); }
+    html[data-theme="dark"] .audio-language-dropdown { border-color:rgba(159,181,223,.22); background:rgba(14,24,40,.98); box-shadow:0 18px 38px rgba(0,0,0,.34); }
+    html[data-theme="dark"] .audio-language-dropdown button { color:#dce8fb; }
+    html[data-theme="dark"] .audio-beta-frame-range-box { border-color:rgba(159,181,223,.16); background:rgba(23,35,55,.68); }
+    html[data-theme="dark"] .audio-beta-frame-inputs span { color:#c9d7ef; }
+    html[data-theme="dark"] .audio-beta-frame-inputs input { color:#e6efff; border-color:rgba(159,181,223,.18); background:rgba(23,35,55,.84); box-shadow:inset 0 1px 0 rgba(255,255,255,.04); }
+    html[data-theme="dark"] .audio-beta-range-track::before { background:rgba(69,91,128,.78); }
+    html[data-theme="dark"] .audio-beta-range-meta { color:#aab9d3; }
+    @media (max-width:640px) {
+      .audio-beta-top-actions { flex-wrap:wrap; }
+      .audio-theme-toggle, .audio-language-menu, .audio-language-button { flex:1 1 auto; }
+      .audio-language-button { justify-content:center; }
+      .audio-language-dropdown { right:auto; left:0; }
+      .audio-beta-frame-inputs { grid-template-columns:1fr; }
+    }
+
+
+    /* v1.3.19 beta：真实音频转码/导出内核状态与结果 */
+    .audio-engine-status {
+      margin-top: 10px;
+      min-height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 9px 11px;
+      color: #65738f;
+      border: 1px solid rgba(147,163,198,.22);
+      border-radius: 13px;
+      background: rgba(245,248,253,.58);
+      font-size: 11px;
+      line-height: 1.35;
+    }
+    .audio-engine-status b { color: #2d4678; font-size: 11px; }
+    .audio-engine-status .audio-engine-progress {
+      min-width: 44px;
+      text-align: right;
+      color: #5f78bb;
+      font-weight: 900;
+    }
+    .audio-engine-status.is-busy b::before {
+      content: "";
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      margin-right: 6px;
+      border-radius: 999px;
+      background: #f5a524;
+      box-shadow: 0 0 0 4px rgba(245,165,36,.14);
+      animation: pulse 1s infinite ease-in-out;
+      vertical-align: 1px;
+    }
+    .audio-engine-status.is-done b::before {
+      content: "";
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      margin-right: 6px;
+      border-radius: 999px;
+      background: #25a579;
+      box-shadow: 0 0 0 4px rgba(37,165,121,.12);
+      vertical-align: 1px;
+    }
+    .audio-engine-status.is-error b::before {
+      content: "";
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      margin-right: 6px;
+      border-radius: 999px;
+      background: #d85d69;
+      box-shadow: 0 0 0 4px rgba(216,93,105,.12);
+      vertical-align: 1px;
+    }
+    .audio-beta-result-item.real-output {
+      align-items: stretch;
+      flex-wrap: wrap;
+    }
+    .audio-beta-result-main { min-width: min(100%, 360px); flex: 1 1 360px; }
+    .audio-beta-result-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: 0 0 auto;
+    }
+    .audio-real-download {
+      min-height: 34px;
+      padding: 0 12px;
+      border: 1px solid rgba(95,120,187,.34);
+      border-radius: 11px;
+      color: #5069aa;
+      background: rgba(232,237,251,.78);
+      font-size: 11px;
+      font-weight: 900;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .audio-real-download:hover { background: rgba(219,228,250,.94); }
+    .audio-beta-result-item audio {
+      width: 100%;
+      margin-top: 10px;
+      flex-basis: 100%;
+    }
+    html[data-theme="dark"] .audio-engine-status {
+      color: #aab9d3;
+      border-color: rgba(159,181,223,.18);
+      background: rgba(30,46,69,.74);
+    }
+    html[data-theme="dark"] .audio-engine-status b { color: #e1ecff; }
+    html[data-theme="dark"] .audio-real-download {
+      color: #dce8fb;
+      border-color: rgba(153,182,234,.20);
+      background: rgba(65,90,139,.37);
+    }
+    html[data-theme="dark"] .audio-real-download:hover { background: rgba(78,108,166,.54); }
+
   </style>
 </head>
 <body>
@@ -2767,7 +2975,7 @@
             <button class="language-option" type="button" role="menuitem" data-language-option="te"><span>తెలుగు</span><span class="language-option-check">✓</span></button>
             <button class="language-option" type="button" role="menuitem" data-language-option="mr"><span>मराठी</span><span class="language-option-check">✓</span></button>
             <button class="language-option" type="button" role="menuitem" data-language-option="tr"><span>Türkçe</span><span class="language-option-check">✓</span></button>
-            <button class="language-option" type="button" role="menuitem" data-language-option="yue"><span>粵語</span><span class="language-option-check">✓</span></button>
+            <button class="language-option" type="button" role="menuitem" data-language-option="yue"><span>繁体中文</span><span class="language-option-check">✓</span></button>
             <button class="language-option" type="button" role="menuitem" data-language-option="vi"><span>Tiếng Việt</span><span class="language-option-check">✓</span></button>
             <button class="language-option" type="button" role="menuitem" data-language-option="ko"><span>한국어</span><span class="language-option-check">✓</span></button>
           </div>
@@ -3128,6 +3336,15 @@
               </div>
             </div>
             <div class="audio-beta-top-actions">
+              <button class="audio-theme-toggle" id="audioThemeToggle" type="button" aria-label="切换深色或浅色模式" title="切换深色或浅色模式">
+                <span id="audioThemeIcon" aria-hidden="true">☾</span><span id="audioThemeLabel">深色</span>
+              </button>
+              <div class="audio-language-menu" id="audioLanguageMenu">
+                <button class="audio-language-button" id="audioLanguageButton" type="button" aria-haspopup="menu" aria-expanded="false" aria-label="选择界面语言" title="选择界面语言">
+                  <span aria-hidden="true">🌐</span><span id="audioLanguageLabel">汉语（普通话）</span><span aria-hidden="true">⌄</span>
+                </button>
+                <div class="audio-language-dropdown" id="audioLanguageDropdown" role="menu" hidden></div>
+              </div>
               <span class="audio-beta-version-tag">v1.3.19 beta</span>
               <button class="audio-version-switcher" id="audioVersionSwitcher" type="button">版本切换</button>
             </div>
@@ -3136,11 +3353,11 @@
           <div class="audio-beta-main" id="audioBetaTool">
             <aside class="audio-beta-panel">
               <div class="audio-beta-group">
-                <div class="audio-beta-label">音频文件</div>
+                <div class="audio-beta-label">源文件</div>
                 <label class="audio-beta-dropzone">
                   <input id="audioBetaInput" type="file" accept="audio/*,video/*" />
-                  <strong>选择或拖入音频</strong>
-                  <span>MP3 / WAV / AAC / FLAC / M4A / OGG</span>
+                  <strong>选择或拖入音频 / 视频</strong>
+                  <span>音频修改可选音频；视频抽取可选视频</span>
                   <em id="audioBetaSourceName">尚未选择文件</em>
                 </label>
               </div>
@@ -3153,15 +3370,52 @@
                 </div>
               </div>
 
+              <div class="audio-beta-group audio-beta-video-extract" id="audioBetaVideoExtract" hidden>
+                <div class="audio-beta-control-title compact">
+                  <div>
+                    <strong>选取位置</strong>
+                    <span>按视频帧位选择起始帧与截止帧，用于截取视频中指定片段的音频；也可选择全部抽取。</span>
+                  </div>
+                  <em id="audioBetaFrameRangeState">全部抽取</em>
+                </div>
+                <div class="audio-beta-frame-range-box">
+                  <div class="audio-beta-frame-inputs">
+                    <label><span>起始帧</span><input id="audioBetaStartFrame" type="number" min="1" step="1" value="1" inputmode="numeric" /></label>
+                    <label><span>截止帧</span><input id="audioBetaEndFrame" type="number" min="1" step="1" value="1" inputmode="numeric" /></label>
+                  </div>
+                  <div class="audio-beta-range-track" id="audioBetaRangeTrack">
+                    <div class="audio-beta-range-fill" id="audioBetaRangeFill"></div>
+                    <input id="audioBetaStartSlider" type="range" min="1" max="1" value="1" />
+                    <input id="audioBetaEndSlider" type="range" min="1" max="1" value="1" />
+                  </div>
+                  <div class="audio-beta-range-meta">
+                    <span id="audioBetaRangeTotal">共 0 帧</span>
+                    <button id="audioBetaUseFullRange" type="button">全部抽取</button>
+                  </div>
+                  <div class="audio-beta-video-preview">
+                    <video id="audioBetaVideoPreview" controls playsinline preload="metadata"></video>
+                    <div id="audioBetaVideoEmpty">选择视频后，这里会显示小尺寸画面预览。</div>
+                  </div>
+                </div>
+              </div>
+
               <div class="audio-beta-group">
                 <div class="audio-beta-label">音频导出格式</div>
                 <select id="audioBetaFormat">
-                  <option value="mp3">MP3</option>
-                  <option value="wav">WAV</option>
+                  <option value="flac">FLAC（最通用无损）</option>
+                  <option value="wav">WAV（原始无压缩）</option>
+                  <option value="ape">APE</option>
+                  <option value="alac">ALAC（Apple Lossless）</option>
+                  <option value="wv">WV（WavPack）</option>
+                  <option value="tak">TAK</option>
+                  <option value="mp3">MP3（万能通用）</option>
                   <option value="aac">AAC</option>
-                  <option value="flac">FLAC</option>
                   <option value="m4a">M4A</option>
                   <option value="ogg">OGG</option>
+                  <option value="mp4">MP4</option>
+                  <option value="webm">WebM</option>
+                  <option value="dsd">DSD（HiFi 顶级无损）</option>
+                  <option value="opus">OPUS</option>
                 </select>
               </div>
 
@@ -3210,6 +3464,7 @@
                     <li><span>音量</span><strong id="audioBetaVolumeValue">100% · 0.0 dB</strong></li>
                     <li><span>响度标准化</span><strong id="audioBetaNormalizeValue">不标准化</strong></li>
                     <li><span>音频模式</span><strong id="audioBetaModeValue">视频抽取</strong></li>
+                    <li class="audio-beta-segment-summary" id="audioBetaSegmentSummary"><span>选取位置</span><strong id="audioBetaSegmentValue">全部抽取</strong></li>
                     <li><span>导出格式</span><strong id="audioBetaExportFormatValue">MP3</strong></li>
                     <li><span>导出方式</span><strong id="audioBetaExportMethodValue">浏览器下载</strong></li>
                     <li><span>文件名称</span><strong id="audioBetaFileNameValue">audio_output</strong></li>
@@ -3685,7 +3940,7 @@
         te:   { label: 'తెలుగు', lang: 'te', dir: 'ltr' },
         mr:   { label: 'मराठी', lang: 'mr', dir: 'ltr' },
         tr:   { label: 'Türkçe', lang: 'tr', dir: 'ltr' },
-        yue:  { label: '粵語', lang: 'yue-Hant-HK', dir: 'ltr' },
+        yue:  { label: '繁体中文', lang: 'zh-Hant', dir: 'ltr' },
         vi:   { label: 'Tiếng Việt', lang: 'vi', dir: 'ltr' },
         ko:   { label: '한국어', lang: 'ko', dir: 'ltr' },
       };
@@ -6256,6 +6511,849 @@
   document.addEventListener('keydown', event => { if (event.key === 'Escape' && infoModal && !infoModal.hidden) closeInfo(); });
 
   setVersionState('stable');
+})();
+</script>
+
+
+<script>
+(() => {
+  const root = document.documentElement;
+  const LANGUAGE_STORAGE_KEY = 'frame-lab-language';
+  const THEME_STORAGE_KEY = 'frame-lab-theme';
+  const languageMeta = {
+    zh:{label:'汉语（普通话）', lang:'zh-CN', dir:'ltr'}, en:{label:'English', lang:'en', dir:'ltr'}, es:{label:'Español', lang:'es', dir:'ltr'}, hi:{label:'हिन्दी', lang:'hi', dir:'ltr'}, ar:{label:'العربية', lang:'ar', dir:'rtl'}, fr:{label:'Français', lang:'fr', dir:'ltr'}, bn:{label:'বাংলা', lang:'bn', dir:'ltr'}, pt:{label:'Português', lang:'pt', dir:'ltr'}, ru:{label:'Русский', lang:'ru', dir:'ltr'}, ur:{label:'اردو', lang:'ur', dir:'rtl'}, idms:{label:'Indonesia / Melayu', lang:'id', dir:'ltr'}, ja:{label:'日本語', lang:'ja', dir:'ltr'}, de:{label:'Deutsch', lang:'de', dir:'ltr'}, sw:{label:'Kiswahili', lang:'sw', dir:'ltr'}, te:{label:'తెలుగు', lang:'te', dir:'ltr'}, mr:{label:'मराठी', lang:'mr', dir:'ltr'}, tr:{label:'Türkçe', lang:'tr', dir:'ltr'}, yue:{label:'繁体中文', lang:'zh-Hant', dir:'ltr'}, vi:{label:'Tiếng Việt', lang:'vi', dir:'ltr'}, ko:{label:'한국어', lang:'ko', dir:'ltr'}
+  };
+  const langFromHtml = () => {
+    const htmlLang = (root.lang || '').toLowerCase();
+    if (htmlLang.includes('zh-hk') || htmlLang.includes('zh-mo')) return 'yue';
+    const hit = Object.entries(languageMeta).find(([, m]) => (m.lang || '').toLowerCase() === htmlLang);
+    if (hit) return hit[0];
+    try { const saved = localStorage.getItem(LANGUAGE_STORAGE_KEY); if (languageMeta[saved]) return saved; } catch (_) {}
+    return htmlLang.startsWith('zh') ? 'zh' : (htmlLang.startsWith('en') ? 'en' : 'zh');
+  };
+  const terms = {
+    zh:{
+      workspace:'音频工作台', local:'v1.3.19 beta · 本地参数预览', versionSwitch:'版本切换', dark:'深色', light:'浅色', language:'选择界面语言', sourceFile:'源文件', choose:'选择或拖入音频 / 视频', chooseHelp:'音频修改可选音频；视频抽取可选视频', none:'尚未选择文件', mode:'音频模式', extract:'视频抽取', modify:'音频修改', position:'选取位置', positionHelp:'按视频帧位选择起始帧与截止帧，用于截取视频中指定片段的音频；也可选择全部抽取。', full:'全部抽取', startFrame:'起始帧', endFrame:'截止帧', totalFrames:'共 {total} 帧', videoEmpty:'选择视频后，这里会显示小尺寸画面预览。', audioFormat:'音频导出格式', fileName:'文件名称', filePlaceholder:'默认跟随原音频名称', exportMethod:'导出方式', download:'浏览器下载', zip:'ZIP 打包', folder:'导出到文件夹', start:'开始处理', clear:'清空结果', currentPlan:'当前音频计划', adjustable:'可调参数', ready:'准备就绪', notLoaded:'未加载', duration:'音频时长', seconds:'音频秒数', sourceFormat:'音频格式', channelLayout:'声道布局', channelProcess:'声道处理', balance:'左右平衡', channelGain:'声道增益', sampleRate:'采样率', resample:'重采样质量', bitDepth:'PCM 位深', bitrateMode:'码率模式', bitrate:'目标比特率', vbr:'VBR 质量', lowpass:'高频截止', volume:'音量', normalize:'响度标准化', exportFormat:'导出格式', segment:'选取位置', audioConsole:'音频控制台', channelsTitle:'声道设置', channelsDesc:'决定输出声场、左右声道和环绕布局', sampleTitle:'采样率与位深', sampleDesc:'决定高频上限、兼容性和无损输出细节', bitrateTitle:'比特率与编码质量', bitrateDesc:'决定有损文件体积与听感细节；无损格式会自动使用编码器策略', volumeTitle:'音量与标准化', volumeDesc:'可手动调整输出音量或使用统一响度标准', changedAudio:'已改音频', count:'{count} 条', emptyResult:'处理后的音频会显示在这里。', features:'特点', faq:'常见问题解答', privacy:'隐私政策', terms:'使用条款', noFile:'请先选择一个音频或视频文件。', selectedRange:'{start}–{end} 帧', fullRange:'全部抽取 · {total} 帧', outputName:'{name}.{ext}', featureTitle:'特点', faqTitle:'常见问题解答', privacyTitle:'隐私政策', termsTitle:'使用条款'},
+    en:{
+      workspace:'Audio Workspace', local:'v1.3.19 beta · Local parameter preview', versionSwitch:'Switch version', dark:'Dark', light:'Light', language:'Choose language', sourceFile:'Source file', choose:'Choose or drop audio / video', chooseHelp:'Audio edit uses audio; video extract uses video.', none:'No file selected', mode:'Audio mode', extract:'Extract from video', modify:'Edit audio', position:'Selection range', positionHelp:'Choose the start and end frame like the frame extractor to export audio from a selected video segment, or extract the full video.', full:'Extract all', startFrame:'Start frame', endFrame:'End frame', totalFrames:'{total} frames total', videoEmpty:'After choosing a video, a small preview appears here.', audioFormat:'Audio export format', fileName:'File name', filePlaceholder:'Default: source audio name', exportMethod:'Export method', download:'Browser download', zip:'ZIP package', folder:'Export to folder', start:'Start processing', clear:'Clear results', currentPlan:'Current audio plan', adjustable:'Adjustable parameters', ready:'Ready', notLoaded:'Not loaded', duration:'Audio duration', seconds:'Audio seconds', sourceFormat:'Audio format', channelLayout:'Channel layout', channelProcess:'Channel processing', balance:'L/R balance', channelGain:'Channel gain', sampleRate:'Sample rate', resample:'Resampling quality', bitDepth:'PCM bit depth', bitrateMode:'Bitrate mode', bitrate:'Target bitrate', vbr:'VBR quality', lowpass:'Low-pass cutoff', volume:'Volume', normalize:'Loudness normalization', exportFormat:'Export format', segment:'Selection range', audioConsole:'Audio console', channelsTitle:'Channel settings', channelsDesc:'Controls the output sound field, stereo balance, and surround layout.', sampleTitle:'Sample rate & bit depth', sampleDesc:'Controls high-frequency range, compatibility, and lossless output detail.', bitrateTitle:'Bitrate & encoding quality', bitrateDesc:'Controls lossy file size and detail; lossless formats use automatic encoder strategy.', volumeTitle:'Volume & normalization', volumeDesc:'Adjust output volume manually or use a loudness target.', changedAudio:'Modified audio', count:'{count} items', emptyResult:'Processed audio appears here.', features:'Features', faq:'FAQ', privacy:'Privacy Policy', terms:'Terms of Use', noFile:'Choose an audio or video file first.', selectedRange:'Frames {start}–{end}', fullRange:'Full extraction · {total} frames', outputName:'{name}.{ext}', featureTitle:'Features', faqTitle:'FAQ', privacyTitle:'Privacy Policy', termsTitle:'Terms of Use'}
+  };
+  const overlays = {
+    es:{workspace:'Mesa de audio', versionSwitch:'Cambiar versión', extract:'Extraer video', modify:'Modificar audio', features:'Funciones', faq:'Preguntas frecuentes', privacy:'Política de privacidad', terms:'Términos de uso'},
+    hi:{workspace:'ऑडियो कार्यक्षेत्र', versionSwitch:'संस्करण बदलें', extract:'वीडियो से निकालें', modify:'ऑडियो संशोधन', features:'विशेषताएँ', faq:'सामान्य प्रश्न', privacy:'गोपनीयता नीति', terms:'उपयोग की शर्तें'},
+    ar:{workspace:'مساحة عمل الصوت', versionSwitch:'تبديل الإصدار', extract:'استخراج من الفيديو', modify:'تعديل الصوت', features:'الميزات', faq:'الأسئلة الشائعة', privacy:'سياسة الخصوصية', terms:'شروط الاستخدام'},
+    fr:{workspace:'Atelier audio', versionSwitch:'Changer de version', extract:'Extraire de la vidéo', modify:'Modifier l’audio', features:'Fonctionnalités', faq:'FAQ', privacy:'Politique de confidentialité', terms:'Conditions d’utilisation'},
+    bn:{workspace:'অডিও ওয়ার্কস্পেস', versionSwitch:'সংস্করণ বদলান', extract:'ভিডিও থেকে নিন', modify:'অডিও পরিবর্তন', features:'বৈশিষ্ট্য', faq:'সাধারণ প্রশ্ন', privacy:'গোপনীয়তা নীতি', terms:'ব্যবহারের শর্ত'},
+    pt:{workspace:'Área de áudio', versionSwitch:'Trocar versão', extract:'Extrair do vídeo', modify:'Modificar áudio', features:'Recursos', faq:'Perguntas frequentes', privacy:'Política de privacidade', terms:'Termos de uso'},
+    ru:{workspace:'Аудио-рабочая область', versionSwitch:'Сменить версию', extract:'Извлечь из видео', modify:'Изменить аудио', features:'Возможности', faq:'FAQ', privacy:'Политика конфиденциальности', terms:'Условия использования'},
+    ur:{workspace:'آڈیو ورک اسپیس', versionSwitch:'ورژن بدلیں', extract:'ویڈیو سے نکالیں', modify:'آڈیو ترمیم', features:'خصوصیات', faq:'عام سوالات', privacy:'رازداری پالیسی', terms:'استعمال کی شرائط'},
+    idms:{workspace:'Ruang kerja audio', versionSwitch:'Ganti versi', extract:'Ekstrak dari video', modify:'Ubah audio', features:'Fitur', faq:'FAQ', privacy:'Kebijakan privasi', terms:'Syarat penggunaan'},
+    ja:{workspace:'オーディオ作業台', versionSwitch:'バージョン切替', extract:'動画から抽出', modify:'音声編集', features:'特徴', faq:'よくある質問', privacy:'プライバシーポリシー', terms:'利用規約'},
+    de:{workspace:'Audio-Arbeitsbereich', versionSwitch:'Version wechseln', extract:'Aus Video extrahieren', modify:'Audio bearbeiten', features:'Funktionen', faq:'FAQ', privacy:'Datenschutzrichtlinie', terms:'Nutzungsbedingungen'},
+    sw:{workspace:'Eneo la kazi la sauti', versionSwitch:'Badilisha toleo', extract:'Toa kutoka video', modify:'Hariri sauti', features:'Vipengele', faq:'Maswali ya mara kwa mara', privacy:'Sera ya faragha', terms:'Masharti ya matumizi'},
+    te:{workspace:'ఆడియో వర్క్‌స్పేస్', versionSwitch:'వెర్షన్ మార్చు', extract:'వీడియో నుంచి తీసుకోండి', modify:'ఆడియో మార్చు', features:'లక్షణాలు', faq:'FAQ', privacy:'గోప్యతా విధానం', terms:'వినియోగ నిబంధనలు'},
+    mr:{workspace:'ऑडिओ कार्यक्षेत्र', versionSwitch:'आवृत्ती बदला', extract:'व्हिडिओतून काढा', modify:'ऑडिओ सुधारणा', features:'वैशिष्ट्ये', faq:'FAQ', privacy:'गोपनीयता धोरण', terms:'वापर अटी'},
+    tr:{workspace:'Ses çalışma alanı', versionSwitch:'Sürüm değiştir', extract:'Videodan çıkar', modify:'Sesi düzenle', features:'Özellikler', faq:'SSS', privacy:'Gizlilik Politikası', terms:'Kullanım şartları'},
+    yue:{workspace:'音訊工作台', versionSwitch:'版本切換', extract:'影片抽取', modify:'音訊修改', features:'特點', faq:'常見問題解答', privacy:'私隱政策', terms:'使用條款'},
+    vi:{workspace:'Không gian âm thanh', versionSwitch:'Đổi phiên bản', extract:'Trích từ video', modify:'Sửa âm thanh', features:'Tính năng', faq:'Câu hỏi thường gặp', privacy:'Chính sách quyền riêng tư', terms:'Điều khoản sử dụng'},
+    ko:{workspace:'오디오 작업실', versionSwitch:'버전 전환', extract:'비디오에서 추출', modify:'오디오 수정', features:'기능', faq:'FAQ', privacy:'개인정보 처리방침', terms:'이용 약관'}
+  };
+  const pack = () => ({...terms.en, ...(terms[langFromHtml()] || {}), ...(overlays[langFromHtml()] || {})});
+  const $ = (s) => document.querySelector(s);
+  const $$ = (s) => Array.from(document.querySelectorAll(s));
+  const fmt = (template, vars={}) => String(template || '').replace(/\{(\w+)\}/g, (_, k) => vars[k] ?? '');
+  const timeText = (seconds) => {
+    if (!Number.isFinite(seconds) || seconds <= 0) return '—';
+    const h = Math.floor(seconds / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+    const s = Math.floor(seconds % 60);
+    return h > 0 ? `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}` : `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  };
+
+  const els = {
+    shell: $('#audioBetaShell'), langBtn: $('#audioLanguageButton'), langLabel: $('#audioLanguageLabel'), langDrop: $('#audioLanguageDropdown'), themeBtn: $('#audioThemeToggle'), themeIcon: $('#audioThemeIcon'), themeLabel: $('#audioThemeLabel'),
+    modeSwitch: $('#audioBetaModeSwitch'), extractBox: $('#audioBetaVideoExtract'), videoPreview: $('#audioBetaVideoPreview'), videoEmpty: $('#audioBetaVideoEmpty'), sourceInput: $('#audioBetaInput'), sourceName: $('#audioBetaSourceName'),
+    startFrame: $('#audioBetaStartFrame'), endFrame: $('#audioBetaEndFrame'), startSlider: $('#audioBetaStartSlider'), endSlider: $('#audioBetaEndSlider'), rangeFill: $('#audioBetaRangeFill'), rangeState: $('#audioBetaFrameRangeState'), rangeTotal: $('#audioBetaRangeTotal'), useFull: $('#audioBetaUseFullRange'), segmentValue: $('#audioBetaSegmentValue'), segmentSummary: $('#audioBetaSegmentSummary'),
+    format: $('#audioBetaFormat'), exportMethod: $('#audioBetaExportMethod'), fileName: $('#audioBetaFileName'), processBtn: $('#audioBetaProcessBtn'), clearBtn: $('#audioBetaClearBtn'), resultsCount: $('#audioBetaResultsCount'), empty: $('#audioBetaEmpty')
+  };
+  if (!els.shell) return;
+
+  const videoState = { url:null, duration:0, fps:30, total:1, start:1, end:1, isVideo:false };
+
+  function text(sel, value) { const el = typeof sel === 'string' ? $(sel) : sel; if (el) el.textContent = value; }
+  function placeholder(sel, value) { const el = typeof sel === 'string' ? $(sel) : sel; if (el) el.setAttribute('placeholder', value); }
+  function selectedMode() { return els.modeSwitch?.querySelector('button.active')?.dataset.mode || 'extract'; }
+  function isExtractMode() { return selectedMode() === 'extract'; }
+
+  function updateThemeButton() {
+    const isDark = root.dataset.theme === 'dark';
+    const p = pack();
+    if (els.themeIcon) els.themeIcon.textContent = isDark ? '☀' : '☾';
+    if (els.themeLabel) els.themeLabel.textContent = isDark ? p.light : p.dark;
+    els.themeBtn?.setAttribute('title', isDark ? p.light : p.dark);
+    els.themeBtn?.setAttribute('aria-label', isDark ? p.light : p.dark);
+  }
+
+  function syncThemeToMain(next) {
+    try { localStorage.setItem(THEME_STORAGE_KEY, next); } catch (_) {}
+    root.dataset.theme = next;
+    root.style.colorScheme = next;
+    const mainIcon = document.getElementById('headerThemeIcon');
+    const mainIcon2 = document.getElementById('themeIcon');
+    const mainLabel = document.getElementById('themeLabel');
+    if (mainIcon) mainIcon.textContent = next === 'dark' ? '☀' : '☾';
+    if (mainIcon2) mainIcon2.textContent = next === 'dark' ? '☀' : '☾';
+    if (mainLabel) mainLabel.textContent = next === 'dark' ? (terms.zh.light) : (terms.zh.dark);
+    updateThemeButton();
+  }
+
+  function buildAudioLanguageMenu() {
+    if (!els.langDrop || els.langDrop.children.length) return;
+    Object.entries(languageMeta).forEach(([code, meta]) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.dataset.audioLanguage = code;
+      btn.textContent = meta.label;
+      btn.addEventListener('click', () => {
+        const mainOption = document.querySelector(`[data-language-option="${code}"]`);
+        if (mainOption) mainOption.click();
+        else {
+          root.lang = meta.lang;
+          root.dir = meta.dir;
+          try { localStorage.setItem(LANGUAGE_STORAGE_KEY, code); } catch (_) {}
+        }
+        applyAudioLanguage(code);
+        els.langDrop.hidden = true;
+        els.langBtn?.setAttribute('aria-expanded', 'false');
+      });
+      els.langDrop.appendChild(btn);
+    });
+  }
+
+  function syncNativeAndCustomSelect(select) {
+    if (!select) return;
+    const box = select.nextElementSibling?.classList?.contains('audio-custom-select') ? select.nextElementSibling : null;
+    if (!box) return;
+    const value = select.options[select.selectedIndex]?.textContent?.trim() || select.value;
+    const triggerValue = box.querySelector('.audio-custom-select-value');
+    if (triggerValue) triggerValue.textContent = value;
+    box.querySelectorAll('.audio-custom-option').forEach((btn) => {
+      const opt = [...select.options].find(o => o.value === btn.dataset.value);
+      if (!opt) return;
+      btn.textContent = opt.textContent;
+      btn.disabled = opt.disabled;
+      btn.setAttribute('aria-selected', opt.value === select.value ? 'true' : 'false');
+    });
+  }
+
+  function applyFormatLabels() {
+    const labels = {
+      zh:{flac:'FLAC（最通用无损）', wav:'WAV（原始无压缩）', ape:'APE', alac:'ALAC（Apple Lossless）', wv:'WV（WavPack）', tak:'TAK', mp3:'MP3（万能通用）', aac:'AAC', m4a:'M4A', ogg:'OGG', mp4:'MP4', webm:'WebM', dsd:'DSD（HiFi 顶级无损）', opus:'OPUS'},
+      en:{flac:'FLAC (most common lossless)', wav:'WAV (raw uncompressed)', ape:'APE', alac:'ALAC (Apple Lossless)', wv:'WV (WavPack)', tak:'TAK', mp3:'MP3 (universal)', aac:'AAC', m4a:'M4A', ogg:'OGG', mp4:'MP4', webm:'WebM', dsd:'DSD (HiFi top-tier lossless)', opus:'OPUS'}
+    };
+    const code = langFromHtml();
+    const map = labels[code] || labels.en;
+    if (els.format) {
+      [...els.format.options].forEach(opt => { if (map[opt.value]) opt.textContent = map[opt.value]; });
+      syncNativeAndCustomSelect(els.format);
+    }
+    if (els.exportMethod) {
+      const p = pack();
+      const m = {download:p.download, zip:p.zip, folder:p.folder};
+      [...els.exportMethod.options].forEach(opt => { if (m[opt.value]) opt.textContent = m[opt.value]; });
+      syncNativeAndCustomSelect(els.exportMethod);
+    }
+  }
+
+  function applyAudioLanguage() {
+    const code = langFromHtml();
+    const p = pack();
+    const meta = languageMeta[code] || languageMeta.zh;
+    if (els.langLabel) els.langLabel.textContent = meta.label;
+    els.langBtn?.setAttribute('title', p.language);
+    els.langBtn?.setAttribute('aria-label', p.language);
+    $$('#audioLanguageDropdown button').forEach(btn => btn.setAttribute('aria-current', String(btn.dataset.audioLanguage === code)));
+    text('.audio-beta-brand strong', p.workspace);
+    text('.audio-beta-brand small', 'v1.3.19 beta');
+    text('.audio-beta-version-tag', 'v1.3.19 beta');
+    text('#audioVersionSwitcher', p.versionSwitch);
+    text('.audio-beta-panel .audio-beta-group:nth-child(1) .audio-beta-label', p.sourceFile);
+    text('.audio-beta-dropzone strong', p.choose);
+    text('.audio-beta-dropzone span', p.chooseHelp);
+    if (!els.sourceInput?.files?.length && els.sourceName) els.sourceName.textContent = p.none;
+    text('.audio-beta-panel .audio-beta-group:nth-child(2) .audio-beta-label', p.mode);
+    text('#audioBetaModeSwitch [data-mode="extract"]', p.extract);
+    text('#audioBetaModeSwitch [data-mode="modify"]', p.modify);
+    text('#audioBetaVideoExtract .audio-beta-control-title strong', p.position);
+    text('#audioBetaVideoExtract .audio-beta-control-title span', p.positionHelp);
+    text('.audio-beta-frame-inputs label:nth-child(1) span', p.startFrame);
+    text('.audio-beta-frame-inputs label:nth-child(2) span', p.endFrame);
+    text('#audioBetaUseFullRange', p.full);
+    if (!videoState.isVideo) text('#audioBetaVideoEmpty', p.videoEmpty);
+    text('#audioBetaVideoExtract + .audio-beta-group .audio-beta-label', p.audioFormat);
+    text('.audio-beta-panel .audio-beta-group:nth-of-type(5) .audio-beta-label', p.fileName);
+    placeholder('#audioBetaFileName', p.filePlaceholder);
+    text('.audio-beta-panel .audio-beta-group:nth-of-type(6) .audio-beta-label', p.exportMethod);
+    text('#audioBetaProcessBtn', p.start);
+    text('#audioBetaClearBtn', p.clear);
+    text('.audio-beta-card-head h4', p.currentPlan);
+    text('#audioBetaConsoleCard .audio-beta-card-head h4', p.audioConsole);
+    text('#audioBetaConsoleCard .audio-beta-card-head strong', p.adjustable);
+    const summaryLabels = [p.duration,p.seconds,p.sourceFormat,p.channelLayout,p.channelProcess,p.balance,p.channelGain,p.sampleRate,p.resample,p.bitDepth,p.bitrateMode,p.bitrate,p.vbr,p.lowpass,p.volume,p.normalize,p.mode,p.segment,p.exportFormat,p.exportMethod,p.fileName];
+    $$('#audioBetaSummary li span').forEach((span, i) => { if (summaryLabels[i]) span.textContent = summaryLabels[i]; });
+    [
+      ['#audioBetaChannels', p.channelLayout], ['#audioBetaChannelProcess', p.channelProcess], ['#audioBetaBalance', p.balance], ['#audioBetaChannelGain', p.channelGain], ['#audioBetaChannelGainCustom', p.channelGain],
+      ['#audioBetaSampleRate', p.sampleRate], ['#audioBetaResampleQuality', p.resample], ['#audioBetaBitDepth', p.bitDepth], ['#audioBetaDither', 'Dither'],
+      ['#audioBetaBitrateMode', p.bitrateMode], ['#audioBetaBitrate', p.bitrate], ['#audioBetaVbrQuality', p.vbr], ['#audioBetaLowpass', p.lowpass],
+      ['#audioBetaVolume', p.volume], ['#audioBetaNormalize', p.normalize]
+    ].forEach(([selector, label]) => {
+      const span = document.querySelector(selector)?.closest('label')?.querySelector('span');
+      if (span) span.textContent = label;
+    });
+    text('#audioBetaPlanState', $('#audioBetaPlanState')?.textContent === terms.zh.notLoaded || $('#audioBetaPlanState')?.textContent === terms.en.notLoaded ? p.notLoaded : p.ready);
+    text('.audio-beta-control-group:nth-child(1) .audio-beta-control-title strong', p.channelsTitle);
+    text('.audio-beta-control-group:nth-child(1) .audio-beta-control-title span', p.channelsDesc);
+    text('.audio-beta-control-group:nth-child(2) .audio-beta-control-title strong', p.sampleTitle);
+    text('.audio-beta-control-group:nth-child(2) .audio-beta-control-title span', p.sampleDesc);
+    text('.audio-beta-control-group:nth-child(3) .audio-beta-control-title strong', p.bitrateTitle);
+    text('.audio-beta-control-group:nth-child(3) .audio-beta-control-title span', p.bitrateDesc);
+    text('.audio-beta-control-group:nth-child(4) .audio-beta-control-title strong', p.volumeTitle);
+    text('.audio-beta-control-group:nth-child(4) .audio-beta-control-title span', p.volumeDesc);
+    $$('.audio-beta-results .audio-beta-card-head h4').forEach(el => el.textContent = p.changedAudio);
+    text('#audioBetaEmpty', p.emptyResult);
+    text('.audio-beta-footer-version strong', p.workspace);
+    text('.audio-beta-footer-version small', p.local);
+    const footer = $$('.audio-beta-footer-links button');
+    [p.features,p.faq,p.privacy,p.terms].forEach((v,i)=>{ if(footer[i]) footer[i].textContent=v; });
+    applyFormatLabels();
+    updateVideoExtractVisibility();
+    updateAudioFrameRangeUI();
+    updateThemeButton();
+  }
+
+  function updateVideoExtractVisibility() {
+    if (els.extractBox) els.extractBox.hidden = !isExtractMode();
+    if (els.segmentSummary) els.segmentSummary.hidden = !isExtractMode();
+  }
+  function clampFrame(n) { return Math.max(1, Math.min(videoState.total || 1, Math.round(Number(n) || 1))); }
+  function updateAudioFrameRangeUI(source) {
+    const p = pack();
+    if (isExtractMode() && videoState.isVideo && videoState.duration) {
+      const durationEl = document.getElementById('audioBetaDuration');
+      const secondsEl = document.getElementById('audioBetaSeconds');
+      const planEl = document.getElementById('audioBetaPlanState');
+      const formatEl = document.getElementById('audioBetaSourceFormat');
+      if (durationEl) durationEl.textContent = timeText(videoState.duration);
+      if (secondsEl) secondsEl.textContent = `${videoState.duration.toFixed(2)} ${p.seconds.includes('秒') ? '秒' : 's'}`;
+      if (planEl) planEl.textContent = p.ready;
+      if (formatEl) formatEl.textContent = 'VIDEO';
+    }
+    if (!isExtractMode()) return;
+    let start = clampFrame(source === 'end' ? (els.startFrame?.value || els.startSlider?.value) : (els.startFrame?.value || els.startSlider?.value));
+    let end = clampFrame(els.endFrame?.value || els.endSlider?.value || videoState.total);
+    if (start > end) { if (source === 'end') start = end; else end = start; }
+    videoState.start = start; videoState.end = end;
+    [els.startFrame, els.startSlider].forEach(el => { if (el) { el.max = videoState.total; el.value = start; }});
+    [els.endFrame, els.endSlider].forEach(el => { if (el) { el.max = videoState.total; el.value = end; }});
+    const left = videoState.total <= 1 ? 0 : ((start - 1) / (videoState.total - 1)) * 100;
+    const right = videoState.total <= 1 ? 0 : 100 - ((end - 1) / (videoState.total - 1)) * 100;
+    if (els.rangeFill) { els.rangeFill.style.left = `${left}%`; els.rangeFill.style.right = `${right}%`; }
+    if (els.rangeTotal) els.rangeTotal.textContent = fmt(p.totalFrames, { total: videoState.isVideo ? videoState.total : 0 });
+    const isFull = start === 1 && end === videoState.total;
+    const txt = videoState.isVideo ? (isFull ? fmt(p.fullRange, {total: videoState.total}) : fmt(p.selectedRange, {start, end})) : p.full;
+    if (els.rangeState) els.rangeState.textContent = txt;
+    if (els.segmentValue) els.segmentValue.textContent = txt;
+    if (els.videoPreview && videoState.isVideo && videoState.duration) {
+      const t = Math.max(0, Math.min(videoState.duration, (start - 1) / videoState.fps));
+      if (Number.isFinite(t) && Math.abs((els.videoPreview.currentTime || 0) - t) > 0.25) {
+        try { els.videoPreview.currentTime = t; } catch (_) {}
+      }
+    }
+  }
+  function resetFullRange() {
+    if (!videoState.isVideo) return;
+    videoState.start = 1; videoState.end = videoState.total;
+    updateAudioFrameRangeUI('full');
+  }
+  function loadVideoPreview(file) {
+    if (videoState.url) URL.revokeObjectURL(videoState.url);
+    videoState.url = null; videoState.isVideo = !!file?.type?.startsWith('video/');
+    const box = els.videoPreview?.closest('.audio-beta-video-preview');
+    if (!els.videoPreview || !box) return;
+    box.classList.toggle('has-video', videoState.isVideo);
+    if (!videoState.isVideo) {
+      els.videoPreview.removeAttribute('src');
+      videoState.duration = 0; videoState.total = 1; updateAudioFrameRangeUI(); return;
+    }
+    videoState.url = URL.createObjectURL(file);
+    els.videoPreview.src = videoState.url;
+    els.videoPreview.onloadedmetadata = () => {
+      videoState.duration = Number.isFinite(els.videoPreview.duration) ? els.videoPreview.duration : 0;
+      videoState.fps = 30;
+      videoState.total = Math.max(1, Math.round(videoState.duration * videoState.fps));
+      videoState.start = 1; videoState.end = videoState.total;
+      resetFullRange();
+    };
+  }
+
+  els.modeSwitch?.addEventListener('click', () => setTimeout(() => { updateVideoExtractVisibility(); updateAudioFrameRangeUI(); applyAudioLanguage(); }, 0));
+  [els.startFrame, els.startSlider].forEach(el => el?.addEventListener('input', () => updateAudioFrameRangeUI('start')));
+  [els.endFrame, els.endSlider].forEach(el => el?.addEventListener('input', () => updateAudioFrameRangeUI('end')));
+  els.useFull?.addEventListener('click', resetFullRange);
+  els.sourceInput?.addEventListener('change', (e) => setTimeout(() => { loadVideoPreview(e.target.files?.[0]); applyAudioLanguage(); }, 0));
+
+  // Add selected video range to newly created result cards.
+  document.getElementById('audioBetaProcessBtn')?.addEventListener('click', () => {
+    setTimeout(() => {
+      const first = document.querySelector('#audioBetaResultList .audio-beta-result-item span');
+      if (first && isExtractMode() && els.segmentValue) first.textContent += ` · ${pack().segment}: ${els.segmentValue.textContent}`;
+    }, 0);
+  });
+
+  // Audio language and theme controls.
+  buildAudioLanguageMenu();
+  els.langBtn?.addEventListener('click', (event) => { event.stopPropagation(); if (!els.langDrop) return; const open = els.langDrop.hidden; els.langDrop.hidden = !open; els.langBtn.setAttribute('aria-expanded', String(open)); });
+  document.addEventListener('click', (event) => { if (!event.target.closest('.audio-language-menu') && els.langDrop) { els.langDrop.hidden = true; els.langBtn?.setAttribute('aria-expanded','false'); }});
+  els.themeBtn?.addEventListener('click', () => syncThemeToMain(root.dataset.theme === 'dark' ? 'light' : 'dark'));
+
+  // Track main language/theme changes so the audio version stays fully synchronized.
+  new MutationObserver(() => { applyAudioLanguage(); updateThemeButton(); }).observe(root, { attributes:true, attributeFilter:['lang','dir','data-theme'] });
+  window.addEventListener('storage', (e) => { if (e.key === LANGUAGE_STORAGE_KEY || e.key === THEME_STORAGE_KEY) applyAudioLanguage(); });
+  applyAudioLanguage();
+})();
+</script>
+
+<script>
+(() => {
+  const root = document.documentElement;
+  const codeFromLang = () => {
+    const l=(root.lang||'zh').toLowerCase();
+    if(l.includes('zh-hk')||l.includes('zh-mo')) return 'yue';
+    if(l.startsWith('zh')) return 'zh';
+    if(l.startsWith('es')) return 'es'; if(l.startsWith('hi')) return 'hi'; if(l.startsWith('ar')) return 'ar'; if(l.startsWith('fr')) return 'fr'; if(l.startsWith('bn')) return 'bn'; if(l.startsWith('pt')) return 'pt'; if(l.startsWith('ru')) return 'ru'; if(l.startsWith('ur')) return 'ur'; if(l.startsWith('id')||l.startsWith('ms')) return 'idms'; if(l.startsWith('ja')) return 'ja'; if(l.startsWith('de')) return 'de'; if(l.startsWith('sw')) return 'sw'; if(l.startsWith('te')) return 'te'; if(l.startsWith('mr')) return 'mr'; if(l.startsWith('tr')) return 'tr'; if(l.startsWith('vi')) return 'vi'; if(l.startsWith('ko')) return 'ko'; return 'en';
+  };
+  const L = {
+    zh:['音频工作台','源文件','选择或拖入音频 / 视频','音频修改可选音频；视频抽取可选视频','音频模式','视频抽取','音频修改','选取位置','音频导出格式','文件名称','导出方式','开始处理','清空结果','当前音频计划','音频控制台','已改音频','特点','常见问题解答','隐私政策','使用条款','声道布局','声道处理','左右平衡','声道增益','采样率','重采样质量','PCM 位深','码率模式','目标比特率','VBR 质量','高频截止','音量','响度标准化','版本切换','深色','浅色'],
+    en:['Audio Workspace','Source file','Choose or drop audio / video','Use audio for editing; use video for extraction.','Audio mode','Extract from video','Edit audio','Selection range','Audio export format','File name','Export method','Start processing','Clear results','Current audio plan','Audio console','Modified audio','Features','FAQ','Privacy Policy','Terms of Use','Channel layout','Channel processing','L/R balance','Channel gain','Sample rate','Resampling quality','PCM bit depth','Bitrate mode','Target bitrate','VBR quality','Low-pass cutoff','Volume','Loudness normalization','Switch version','Dark','Light'],
+    es:['Mesa de audio','Archivo fuente','Elige o arrastra audio / video','Usa audio para editar; video para extraer.','Modo de audio','Extraer de video','Modificar audio','Rango seleccionado','Formato de audio','Nombre de archivo','Método de exportación','Iniciar proceso','Limpiar resultados','Plan de audio actual','Consola de audio','Audio modificado','Características','Preguntas frecuentes','Política de privacidad','Términos de uso','Diseño de canales','Proceso de canales','Balance L/R','Ganancia de canal','Frecuencia de muestreo','Calidad de remuestreo','Profundidad PCM','Modo de bitrate','Bitrate objetivo','Calidad VBR','Corte de agudos','Volumen','Normalización de sonoridad','Cambiar versión','Oscuro','Claro'],
+    hi:['ऑडियो कार्यक्षेत्र','स्रोत फ़ाइल','ऑडियो / वीडियो चुनें या छोड़ें','संपादन के लिए ऑडियो; निष्कर्षण के लिए वीडियो।','ऑडियो मोड','वीडियो से निकालें','ऑडियो संपादित करें','चयन सीमा','ऑडियो निर्यात प्रारूप','फ़ाइल नाम','निर्यात विधि','प्रसंस्करण शुरू करें','परिणाम साफ़ करें','वर्तमान ऑडियो योजना','ऑडियो कंसोल','संशोधित ऑडियो','विशेषताएँ','सामान्य प्रश्न','गोपनीयता नीति','उपयोग की शर्तें','चैनल लेआउट','चैनल प्रक्रिया','L/R संतुलन','चैनल गेन','नमूना दर','रीसैंपल गुणवत्ता','PCM बिट गहराई','बिटरेट मोड','लक्ष्य बिटरेट','VBR गुणवत्ता','लो-पास कटऑफ','वॉल्यूम','लाउडनेस सामान्यीकरण','संस्करण बदलें','डार्क','लाइट'],
+    ar:['مساحة عمل الصوت','الملف المصدر','اختر أو اسحب صوت / فيديو','استخدم الصوت للتعديل والفيديو للاستخراج.','وضع الصوت','استخراج من الفيديو','تعديل الصوت','نطاق التحديد','تنسيق تصدير الصوت','اسم الملف','طريقة التصدير','بدء المعالجة','مسح النتائج','خطة الصوت الحالية','لوحة التحكم الصوتية','الصوت المعدل','الميزات','الأسئلة الشائعة','سياسة الخصوصية','شروط الاستخدام','تخطيط القنوات','معالجة القنوات','توازن L/R','كسب القناة','معدل العينة','جودة إعادة العينة','عمق PCM','وضع معدل البت','معدل البت الهدف','جودة VBR','قطع الترددات العالية','الصوت','تطبيع مستوى الصوت','تبديل الإصدار','داكن','فاتح'],
+    fr:['Atelier audio','Fichier source','Choisir ou déposer audio / vidéo','Audio pour modifier ; vidéo pour extraire.','Mode audio','Extraire de la vidéo','Modifier l’audio','Plage de sélection','Format audio exporté','Nom du fichier','Méthode d’exportation','Démarrer','Effacer les résultats','Plan audio actuel','Console audio','Audio modifié','Fonctionnalités','FAQ','Politique de confidentialité','Conditions d’utilisation','Disposition des canaux','Traitement des canaux','Balance G/D','Gain de canal','Taux d’échantillonnage','Qualité de rééchantillonnage','Profondeur PCM','Mode de débit','Débit cible','Qualité VBR','Coupure haute fréquence','Volume','Normalisation de loudness','Changer de version','Sombre','Clair'],
+    bn:['অডিও ওয়ার্কস্পেস','উৎস ফাইল','অডিও / ভিডিও বেছে নিন বা টেনে দিন','সম্পাদনার জন্য অডিও; নিষ্কাশনের জন্য ভিডিও।','অডিও মোড','ভিডিও থেকে নিন','অডিও সম্পাদনা','নির্বাচন পরিসর','অডিও রপ্তানি ফরম্যাট','ফাইলের নাম','রপ্তানি পদ্ধতি','প্রক্রিয়া শুরু','ফলাফল মুছুন','বর্তমান অডিও পরিকল্পনা','অডিও কনসোল','পরিবর্তিত অডিও','বৈশিষ্ট্য','FAQ','গোপনীয়তা নীতি','ব্যবহারের শর্ত','চ্যানেল বিন্যাস','চ্যানেল প্রক্রিয়া','L/R ভারসাম্য','চ্যানেল গেইন','স্যাম্পল রেট','রিস্যাম্পল মান','PCM বিট গভীরতা','বিটরেট মোড','লক্ষ্য বিটরেট','VBR মান','লো-পাস কাটঅফ','ভলিউম','লাউডনেস স্বাভাবিককরণ','সংস্করণ বদলান','ডার্ক','লাইট'],
+    pt:['Área de áudio','Arquivo de origem','Escolha ou solte áudio / vídeo','Use áudio para editar; vídeo para extrair.','Modo de áudio','Extrair do vídeo','Modificar áudio','Intervalo selecionado','Formato de áudio','Nome do arquivo','Método de exportação','Iniciar processamento','Limpar resultados','Plano de áudio atual','Console de áudio','Áudio modificado','Recursos','FAQ','Política de privacidade','Termos de uso','Layout de canais','Processamento de canais','Balanço L/R','Ganho de canal','Taxa de amostragem','Qualidade de reamostragem','Profundidade PCM','Modo de bitrate','Bitrate alvo','Qualidade VBR','Corte passa-baixa','Volume','Normalização de loudness','Trocar versão','Escuro','Claro'],
+    ru:['Аудио-рабочая область','Исходный файл','Выберите или перетащите аудио / видео','Аудио для редактирования; видео для извлечения.','Режим аудио','Извлечь из видео','Изменить аудио','Диапазон выбора','Формат экспорта аудио','Имя файла','Способ экспорта','Начать обработку','Очистить результаты','Текущий аудио-план','Аудио-консоль','Изменённое аудио','Возможности','FAQ','Политика конфиденциальности','Условия использования','Схема каналов','Обработка каналов','Баланс L/R','Усиление канала','Частота дискретизации','Качество ресэмплинга','Глубина PCM','Режим битрейта','Целевой битрейт','Качество VBR','Срез ВЧ','Громкость','Нормализация громкости','Сменить версию','Тёмная','Светлая'],
+    ur:['آڈیو ورک اسپیس','ماخذ فائل','آڈیو / ویڈیو منتخب کریں یا ڈالیں','ترمیم کے لیے آڈیو؛ اخراج کے لیے ویڈیو۔','آڈیو موڈ','ویڈیو سے نکالیں','آڈیو ترمیم','انتخابی حد','آڈیو برآمد فارمیٹ','فائل کا نام','برآمد طریقہ','عمل شروع کریں','نتائج صاف کریں','موجودہ آڈیو منصوبہ','آڈیو کنسول','ترمیم شدہ آڈیو','خصوصیات','FAQ','رازداری پالیسی','استعمال کی شرائط','چینل لے آؤٹ','چینل پروسیسنگ','L/R توازن','چینل گین','سیمپل ریٹ','ری سیمپل معیار','PCM بٹ گہرائی','بٹ ریٹ موڈ','ہدف بٹ ریٹ','VBR معیار','لو پاس کٹ آف','آواز','لاؤڈنیس نارملائزیشن','ورژن بدلیں','ڈارک','لائٹ'],
+    idms:['Ruang kerja audio','File sumber','Pilih atau jatuhkan audio / video','Audio untuk edit; video untuk ekstrak.','Mode audio','Ekstrak dari video','Ubah audio','Rentang pilihan','Format ekspor audio','Nama file','Metode ekspor','Mulai proses','Bersihkan hasil','Rencana audio saat ini','Konsol audio','Audio diubah','Fitur','FAQ','Kebijakan privasi','Syarat penggunaan','Tata letak kanal','Pemrosesan kanal','Keseimbangan L/R','Gain kanal','Sample rate','Kualitas resampling','Kedalaman bit PCM','Mode bitrate','Bitrate target','Kualitas VBR','Batas low-pass','Volume','Normalisasi loudness','Ganti versi','Gelap','Terang'],
+    ja:['オーディオ作業台','ソースファイル','音声 / 動画を選択またはドロップ','音声編集は音声、抽出は動画を使用。','音声モード','動画から抽出','音声を編集','選択範囲','音声書き出し形式','ファイル名','書き出し方法','処理開始','結果をクリア','現在の音声プラン','音声コンソール','変更済み音声','特徴','よくある質問','プライバシーポリシー','利用規約','チャンネル配置','チャンネル処理','L/R バランス','チャンネルゲイン','サンプルレート','リサンプル品質','PCM ビット深度','ビットレートモード','目標ビットレート','VBR 品質','ローパス cutoff','音量','ラウドネス正規化','バージョン切替','ダーク','ライト'],
+    de:['Audio-Arbeitsbereich','Quelldatei','Audio / Video wählen oder ablegen','Audio zum Bearbeiten; Video zum Extrahieren.','Audiomodus','Aus Video extrahieren','Audio bearbeiten','Auswahlbereich','Audio-Exportformat','Dateiname','Exportmethode','Verarbeitung starten','Ergebnisse löschen','Aktueller Audioplan','Audiokonsole','Bearbeitetes Audio','Funktionen','FAQ','Datenschutzrichtlinie','Nutzungsbedingungen','Kanal-Layout','Kanalverarbeitung','L/R-Balance','Kanalverstärkung','Abtastrate','Resampling-Qualität','PCM-Bittiefe','Bitratenmodus','Zielbitrate','VBR-Qualität','Tiefpass-Grenze','Lautstärke','Loudness-Normalisierung','Version wechseln','Dunkel','Hell'],
+    sw:['Eneo la kazi la sauti','Faili chanzo','Chagua au dondosha sauti / video','Sauti kwa kuhariri; video kwa kutoa.','Hali ya sauti','Toa kutoka video','Hariri sauti','Masafa ya uteuzi','Umbizo la sauti','Jina la faili','Njia ya kuhamisha','Anza kuchakata','Futa matokeo','Mpango wa sasa wa sauti','Konsoli ya sauti','Sauti iliyobadilishwa','Vipengele','FAQ','Sera ya faragha','Masharti ya matumizi','Mpangilio wa chaneli','Uchakataji wa chaneli','Mizani L/R','Faida ya chaneli','Kiwango cha sampuli','Ubora wa resampling','Kina cha biti PCM','Hali ya bitrate','Bitrate lengwa','Ubora wa VBR','Kikomo cha low-pass','Sauti','Usawazishaji wa loudness','Badilisha toleo','Giza','Mwanga'],
+    te:['ఆడియో వర్క్‌స్పేస్','మూల ఫైల్','ఆడియో / వీడియో ఎంచుకోండి లేదా వదలండి','ఎడిట్‌కు ఆడియో; తీసుకోవడానికి వీడియో.','ఆడియో మోడ్','వీడియో నుంచి తీసుకోండి','ఆడియో మార్చండి','ఎంపిక పరిధి','ఆడియో ఎగుమతి ఫార్మాట్','ఫైల్ పేరు','ఎగుమతి విధానం','ప్రాసెస్ ప్రారంభించు','ఫలితాలు క్లియర్','ప్రస్తుత ఆడియో ప్రణాళిక','ఆడియో కన్సోల్','మార్చిన ఆడియో','లక్షణాలు','FAQ','గోప్యతా విధానం','వినియోగ నిబంధనలు','చానల్ లేఅవుట్','చానల్ ప్రాసెసింగ్','L/R బ్యాలెన్స్','చానల్ గెయిన్','సాంపిల్ రేటు','రీ-సాంపుల్ నాణ్యత','PCM బిట్ లోతు','బిట్రేట్ మోడ్','లక్ష్య బిట్రేట్','VBR నాణ్యత','లో-పాస్ కట్‌ఆఫ్','వాల్యూమ్','లౌడ్‌నెస్ సాధారణీకరణ','వెర్షన్ మార్చు','డార్క్','లైట్'],
+    mr:['ऑडिओ कार्यक्षेत्र','स्रोत फाइल','ऑडिओ / व्हिडिओ निवडा किंवा टाका','संपादनासाठी ऑडिओ; काढण्यासाठी व्हिडिओ.','ऑडिओ मोड','व्हिडिओतून काढा','ऑडिओ संपादित करा','निवड श्रेणी','ऑडिओ निर्यात स्वरूप','फाइल नाव','निर्यात पद्धत','प्रक्रिया सुरू करा','निकाल साफ करा','सध्याचा ऑडिओ आराखडा','ऑडिओ कन्सोल','बदललेला ऑडिओ','वैशिष्ट्ये','FAQ','गोपनीयता धोरण','वापर अटी','चॅनेल लेआउट','चॅनेल प्रक्रिया','L/R संतुलन','चॅनेल गेन','सॅम्पल रेट','रीसॅम्पल गुणवत्ता','PCM बिट खोली','बिटरेट मोड','लक्ष्य बिटरेट','VBR गुणवत्ता','लो-पास कटऑफ','व्हॉल्यूम','लाउडनेस सामान्यीकरण','आवृत्ती बदला','गडद','फिकट'],
+    tr:['Ses çalışma alanı','Kaynak dosya','Ses / video seç veya bırak','Düzenleme için ses; çıkarma için video.','Ses modu','Videodan çıkar','Sesi düzenle','Seçim aralığı','Ses dışa aktarma biçimi','Dosya adı','Dışa aktarma yöntemi','İşlemeyi başlat','Sonuçları temizle','Geçerli ses planı','Ses konsolu','Değiştirilmiş ses','Özellikler','SSS','Gizlilik Politikası','Kullanım şartları','Kanal düzeni','Kanal işleme','L/R dengesi','Kanal kazancı','Örnekleme hızı','Yeniden örnekleme kalitesi','PCM bit derinliği','Bitrate modu','Hedef bitrate','VBR kalitesi','Alçak geçiş kesimi','Ses seviyesi','Loudness normalleştirme','Sürüm değiştir','Koyu','Açık'],
+    yue:['音訊工作台','來源檔案','揀或者拖入音訊 / 影片','音訊修改用音訊；影片抽取用影片。','音訊模式','影片抽取','音訊修改','選取位置','音訊匯出格式','檔案名稱','匯出方式','開始處理','清空結果','目前音訊計劃','音訊控制台','已改音訊','特點','常見問題解答','私隱政策','使用條款','聲道佈局','聲道處理','左右平衡','聲道增益','採樣率','重採樣質素','PCM 位深','碼率模式','目標碼率','VBR 質素','高頻截止','音量','響度標準化','版本切換','深色','淺色'],
+    vi:['Không gian âm thanh','Tệp nguồn','Chọn hoặc kéo thả âm thanh / video','Dùng âm thanh để sửa; dùng video để trích xuất.','Chế độ âm thanh','Trích từ video','Sửa âm thanh','Vùng chọn','Định dạng xuất âm thanh','Tên tệp','Cách xuất','Bắt đầu xử lý','Xóa kết quả','Kế hoạch âm thanh hiện tại','Bảng điều khiển âm thanh','Âm thanh đã sửa','Tính năng','FAQ','Chính sách quyền riêng tư','Điều khoản sử dụng','Bố cục kênh','Xử lý kênh','Cân bằng L/R','Gain kênh','Tần số lấy mẫu','Chất lượng resample','Độ sâu bit PCM','Chế độ bitrate','Bitrate mục tiêu','Chất lượng VBR','Cắt low-pass','Âm lượng','Chuẩn hóa loudness','Đổi phiên bản','Tối','Sáng'],
+    ko:['오디오 작업실','소스 파일','오디오 / 비디오 선택 또는 드롭','편집은 오디오, 추출은 비디오를 사용합니다.','오디오 모드','비디오에서 추출','오디오 수정','선택 범위','오디오 내보내기 형식','파일 이름','내보내기 방법','처리 시작','결과 지우기','현재 오디오 계획','오디오 콘솔','수정된 오디오','기능','FAQ','개인정보 처리방침','이용 약관','채널 레이아웃','채널 처리','L/R 밸런스','채널 게인','샘플 레이트','리샘플링 품질','PCM 비트 깊이','비트레이트 모드','목표 비트레이트','VBR 품질','로우패스 컷오프','볼륨','라우드니스 정규화','버전 전환','어두움','밝음']
+  };
+  const idx = ['workspace','sourceFile','choose','chooseHelp','mode','extract','modify','position','audioFormat','fileName','exportMethod','start','clear','currentPlan','audioConsole','changedAudio','features','faq','privacy','terms','channelLayout','channelProcess','balance','channelGain','sampleRate','resample','bitDepth','bitrateMode','bitrate','vbr','lowpass','volume','normalize','versionSwitch','dark','light'];
+  const pack = () => Object.fromEntries(idx.map((k,i)=>[k,(L[codeFromLang()]||L.en)[i]||L.en[i]]));
+  const $ = (s)=>document.querySelector(s); const $$=(s)=>Array.from(document.querySelectorAll(s));
+  function set(sel,val){const el=$(sel); if(el) el.textContent=val;}
+  function apply(){
+    const p=pack();
+    set('.audio-beta-brand strong',p.workspace); set('#audioVersionSwitcher',p.versionSwitch);
+    set('.audio-beta-dropzone strong',p.choose); set('.audio-beta-dropzone span',p.chooseHelp);
+    set('#audioBetaModeSwitch [data-mode="extract"]',p.extract); set('#audioBetaModeSwitch [data-mode="modify"]',p.modify);
+    set('#audioBetaProcessBtn',p.start); set('#audioBetaClearBtn',p.clear); set('#audioBetaConsoleCard .audio-beta-card-head h4',p.audioConsole);
+    set('#audioBetaVideoExtract .audio-beta-control-title strong',p.position);
+    set('#audioBetaVideoExtract + .audio-beta-group .audio-beta-label',p.audioFormat);
+    const groupLabels=[p.sourceFile,p.mode,p.position,p.audioFormat,p.fileName,p.exportMethod];
+    $$('.audio-beta-panel > .audio-beta-group > .audio-beta-label').forEach((el,i)=>{ if(groupLabels[i]) el.textContent=groupLabels[i]; });
+    const summary=[null,null,null,p.channelLayout,p.channelProcess,p.balance,p.channelGain,p.sampleRate,p.resample,p.bitDepth,p.bitrateMode,p.bitrate,p.vbr,p.lowpass,p.volume,p.normalize,p.mode,p.position,p.audioFormat,p.exportMethod,p.fileName];
+    $$('#audioBetaSummary li span').forEach((el,i)=>{ if(summary[i]) el.textContent=summary[i]; });
+    const labels=[['#audioBetaChannels',p.channelLayout],['#audioBetaChannelProcess',p.channelProcess],['#audioBetaBalance',p.balance],['#audioBetaChannelGain',p.channelGain],['#audioBetaChannelGainCustom',p.channelGain],['#audioBetaSampleRate',p.sampleRate],['#audioBetaResampleQuality',p.resample],['#audioBetaBitDepth',p.bitDepth],['#audioBetaBitrateMode',p.bitrateMode],['#audioBetaBitrate',p.bitrate],['#audioBetaVbrQuality',p.vbr],['#audioBetaLowpass',p.lowpass],['#audioBetaVolume',p.volume],['#audioBetaNormalize',p.normalize]];
+    labels.forEach(([sel,val])=>{const sp=$(sel)?.closest('label')?.querySelector('span'); if(sp) sp.textContent=val;});
+    set('.audio-beta-results .audio-beta-card-head h4',p.changedAudio);
+    const footer=$$('.audio-beta-footer-links button'); [p.features,p.faq,p.privacy,p.terms].forEach((v,i)=>{if(footer[i]) footer[i].textContent=v;});
+    const isDark=root.dataset.theme==='dark'; set('#audioThemeLabel', isDark?p.light:p.dark);
+  }
+  new MutationObserver(apply).observe(root,{attributes:true,attributeFilter:['lang','dir','data-theme']});
+  setTimeout(apply,0);
+})();
+</script>
+
+
+<script>
+/* v1.3.19 beta：真实音频转码 / 导出内核（FFmpeg WebAssembly） */
+(() => {
+  const $ = (s) => document.querySelector(s);
+  const root = document.documentElement;
+  const btn = $('#audioBetaProcessBtn');
+  const clearBtn = $('#audioBetaClearBtn');
+  const actions = document.querySelector('.audio-beta-actions');
+  if (!btn || !actions) return;
+
+  let ffmpeg = null;
+  let ffmpegLoading = null;
+  let ffmpegFetchFile = null;
+  let lastLog = '';
+  const outputUrls = new Set();
+
+  const TEXT = {
+    zh: { idle:'真实转码内核：未加载', loading:'正在加载 FFmpeg 转码内核…', ready:'真实转码内核已就绪', processing:'正在真实转码…', exported:'已真实导出', failed:'转码失败', needFile:'请先选择音频或视频文件。', needVideo:'“视频抽取”模式需要选择视频文件。', unsupported:'当前浏览器 FFmpeg 内核没有完成该专业格式编码。请换用 FLAC / WAV / ALAC / MP3 / AAC / OPUS，或使用自定义完整版 FFmpeg 内核。', download:'下载', preview:'预览可能受浏览器格式支持限制', noZip:'ZIP 组件未加载，已改为浏览器下载。', noFolder:'当前浏览器不支持文件夹导出，已改为浏览器下载。', writing:'正在写入文件…' },
+    en: { idle:'Real transcoder: not loaded', loading:'Loading FFmpeg transcoder…', ready:'Real transcoder ready', processing:'Transcoding for real…', exported:'Real export finished', failed:'Transcoding failed', needFile:'Choose an audio or video file first.', needVideo:'Video extraction mode requires a video file.', unsupported:'This browser FFmpeg core cannot encode that professional format. Use FLAC / WAV / ALAC / MP3 / AAC / OPUS, or provide a custom full FFmpeg core.', download:'Download', preview:'Preview depends on browser format support', noZip:'ZIP component is unavailable; using browser download.', noFolder:'Folder export is unsupported here; using browser download.', writing:'Writing file…' },
+    es: { idle:'Transcodificador real: no cargado', loading:'Cargando FFmpeg…', ready:'Transcodificador listo', processing:'Transcodificando…', exported:'Exportación real terminada', failed:'Error de transcodificación', needFile:'Primero elige un archivo de audio o video.', needVideo:'El modo de extracción requiere un video.', unsupported:'Este núcleo FFmpeg del navegador no puede codificar ese formato profesional.', download:'Descargar', preview:'La vista previa depende del navegador', noZip:'ZIP no está disponible; se descargará en el navegador.', noFolder:'Exportar carpeta no está disponible; se descargará en el navegador.', writing:'Escribiendo archivo…' },
+    hi: { idle:'वास्तविक ट्रांसकोडर लोड नहीं', loading:'FFmpeg लोड हो रहा है…', ready:'वास्तविक ट्रांसकोडर तैयार', processing:'ट्रांसकोड हो रहा है…', exported:'वास्तविक निर्यात पूरा', failed:'ट्रांसकोड विफल', needFile:'पहले ऑडियो या वीडियो फ़ाइल चुनें।', needVideo:'वीडियो निष्कर्षण के लिए वीडियो फ़ाइल चाहिए।', unsupported:'यह ब्राउज़र FFmpeg कोर यह पेशेवर फ़ॉर्मेट encode नहीं कर सकता।', download:'डाउनलोड', preview:'पूर्वावलोकन ब्राउज़र समर्थन पर निर्भर है', noZip:'ZIP उपलब्ध नहीं; ब्राउज़र डाउनलोड का उपयोग होगा।', noFolder:'फ़ोल्डर निर्यात उपलब्ध नहीं; ब्राउज़र डाउनलोड होगा।', writing:'फ़ाइल लिखी जा रही है…' },
+    ar: { idle:'محول حقيقي: غير محمل', loading:'جارٍ تحميل FFmpeg…', ready:'المحول جاهز', processing:'جارٍ التحويل…', exported:'اكتمل التصدير الحقيقي', failed:'فشل التحويل', needFile:'اختر ملف صوت أو فيديو أولاً.', needVideo:'وضع استخراج الفيديو يحتاج ملف فيديو.', unsupported:'نواة FFmpeg في هذا المتصفح لا تدعم ترميز هذا التنسيق الاحترافي.', download:'تنزيل', preview:'المعاينة تعتمد على دعم المتصفح', noZip:'ZIP غير متاح؛ سيتم التنزيل عبر المتصفح.', noFolder:'تصدير المجلد غير مدعوم؛ سيتم التنزيل عبر المتصفح.', writing:'جارٍ كتابة الملف…' },
+    fr: { idle:'Transcodeur réel : non chargé', loading:'Chargement de FFmpeg…', ready:'Transcodeur prêt', processing:'Transcodage réel…', exported:'Export réel terminé', failed:'Échec du transcodage', needFile:'Choisissez d’abord un fichier audio ou vidéo.', needVideo:'Le mode extraction vidéo nécessite une vidéo.', unsupported:'Ce noyau FFmpeg du navigateur ne peut pas encoder ce format professionnel.', download:'Télécharger', preview:'L’aperçu dépend du navigateur', noZip:'ZIP indisponible ; téléchargement navigateur utilisé.', noFolder:'Export dossier indisponible ; téléchargement navigateur utilisé.', writing:'Écriture du fichier…' },
+    bn: { idle:'বাস্তব ট্রান্সকোডার লোড হয়নি', loading:'FFmpeg লোড হচ্ছে…', ready:'ট্রান্সকোডার প্রস্তুত', processing:'ট্রান্সকোড হচ্ছে…', exported:'বাস্তব এক্সপোর্ট শেষ', failed:'ট্রান্সকোড ব্যর্থ', needFile:'আগে একটি অডিও বা ভিডিও ফাইল বেছে নিন।', needVideo:'ভিডিও থেকে নেওয়ার জন্য ভিডিও ফাইল দরকার।', unsupported:'এই ব্রাউজার FFmpeg কোর এই পেশাদার ফরম্যাট encode করতে পারে না।', download:'ডাউনলোড', preview:'প্রিভিউ ব্রাউজারের ওপর নির্ভর করে', noZip:'ZIP নেই; ব্রাউজার ডাউনলোড ব্যবহার হবে।', noFolder:'ফোল্ডার এক্সপোর্ট নেই; ব্রাউজার ডাউনলোড হবে।', writing:'ফাইল লেখা হচ্ছে…' },
+    pt: { idle:'Transcodificador real: não carregado', loading:'Carregando FFmpeg…', ready:'Transcodificador pronto', processing:'Transcodificando…', exported:'Exportação real concluída', failed:'Falha na transcodificação', needFile:'Escolha primeiro um arquivo de áudio ou vídeo.', needVideo:'O modo de extração requer vídeo.', unsupported:'Este núcleo FFmpeg do navegador não codifica esse formato profissional.', download:'Baixar', preview:'Prévia depende do navegador', noZip:'ZIP indisponível; usando download do navegador.', noFolder:'Exportar pasta indisponível; usando download do navegador.', writing:'Gravando arquivo…' },
+    ru: { idle:'Реальный транскодер: не загружен', loading:'Загрузка FFmpeg…', ready:'Транскодер готов', processing:'Транскодирование…', exported:'Экспорт завершён', failed:'Ошибка транскодирования', needFile:'Сначала выберите аудио или видео файл.', needVideo:'Для извлечения нужен видеофайл.', unsupported:'FFmpeg-ядро браузера не кодирует этот профессиональный формат.', download:'Скачать', preview:'Предпросмотр зависит от браузера', noZip:'ZIP недоступен; используется загрузка браузера.', noFolder:'Экспорт в папку недоступен; используется загрузка браузера.', writing:'Запись файла…' },
+    ur: { idle:'حقیقی ٹرانس کوڈر لوڈ نہیں', loading:'FFmpeg لوڈ ہو رہا ہے…', ready:'ٹرانس کوڈر تیار', processing:'ٹرانس کوڈ ہو رہا ہے…', exported:'حقیقی برآمد مکمل', failed:'ٹرانس کوڈ ناکام', needFile:'پہلے آڈیو یا ویڈیو فائل منتخب کریں۔', needVideo:'ویڈیو اخراج کے لیے ویڈیو فائل چاہیے۔', unsupported:'یہ براؤزر FFmpeg کور یہ پیشہ ور فارمیٹ encode نہیں کر سکتا۔', download:'ڈاؤن لوڈ', preview:'پری ویو براؤزر سپورٹ پر منحصر ہے', noZip:'ZIP دستیاب نہیں؛ براؤزر ڈاؤن لوڈ استعمال ہوگا۔', noFolder:'فولڈر ایکسپورٹ دستیاب نہیں؛ براؤزر ڈاؤن لوڈ ہوگا۔', writing:'فائل لکھی جا رہی ہے…' },
+    idms: { idle:'Transcoder nyata: belum dimuat', loading:'Memuat FFmpeg…', ready:'Transcoder siap', processing:'Transcoding…', exported:'Ekspor nyata selesai', failed:'Transcoding gagal', needFile:'Pilih file audio atau video dahulu.', needVideo:'Mode ekstrak video memerlukan file video.', unsupported:'Core FFmpeg browser ini tidak dapat mengode format profesional itu.', download:'Unduh', preview:'Pratinjau tergantung dukungan browser', noZip:'ZIP tidak tersedia; memakai unduhan browser.', noFolder:'Ekspor folder tidak tersedia; memakai unduhan browser.', writing:'Menulis file…' },
+    ja: { idle:'実変換エンジン: 未読み込み', loading:'FFmpeg を読み込み中…', ready:'変換エンジン準備完了', processing:'変換中…', exported:'実書き出し完了', failed:'変換失敗', needFile:'先に音声または動画ファイルを選択してください。', needVideo:'動画抽出には動画ファイルが必要です。', unsupported:'このブラウザの FFmpeg コアはその専門形式をエンコードできません。', download:'ダウンロード', preview:'プレビューはブラウザ対応に依存します', noZip:'ZIP が使えないためブラウザで保存します。', noFolder:'フォルダ出力は未対応のためブラウザで保存します。', writing:'ファイルを書き込み中…' },
+    de: { idle:'Echter Transcoder: nicht geladen', loading:'FFmpeg wird geladen…', ready:'Transcoder bereit', processing:'Transcodierung läuft…', exported:'Echter Export abgeschlossen', failed:'Transcodierung fehlgeschlagen', needFile:'Wählen Sie zuerst eine Audio- oder Videodatei.', needVideo:'Videoextraktion benötigt eine Videodatei.', unsupported:'Dieser Browser-FFmpeg-Kern kann dieses Profi-Format nicht codieren.', download:'Herunterladen', preview:'Vorschau hängt vom Browser ab', noZip:'ZIP nicht verfügbar; Browser-Download wird verwendet.', noFolder:'Ordnerexport nicht verfügbar; Browser-Download wird verwendet.', writing:'Datei wird geschrieben…' },
+    sw: { idle:'Transcoder halisi haijapakiwa', loading:'Inapakia FFmpeg…', ready:'Transcoder iko tayari', processing:'Inabadilisha…', exported:'Uhamishaji halisi umekamilika', failed:'Kubadilisha kumeshindwa', needFile:'Chagua faili ya sauti au video kwanza.', needVideo:'Hali ya kutoa video inahitaji faili ya video.', unsupported:'Kiini cha FFmpeg cha kivinjari hakiwezi kusimba umbizo hilo la kitaalamu.', download:'Pakua', preview:'Onyesho hutegemea kivinjari', noZip:'ZIP haipatikani; tumia upakuaji wa kivinjari.', noFolder:'Folda haipatikani; tumia upakuaji wa kivinjari.', writing:'Inaandika faili…' },
+    te: { idle:'నిజమైన ట్రాన్స్‌కోడర్ లోడ్ కాలేదు', loading:'FFmpeg లోడ్ అవుతోంది…', ready:'ట్రాన్స్‌కోడర్ సిద్ధం', processing:'ట్రాన్స్‌కోడ్ అవుతోంది…', exported:'నిజమైన ఎగుమతి పూర్తైంది', failed:'ట్రాన్స్‌కోడ్ విఫలమైంది', needFile:'ముందుగా ఆడియో లేదా వీడియో ఫైల్ ఎంచుకోండి.', needVideo:'వీడియో తీసుకునే మోడ్‌కు వీడియో ఫైల్ కావాలి.', unsupported:'ఈ బ్రౌజర్ FFmpeg కోర్ ఆ ప్రొఫెషనల్ ఫార్మాట్ encode చేయలేడు.', download:'డౌన్‌లోడ్', preview:'ప్రివ్యూ బ్రౌజర్‌పై ఆధారపడి ఉంటుంది', noZip:'ZIP లేదు; బ్రౌజర్ డౌన్‌లోడ్ వాడతాం.', noFolder:'ఫోల్డర్ ఎగుమతి లేదు; బ్రౌజర్ డౌన్‌లోడ్ వాడతాం.', writing:'ఫైల్ రాస్తోంది…' },
+    mr: { idle:'खरा ट्रान्सकोडर लोड नाही', loading:'FFmpeg लोड होत आहे…', ready:'ट्रान्सकोडर तयार', processing:'ट्रान्सकोड होत आहे…', exported:'खरी निर्यात पूर्ण', failed:'ट्रान्सकोड अयशस्वी', needFile:'आधी ऑडिओ किंवा व्हिडिओ फाइल निवडा.', needVideo:'व्हिडिओ काढण्यासाठी व्हिडिओ फाइल हवी.', unsupported:'हा ब्राउझर FFmpeg कोर हा व्यावसायिक फॉरमॅट encode करू शकत नाही.', download:'डाउनलोड', preview:'पूर्वावलोकन ब्राउझरवर अवलंबून आहे', noZip:'ZIP उपलब्ध नाही; ब्राउझर डाउनलोड वापरू.', noFolder:'फोल्डर निर्यात उपलब्ध नाही; ब्राउझर डाउनलोड वापरू.', writing:'फाइल लिहित आहे…' },
+    tr: { idle:'Gerçek dönüştürücü yüklenmedi', loading:'FFmpeg yükleniyor…', ready:'Dönüştürücü hazır', processing:'Dönüştürülüyor…', exported:'Gerçek dışa aktarım tamamlandı', failed:'Dönüştürme başarısız', needFile:'Önce bir ses veya video dosyası seçin.', needVideo:'Video çıkarma modu video dosyası gerektirir.', unsupported:'Bu tarayıcı FFmpeg çekirdeği bu profesyonel formatı kodlayamaz.', download:'İndir', preview:'Önizleme tarayıcı desteğine bağlıdır', noZip:'ZIP yok; tarayıcı indirmesi kullanılacak.', noFolder:'Klasör dışa aktarma yok; tarayıcı indirmesi kullanılacak.', writing:'Dosya yazılıyor…' },
+    yue: { idle:'真實轉碼核心：未載入', loading:'載入 FFmpeg 轉碼核心…', ready:'真實轉碼核心已就緒', processing:'正在真實轉碼…', exported:'已真實匯出', failed:'轉碼失敗', needFile:'請先揀音訊或影片檔。', needVideo:'「影片抽取」模式需要影片檔。', unsupported:'呢個瀏覽器 FFmpeg 核心未能編碼呢個專業格式。', download:'下載', preview:'預覽視乎瀏覽器支援', noZip:'ZIP 元件未載入，改用瀏覽器下載。', noFolder:'瀏覽器唔支援資料夾匯出，改用下載。', writing:'正在寫入檔案…' },
+    vi: { idle:'Bộ chuyển mã thật: chưa tải', loading:'Đang tải FFmpeg…', ready:'Bộ chuyển mã sẵn sàng', processing:'Đang chuyển mã…', exported:'Xuất thật hoàn tất', failed:'Chuyển mã thất bại', needFile:'Hãy chọn tệp âm thanh hoặc video trước.', needVideo:'Chế độ trích từ video cần tệp video.', unsupported:'Lõi FFmpeg của trình duyệt không mã hóa được định dạng chuyên nghiệp này.', download:'Tải xuống', preview:'Xem trước phụ thuộc trình duyệt', noZip:'Không có ZIP; dùng tải xuống trình duyệt.', noFolder:'Không hỗ trợ thư mục; dùng tải xuống trình duyệt.', writing:'Đang ghi tệp…' },
+    ko: { idle:'실제 변환 엔진: 미로드', loading:'FFmpeg 로딩 중…', ready:'변환 엔진 준비됨', processing:'변환 중…', exported:'실제 내보내기 완료', failed:'변환 실패', needFile:'먼저 오디오 또는 비디오 파일을 선택하세요.', needVideo:'비디오 추출 모드는 비디오 파일이 필요합니다.', unsupported:'이 브라우저 FFmpeg 코어는 해당 전문 형식을 인코딩할 수 없습니다.', download:'다운로드', preview:'미리보기는 브라우저 지원에 따라 달라집니다', noZip:'ZIP 사용 불가; 브라우저 다운로드를 사용합니다.', noFolder:'폴더 내보내기 불가; 브라우저 다운로드를 사용합니다.', writing:'파일 쓰는 중…' }
+  };
+
+  function langCode() {
+    const htmlLang = (root.getAttribute('lang') || 'zh').toLowerCase();
+    if (htmlLang.startsWith('zh') && htmlLang.includes('hant')) return 'yue';
+    if (htmlLang.startsWith('zh')) return 'zh';
+    if (htmlLang.startsWith('id') || htmlLang.startsWith('ms')) return 'idms';
+    return htmlLang.split('-')[0] || 'zh';
+  }
+  function t(key) { const code = langCode(); return (TEXT[code] && TEXT[code][key]) || TEXT.en[key] || TEXT.zh[key] || key; }
+
+  let statusEl = $('#audioRealEngineStatus');
+  if (!statusEl) {
+    statusEl = document.createElement('div');
+    statusEl.id = 'audioRealEngineStatus';
+    statusEl.className = 'audio-engine-status';
+    statusEl.innerHTML = `<b>${t('idle')}</b><span class="audio-engine-progress">0%</span>`;
+    actions.insertAdjacentElement('afterend', statusEl);
+  }
+  function setStatus(kind, msg, pct = null) {
+    statusEl.classList.remove('is-busy','is-done','is-error');
+    if (kind) statusEl.classList.add(`is-${kind}`);
+    const b = statusEl.querySelector('b');
+    const p = statusEl.querySelector('.audio-engine-progress');
+    if (b) b.textContent = msg;
+    if (p && pct !== null) p.textContent = `${Math.round(Math.max(0, Math.min(100, pct)))}%`;
+  }
+
+  function safeName(raw, fallback = 'audio_output') {
+    return String(raw || '').trim()
+      .replace(/\.[^.]+$/,'')
+      .replace(/[<>:"/\\|?*\x00-\x1F]+/g, '_')
+      .replace(/\s+/g, '_')
+      .replace(/_+/g, '_')
+      .replace(/^[_\-.]+|[_\-.]+$/g, '') || fallback;
+  }
+  function fileExt(name) { const m = String(name || '').match(/\.([^.]+)$/); return (m ? m[1] : 'bin').toLowerCase(); }
+  function numFromText(text, fallback = 0) { const m = String(text || '').match(/[+-]?\d+(?:\.\d+)?/); return m ? Number(m[0]) : fallback; }
+  function sampleRateValue() {
+    const v = $('#audioBetaSampleRate')?.value || '';
+    if (/保持/.test(v)) return null;
+    const n = numFromText(v, 44.1);
+    return Math.round(n * 1000);
+  }
+  function channelCount() {
+    const v = $('#audioBetaChannels')?.value || '';
+    if (/保持/.test(v)) return null;
+    if (/单声道/.test(v) && !/双单/.test(v)) return 1;
+    if (/双单|立体声/.test(v) && !/2\.1/.test(v)) return 2;
+    if (/2\.1|3\.0/.test(v)) return 3;
+    if (/4\.0/.test(v)) return 4;
+    if (/5\.0/.test(v)) return 5;
+    if (/5\.1/.test(v)) return 6;
+    if (/7\.1/.test(v)) return 8;
+    return null;
+  }
+  function bitRateValue() {
+    const v = $('#audioBetaBitrate')?.value || '';
+    const n = numFromText(v, 320);
+    return `${Math.round(n)}k`;
+  }
+  function qualityNumber() {
+    const v = $('#audioBetaVbrQuality')?.value || '';
+    const m = v.match(/Q(\d+)/i);
+    return m ? Number(m[1]) : 3;
+  }
+  function gainDb() {
+    const sel = $('#audioBetaChannelGain');
+    if (!sel) return 0;
+    if (sel.value === 'custom') return Math.max(-24, Math.min(24, Number($('#audioBetaChannelGainCustom')?.value || 0)));
+    return numFromText(sel.value, 0);
+  }
+  function secondsFromFrameRange(file) {
+    const isExtract = document.querySelector('#audioBetaModeSwitch button.active')?.dataset.mode === 'extract';
+    if (!isExtract || !file.type.startsWith('video/')) return null;
+    const video = $('#audioBetaVideoPreview');
+    const duration = Number(video?.duration || 0);
+    const startFrame = Math.max(1, Number($('#audioBetaStartFrame')?.value || 1));
+    const endFrame = Math.max(startFrame, Number($('#audioBetaEndFrame')?.value || startFrame));
+    const maxFrame = Math.max(1, Number($('#audioBetaEndSlider')?.max || endFrame));
+    if (!duration || !maxFrame || startFrame <= 1 && endFrame >= maxFrame) return null;
+    const fps = maxFrame / duration;
+    const start = Math.max(0, (startFrame - 1) / fps);
+    const end = Math.min(duration, endFrame / fps);
+    const len = Math.max(0.01, end - start);
+    return { start, len };
+  }
+
+  function pcmCodecForWav() {
+    const v = $('#audioBetaBitDepth')?.value || '';
+    if (/8 bit/.test(v)) return 'pcm_u8';
+    if (/24 bit/.test(v)) return 'pcm_s24le';
+    if (/32 bit/.test(v)) return 'pcm_f32le';
+    return 'pcm_s16le';
+  }
+
+  function profileFor(format) {
+    const p = {
+      flac: { ext:'flac', mime:'audio/flac', args:['-c:a','flac','-compression_level','8'] },
+      wav:  { ext:'wav',  mime:'audio/wav',  args:['-c:a', pcmCodecForWav()] },
+      ape:  { ext:'ape',  mime:'audio/x-ape', args:['-c:a','ape','-f','ape'], professional:true },
+      alac: { ext:'m4a',  mime:'audio/mp4',  args:['-c:a','alac','-f','ipod'] },
+      wv:   { ext:'wv',   mime:'audio/x-wavpack', args:['-c:a','wavpack','-f','wv'], professional:true },
+      tak:  { ext:'tak',  mime:'audio/x-tak', args:['-c:a','tak','-f','tak'], professional:true },
+      mp3:  { ext:'mp3',  mime:'audio/mpeg', args:['-c:a','libmp3lame'] },
+      aac:  { ext:'aac',  mime:'audio/aac',  args:['-c:a','aac','-f','adts'] },
+      m4a:  { ext:'m4a',  mime:'audio/mp4',  args:['-c:a','aac','-f','ipod'] },
+      ogg:  { ext:'ogg',  mime:'audio/ogg',  args:['-c:a','libvorbis','-f','ogg'] },
+      mp4:  { ext:'mp4',  mime:'audio/mp4',  args:['-c:a','aac','-f','mp4'] },
+      webm: { ext:'webm', mime:'audio/webm', args:['-c:a','libopus','-f','webm'] },
+      dsd:  { ext:'dsf',  mime:'audio/x-dsf', args:['-c:a','dsd_lsbf','-f','dsf'], professional:true },
+      opus: { ext:'opus', mime:'audio/opus', args:['-c:a','libopus','-f','opus'] }
+    };
+    return p[format] || p.mp3;
+  }
+
+  function buildFilters() {
+    const filters = [];
+    const vol = Math.max(0, Number($('#audioBetaVolume')?.value || 100)) / 100;
+    const gain = Math.pow(10, gainDb() / 20);
+    const finalVol = vol * gain;
+    if (Math.abs(finalVol - 1) > 0.001) filters.push(`volume=${finalVol.toFixed(5)}`);
+    const lowpass = $('#audioBetaLowpass')?.value || '';
+    if (!/自动|关闭/.test(lowpass)) {
+      const hz = Math.round(numFromText(lowpass, 0) * 1000);
+      if (hz > 0) filters.push(`lowpass=f=${hz}`);
+    }
+    const norm = $('#audioBetaNormalize')?.value || '';
+    if (/14/.test(norm)) filters.push('loudnorm=I=-14:TP=-1.5:LRA=11');
+    else if (/16/.test(norm)) filters.push('loudnorm=I=-16:TP=-1.5:LRA=11');
+    else if (/23/.test(norm)) filters.push('loudnorm=I=-23:TP=-2:LRA=7');
+    else if (/峰值/.test(norm)) filters.push('alimiter=limit=0.891');
+    return filters;
+  }
+
+  function buildArgs(inputName, outputName, file, profile, format) {
+    const args = ['-hide_banner', '-y'];
+    const seg = secondsFromFrameRange(file);
+    if (seg) args.push('-ss', String(seg.start.toFixed(3)), '-t', String(seg.len.toFixed(3)));
+    args.push('-i', inputName, '-vn');
+
+    const filters = buildFilters();
+    if (filters.length) args.push('-af', filters.join(','));
+
+    const ar = sampleRateValue();
+    if (ar) args.push('-ar', String(ar));
+    const ac = channelCount();
+    if (ac) args.push('-ac', String(ac));
+
+    args.push(...profile.args);
+
+    const mode = $('#audioBetaBitrateMode')?.value || '';
+    const isLossless = ['flac','wav','ape','alac','wv','tak','dsd'].includes(format) || /无损/.test(mode);
+    if (!isLossless) {
+      if (/VBR/.test(mode) && format === 'mp3') args.push('-q:a', String(qualityNumber()));
+      else if (/VBR/.test(mode) && ['ogg'].includes(format)) args.push('-q:a', String(Math.max(0, 10 - qualityNumber())));
+      else args.push('-b:a', bitRateValue());
+      if (format === 'opus' || format === 'webm') args.push('-vbr', /CBR/.test(mode) ? 'off' : 'on');
+    }
+    args.push(outputName);
+    return args;
+  }
+
+  async function ensureFFmpeg() {
+    if (ffmpeg) return ffmpeg;
+    if (ffmpegLoading) return ffmpegLoading;
+    ffmpegLoading = (async () => {
+      setStatus('busy', t('loading'), 1);
+      const [{ FFmpeg }, util] = await Promise.all([
+        import('https://unpkg.com/@ffmpeg/ffmpeg@0.12.10/dist/esm/index.js'),
+        import('https://unpkg.com/@ffmpeg/util@0.12.1/dist/esm/index.js')
+      ]);
+      ffmpegFetchFile = util.fetchFile;
+      const toBlobURL = util.toBlobURL;
+      const coreBase = 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/esm';
+      const instance = new FFmpeg();
+      instance.on('log', ({ message }) => { lastLog = message || lastLog; });
+      instance.on('progress', ({ progress }) => {
+        if (Number.isFinite(progress)) setStatus('busy', t('processing'), Math.max(2, progress * 100));
+      });
+      await instance.load({
+        coreURL: await toBlobURL(`${coreBase}/ffmpeg-core.js`, 'text/javascript'),
+        wasmURL: await toBlobURL(`${coreBase}/ffmpeg-core.wasm`, 'application/wasm')
+      });
+      ffmpeg = instance;
+      setStatus('done', t('ready'), 100);
+      return instance;
+    })();
+    try { return await ffmpegLoading; }
+    finally { if (!ffmpeg) ffmpegLoading = null; }
+  }
+
+  function downloadBlob(blob, filename) {
+    const url = URL.createObjectURL(blob);
+    outputUrls.add(url);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    return url;
+  }
+
+  async function saveOutput(blob, filename) {
+    const method = $('#audioBetaExportMethod')?.value || 'download';
+    if (method === 'zip') {
+      if (window.JSZip) {
+        const zip = new JSZip();
+        zip.file(filename, blob);
+        const zipBlob = await zip.generateAsync({ type:'blob' });
+        return downloadBlob(zipBlob, `${safeName(filename, 'audio_output')}.zip`), 'zip';
+      }
+      setStatus('error', t('noZip'), 100);
+    }
+    if (method === 'folder') {
+      if (window.showDirectoryPicker) {
+        try {
+          setStatus('busy', t('writing'), 92);
+          const dir = await window.showDirectoryPicker({ mode:'readwrite' });
+          const handle = await dir.getFileHandle(filename, { create:true });
+          const writable = await handle.createWritable();
+          await writable.write(blob);
+          await writable.close();
+          return null;
+        } catch (error) {
+          if (error?.name !== 'AbortError') setStatus('error', `${t('failed')}：${error.message || error}`, 100);
+          throw error;
+        }
+      }
+      setStatus('error', t('noFolder'), 100);
+    }
+    return downloadBlob(blob, filename);
+  }
+
+  function addRealResultCard({ filename, blob, url, format, size, detail }) {
+    const list = $('#audioBetaResultList');
+    const empty = $('#audioBetaEmpty');
+    const count = $('#audioBetaResultsCount');
+    if (!list) return;
+    const card = document.createElement('div');
+    card.className = 'audio-beta-result-item real-output';
+    const localUrl = url || URL.createObjectURL(blob);
+    outputUrls.add(localUrl);
+    const canPreview = ['mp3','wav','aac','m4a','ogg','mp4','webm','opus','flac'].includes(format);
+    card.innerHTML = `
+      <div class="audio-beta-result-main">
+        <strong>${filename}</strong>
+        <span>${detail} · ${(size / 1024 / 1024).toFixed(2)} MB · ${t('exported')}</span>
+      </div>
+      <div class="audio-beta-result-actions">
+        <span class="audio-beta-result-tag">${format.toUpperCase()}</span>
+        <a class="audio-real-download" href="${localUrl}" download="${filename}">${t('download')}</a>
+      </div>
+      ${canPreview ? `<audio controls preload="metadata" src="${localUrl}"></audio>` : `<span style="flex-basis:100%;font-size:11px;color:var(--muted,#7180a0);">${t('preview')}</span>`}
+    `;
+    list.prepend(card);
+    if (empty) empty.hidden = true;
+    if (count) count.textContent = `${list.children.length} 条`;
+  }
+
+  async function runRealAudioTranscode(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    event.stopImmediatePropagation();
+    const input = $('#audioBetaInput');
+    const file = input?.files?.[0];
+    if (!file) { alert(t('needFile')); return; }
+    const mode = document.querySelector('#audioBetaModeSwitch button.active')?.dataset.mode || 'extract';
+    if (mode === 'extract' && !file.type.startsWith('video/')) { alert(t('needVideo')); return; }
+
+    btn.disabled = true;
+    clearBtn && (clearBtn.disabled = true);
+    const originalText = btn.textContent;
+    try {
+      setStatus('busy', t('loading'), 1);
+      const ff = await ensureFFmpeg();
+      setStatus('busy', t('processing'), 3);
+      const format = ($('#audioBetaFormat')?.value || 'mp3').toLowerCase();
+      const profile = profileFor(format);
+      const inputName = `input_${Date.now()}.${fileExt(file.name)}`;
+      const outputName = `${safeName($('#audioBetaFileName')?.value || file.name.replace(/\.[^.]+$/, ''), 'audio_output')}.${profile.ext}`;
+      lastLog = '';
+      await ff.writeFile(inputName, await ffmpegFetchFile(file));
+      const args = buildArgs(inputName, outputName, file, profile, format);
+      console.info('[Audio Workbench FFmpeg]', args.join(' '));
+      await ff.exec(args);
+      const data = await ff.readFile(outputName);
+      const blob = new Blob([data], { type: profile.mime });
+      const url = await saveOutput(blob, outputName);
+      addRealResultCard({
+        filename: outputName,
+        blob,
+        url,
+        format,
+        size: blob.size,
+        detail: `${mode === 'extract' ? '视频抽取' : '音频修改'} · ${profile.ext.toUpperCase()} · FFmpeg WASM`
+      });
+      setStatus('done', t('exported'), 100);
+      try { await ff.deleteFile(inputName); } catch (_) {}
+      try { await ff.deleteFile(outputName); } catch (_) {}
+    } catch (error) {
+      console.error(error, lastLog);
+      const msg = String(error?.message || error || lastLog || '').trim();
+      const lower = `${msg}\n${lastLog}`.toLowerCase();
+      const professionalHint = /unknown encoder|invalid argument|not found|muxer|encoder|experimental|not currently supported/.test(lower) ? `\n${t('unsupported')}` : '';
+      setStatus('error', `${t('failed')}：${msg || lastLog || 'FFmpeg error'}${professionalHint}`, 100);
+      alert(`${t('failed')}：${msg || lastLog || 'FFmpeg error'}${professionalHint}`);
+    } finally {
+      btn.disabled = false;
+      clearBtn && (clearBtn.disabled = false);
+      if (originalText) btn.textContent = originalText;
+    }
+  }
+
+  btn.addEventListener('click', runRealAudioTranscode, true);
+  clearBtn?.addEventListener('click', () => {
+    outputUrls.forEach(url => { try { URL.revokeObjectURL(url); } catch (_) {} });
+    outputUrls.clear();
+    setStatus('', t('idle'), 0);
+  }, true);
+
+  const mo = new MutationObserver(() => {
+    const b = statusEl.querySelector('b');
+    if (b && !statusEl.classList.contains('is-busy') && !statusEl.classList.contains('is-done') && !statusEl.classList.contains('is-error')) b.textContent = t('idle');
+    statusEl.querySelectorAll('.audio-real-download').forEach(a => a.textContent = t('download'));
+  });
+  mo.observe(root, { attributes:true, attributeFilter:['lang','dir','data-theme'] });
+})();
+</script>
+
+
+<script>
+(() => {
+  const ROOT = document.documentElement;
+  const AUDIO_EN_MAP = {"音频工作台": "Audio Workspace", "深色": "Dark", "浅色": "Light", "版本切换": "Switch version", "源文件": "Source file", "选择或拖入音频 / 视频": "Choose or drop audio / video", "音频修改可选音频；视频抽取可选视频": "Choose audio for editing; choose video for extraction", "尚未选择文件": "No file selected", "音频模式": "Audio mode", "视频抽取": "Extract from video", "音频修改": "Edit audio", "选取位置": "Selection range", "按视频帧位选择起始帧与截止帧，用于截取视频中指定片段的音频；也可选择全部抽取。": "Choose a start and end frame to extract audio from a selected video segment, or extract the full video.", "全部抽取": "Extract all", "起始帧": "Start frame", "截止帧": "End frame", "共 0 帧": "0 frames total", "选择视频后，这里会显示小尺寸画面预览。": "After choosing a video, a small preview appears here.", "音频导出格式": "Audio export format", "文件名称": "File name", "导出方式": "Export method", "浏览器下载": "Browser download", "ZIP 打包": "ZIP package", "导出到文件夹": "Export to folder", "开始处理": "Start processing", "清空结果": "Clear results", "当前音频计划": "Current audio plan", "未加载": "Not loaded", "准备就绪": "Ready", "音频时长": "Audio duration", "音频秒数": "Audio seconds", "音频格式": "Audio format", "声道布局": "Channel layout", "声道处理": "Channel processing", "自动匹配": "Auto match", "左右平衡": "Left/right balance", "居中": "Center", "声道增益": "Channel gain", "采样率": "Sample rate", "重采样质量": "Resampling quality", "PCM 位深": "PCM bit depth", "码率模式": "Bitrate mode", "目标比特率": "Target bitrate", "VBR 质量": "VBR quality", "高频截止": "Low-pass cutoff", "音量": "Volume", "响度标准化": "Loudness normalization", "导出格式": "Export format", "音频控制台": "Audio console", "可调参数": "Adjustable parameters", "声道设置": "Channel settings", "决定输出声场、左右声道和环绕布局": "Controls the output sound field, left/right channels, and surround layout", "2.0 立体声": "2.0 stereo", "保持原始声道": "Keep original channels", "单声道 · 1.0": "Mono · 1.0", "双单声道 · Dual Mono": "Dual mono", "立体声 · 2.0": "Stereo · 2.0", "立体声低音 · 2.1": "Stereo + sub · 2.1", "前置三声道 · 3.0": "Front three-channel · 3.0", "四声道环绕 · 4.0": "Quad surround · 4.0", "五声道环绕 · 5.0": "Five-channel surround · 5.0", "5.1 环绕": "5.1 surround", "7.1 环绕": "7.1 surround", "“保持原始”不改变输入文件的声道布局。": "“Keep original” does not change the input channel layout.", "保持原始声场": "Keep original sound field", "向下混音 Downmix": "Downmix", "模拟扩展 Upmix": "Simulated upmix", "左右声道互换": "Swap left/right channels", "环绕转双声道时建议使用“向下混音”。": "Use downmix when converting surround to stereo.", "居中（L 0 / R 0）": "Center (L 0 / R 0)", "0 dB · 不补偿": "0 dB · no compensation", "-3 dB · 防止混音过载": "-3 dB · prevent mix overload", "-6 dB · 环绕下混音": "-6 dB · surround downmix", "+3 dB · 轻微增强": "+3 dB · slight boost", "自定义增益…": "Custom gain…", "下混音时可降低增益，减少削波风险；也可单独设置自定义增益。": "Lower gain during downmixing to reduce clipping risk; custom gain is also available.", "自定义声道增益": "Custom channel gain", "可输入 -24.0 至 +24.0 dB；正数增强，负数衰减。较大增益可能产生削波。": "Enter -24.0 to +24.0 dB; positive boosts, negative attenuates. Large boosts may clip.", "采样率与位深": "Sample rate & bit depth", "决定高频上限、兼容性和无损输出细节": "Controls high-frequency range, compatibility, and lossless output detail", "保持原始采样率": "Keep original sample rate", "8 kHz · 电话语音": "8 kHz · telephone speech", "11.025 kHz · 低码率语音": "11.025 kHz · low-bitrate speech", "12 kHz · 语音": "12 kHz · speech", "16 kHz · 清晰语音": "16 kHz · clear speech", "22.05 kHz · 广播 / 有声书": "22.05 kHz · broadcast / audiobook", "24 kHz · 视频语音": "24 kHz · video speech", "32 kHz · 普通音频": "32 kHz · general audio", "44.1 kHz · CD / 音乐": "44.1 kHz · CD / music", "48 kHz · 视频 / 影视": "48 kHz · video / film", "88.2 kHz · 高解析音乐": "88.2 kHz · hi-res music", "96 kHz · 录音 / 母带": "96 kHz · recording / mastering", "176.4 kHz · 高解析": "176.4 kHz · hi-res", "192 kHz · 母带归档": "192 kHz · master archive", "视频项目通常用 48 kHz；音乐和一般听音用 44.1 kHz。": "Video projects usually use 48 kHz; music and general listening usually use 44.1 kHz.", "快速 · 低 CPU": "Fast · low CPU", "标准 · 平衡": "Standard · balanced", "高质量 · 更平滑": "High quality · smoother", "最高 · 母带优先": "Maximum · mastering priority", "采样率变化时才会生效，质量越高处理越慢。": "Only applies when changing sample rate; higher quality is slower.", "保持原始位深": "Keep original bit depth", "8 bit · 低保真": "8 bit · low fidelity", "16 bit · 通用交付": "16 bit · general delivery", "24 bit · 录音 / 后期": "24 bit · recording / post", "32 bit float · 编辑母带": "32 bit float · editing / mastering", "位深主要用于 WAV / FLAC 等无损导出。": "Bit depth mainly applies to lossless exports such as WAV / FLAC.", "抖动 Dither": "Dither", "自动": "Auto", "关闭": "Close", "TPDF · 常用": "TPDF · common", "噪声整形 · 高级": "Noise shaping · advanced", "降低位深时可减少量化失真。": "Helps reduce quantization distortion when lowering bit depth.", "比特率与编码质量": "Bitrate & encoding quality", "决定有损文件体积与听感细节；无损格式会自动使用编码器策略": "Controls lossy file size and detail; lossless formats use the encoder strategy automatically.", "码率控制模式": "Bitrate control mode", "CBR · 固定码率": "CBR · fixed bitrate", "ABR · 平均码率": "ABR · average bitrate", "VBR · 可变码率": "VBR · variable bitrate", "无损 · 编码器自动": "Lossless · encoder auto", "CBR 适合稳定交付；VBR 适合兼顾体积和质量。": "CBR is stable for delivery; VBR balances size and quality.", "8 kbps · 极低语音": "8 kbps · very low speech", "16 kbps · 基础语音": "16 kbps · basic speech", "24 kbps · 语音": "24 kbps · speech", "32 kbps · 低码率语音": "32 kbps · low-bitrate speech", "40 kbps · 语音": "40 kbps · speech", "48 kbps · 语音 / 播客": "48 kbps · speech / podcast", "56 kbps · 播客": "56 kbps · podcast", "64 kbps · 单声道音乐": "64 kbps · mono music", "80 kbps · 节省空间": "80 kbps · space saving", "96 kbps · 普通听音": "96 kbps · normal listening", "112 kbps · 普通听音": "112 kbps · normal listening", "128 kbps · 常用": "128 kbps · common", "160 kbps · 较好音乐": "160 kbps · better music", "192 kbps · 高质量": "192 kbps · high quality", "224 kbps · 高质量": "224 kbps · high quality", "256 kbps · 接近高保真": "256 kbps · near Hi-Fi", "320 kbps · MP3 高质量": "320 kbps · MP3 high quality", "384 kbps · AAC 高质量": "384 kbps · AAC high quality", "512 kbps · AAC 高质量": "512 kbps · AAC high quality", "MP3 常用 128–320 kbps；AAC 可使用更高码率。": "MP3 commonly uses 128–320 kbps; AAC may use higher bitrates.", "VBR 质量等级": "VBR quality level", "Q0 · 最高": "Q0 · highest", "Q1 · 很高": "Q1 · very high", "Q2 · 高": "Q2 · high", "Q3 · 良好": "Q3 · good", "Q4 · 标准": "Q4 · standard", "Q5 · 节省空间": "Q5 · space saving", "Q6 · 低": "Q6 · low", "Q7 · 更低": "Q7 · lower", "Q8 · 最低": "Q8 · lowest", "Q9 · 极低": "Q9 · very low", "仅在 VBR 模式下用于控制编码器质量倾向。": "Used only in VBR mode to guide encoder quality.", "关闭截止": "Disable cutoff", "12 kHz · 低码率": "12 kHz · low bitrate", "16 kHz · 节省空间": "16 kHz · space saving", "18 kHz · 平衡": "18 kHz · balanced", "20 kHz · 高质量": "20 kHz · high quality", "低码率时适当截止高频可减少失真感。": "At low bitrates, cutting high frequencies can reduce audible distortion.", "音量与标准化": "Volume & normalization", "可手动调整输出音量或使用统一响度标准": "Adjust output volume manually or use a loudness target", "输出音量": "Output volume", "不标准化": "No normalization", "峰值标准化 · -1 dBTP": "Peak normalization · -1 dBTP", "流媒体 · -14 LUFS": "Streaming · -14 LUFS", "播客 · -16 LUFS": "Podcast · -16 LUFS", "广播 · -23 LUFS": "Broadcast · -23 LUFS", "可避免不同音频之间的音量差异过大。": "Helps avoid large volume differences between files.", "已改音频": "Modified audio", "0 条": "0 items", "处理后的音频会显示在这里。": "Processed audio will appear here.", "v1.3.19 beta · 本地参数预览": "v1.3.19 beta · local parameter preview", "特点": "Features", "常见问题解答": "FAQ", "隐私政策": "Privacy Policy", "使用条款": "Terms of Use", "FLAC（最通用无损）": "FLAC (most common lossless)", "WAV（原始无压缩）": "WAV (raw uncompressed)", "ALAC（Apple Lossless）": "ALAC (Apple Lossless)", "WV（WavPack）": "WV (WavPack)", "MP3（万能通用）": "MP3 (universal)", "DSD（HiFi 顶级无损）": "DSD (HiFi top-tier lossless)", "说明": "Information", "dB": "dB", "100% / 未标准化": "100% / no normalization", "CBR / 320 kbps": "CBR / 320 kbps", "44.1 kHz / 16 bit": "44.1 kHz / 16 bit"};
+  const AUDIO_HANT_MAP = {"汉语（普通话）": "漢語（普通話）", "音频工作台": "音訊工作台", "深色": "深色", "浅色": "淺色", "版本切换": "版本切換", "源文件": "來源檔案", "选择或拖入音频 / 视频": "選擇或拖入音訊 / 影片", "音频修改可选音频；视频抽取可选视频": "音訊修改可選音訊；影片抽取可選影片", "尚未选择文件": "尚未選擇檔案", "音频模式": "音訊模式", "视频抽取": "影片抽取", "音频修改": "音訊修改", "选取位置": "選取位置", "按视频帧位选择起始帧与截止帧，用于截取视频中指定片段的音频；也可选择全部抽取。": "依影片幀位選擇起始幀與截止幀，用於截取影片中指定片段的音訊；也可選擇全部抽取。", "全部抽取": "全部抽取", "起始帧": "起始幀", "截止帧": "截止幀", "共 0 帧": "共 0 幀", "选择视频后，这里会显示小尺寸画面预览。": "選擇影片後，這裡會顯示小尺寸畫面預覽。", "音频导出格式": "音訊匯出格式", "文件名称": "檔案名稱", "导出方式": "匯出方式", "浏览器下载": "瀏覽器下載", "ZIP 打包": "ZIP 打包", "导出到文件夹": "匯出到資料夾", "开始处理": "開始處理", "清空结果": "清空結果", "当前音频计划": "目前音訊計畫", "未加载": "未載入", "准备就绪": "準備就緒", "音频时长": "音訊時長", "音频秒数": "音訊秒數", "音频格式": "音訊格式", "声道布局": "聲道配置", "声道处理": "聲道處理", "自动匹配": "自動匹配", "左右平衡": "左右平衡", "居中": "置中", "声道增益": "聲道增益", "采样率": "取樣率", "重采样质量": "重取樣品質", "PCM 位深": "PCM 位元深度", "码率模式": "位元率模式", "目标比特率": "目標位元率", "VBR 质量": "VBR 品質", "高频截止": "高頻截止", "音量": "音量", "响度标准化": "響度標準化", "导出格式": "匯出格式", "音频控制台": "音訊控制台", "可调参数": "可調參數", "声道设置": "聲道設定", "决定输出声场、左右声道和环绕布局": "決定輸出聲場、左右聲道與環繞配置", "2.0 立体声": "2.0 立體聲", "保持原始声道": "保持原始聲道", "单声道 · 1.0": "單聲道 · 1.0", "双单声道 · Dual Mono": "雙單聲道 · Dual Mono", "立体声 · 2.0": "立體聲 · 2.0", "立体声低音 · 2.1": "立體聲低音 · 2.1", "前置三声道 · 3.0": "前置三聲道 · 3.0", "四声道环绕 · 4.0": "四聲道環繞 · 4.0", "五声道环绕 · 5.0": "五聲道環繞 · 5.0", "5.1 环绕": "5.1 環繞", "7.1 环绕": "7.1 環繞", "“保持原始”不改变输入文件的声道布局。": "「保持原始」不改變輸入檔案的聲道配置。", "保持原始声场": "保持原始聲場", "向下混音 Downmix": "向下混音 Downmix", "模拟扩展 Upmix": "模擬擴展 Upmix", "左右声道互换": "左右聲道互換", "环绕转双声道时建议使用“向下混音”。": "環繞轉雙聲道時建議使用「向下混音」。", "居中（L 0 / R 0）": "置中（L 0 / R 0）", "0 dB · 不补偿": "0 dB · 不補償", "-3 dB · 防止混音过载": "-3 dB · 防止混音過載", "-6 dB · 环绕下混音": "-6 dB · 環繞下混音", "+3 dB · 轻微增强": "+3 dB · 輕微增強", "自定义增益…": "自訂增益…", "下混音时可降低增益，减少削波风险；也可单独设置自定义增益。": "下混音時可降低增益，減少削波風險；也可單獨設定自訂增益。", "自定义声道增益": "自訂聲道增益", "可输入 -24.0 至 +24.0 dB；正数增强，负数衰减。较大增益可能产生削波。": "可輸入 -24.0 至 +24.0 dB；正數增強，負數衰減。較大增益可能產生削波。", "采样率与位深": "取樣率與位元深度", "决定高频上限、兼容性和无损输出细节": "決定高頻上限、相容性與無損輸出細節", "保持原始采样率": "保持原始取樣率", "8 kHz · 电话语音": "8 kHz · 電話語音", "11.025 kHz · 低码率语音": "11.025 kHz · 低位元率語音", "12 kHz · 语音": "12 kHz · 語音", "16 kHz · 清晰语音": "16 kHz · 清晰語音", "22.05 kHz · 广播 / 有声书": "22.05 kHz · 廣播 / 有聲書", "24 kHz · 视频语音": "24 kHz · 影片語音", "32 kHz · 普通音频": "32 kHz · 一般音訊", "44.1 kHz · CD / 音乐": "44.1 kHz · CD / 音樂", "48 kHz · 视频 / 影视": "48 kHz · 影片 / 影視", "88.2 kHz · 高解析音乐": "88.2 kHz · 高解析音樂", "96 kHz · 录音 / 母带": "96 kHz · 錄音 / 母帶", "176.4 kHz · 高解析": "176.4 kHz · 高解析", "192 kHz · 母带归档": "192 kHz · 母帶歸檔", "视频项目通常用 48 kHz；音乐和一般听音用 44.1 kHz。": "影片專案通常用 48 kHz；音樂與一般聆聽用 44.1 kHz。", "快速 · 低 CPU": "快速 · 低 CPU", "标准 · 平衡": "標準 · 平衡", "高质量 · 更平滑": "高品質 · 更平滑", "最高 · 母带优先": "最高 · 母帶優先", "采样率变化时才会生效，质量越高处理越慢。": "取樣率變更時才會生效，品質越高處理越慢。", "保持原始位深": "保持原始位元深度", "8 bit · 低保真": "8 bit · 低傳真", "16 bit · 通用交付": "16 bit · 通用交付", "24 bit · 录音 / 后期": "24 bit · 錄音 / 後期", "32 bit float · 编辑母带": "32 bit float · 編輯母帶", "位深主要用于 WAV / FLAC 等无损导出。": "位元深度主要用於 WAV / FLAC 等無損匯出。", "抖动 Dither": "抖動 Dither", "自动": "自動", "关闭": "關閉", "TPDF · 常用": "TPDF · 常用", "噪声整形 · 高级": "雜訊整形 · 進階", "降低位深时可减少量化失真。": "降低位元深度時可減少量化失真。", "比特率与编码质量": "位元率與編碼品質", "决定有损文件体积与听感细节；无损格式会自动使用编码器策略": "決定有損檔案大小與聽感細節；無損格式會自動使用編碼器策略", "码率控制模式": "位元率控制模式", "CBR · 固定码率": "CBR · 固定位元率", "ABR · 平均码率": "ABR · 平均位元率", "VBR · 可变码率": "VBR · 可變位元率", "无损 · 编码器自动": "無損 · 編碼器自動", "CBR 适合稳定交付；VBR 适合兼顾体积和质量。": "CBR 適合穩定交付；VBR 適合兼顧大小與品質。", "8 kbps · 极低语音": "8 kbps · 極低語音", "16 kbps · 基础语音": "16 kbps · 基礎語音", "24 kbps · 语音": "24 kbps · 語音", "32 kbps · 低码率语音": "32 kbps · 低位元率語音", "40 kbps · 语音": "40 kbps · 語音", "48 kbps · 语音 / 播客": "48 kbps · 語音 / Podcast", "56 kbps · 播客": "56 kbps · Podcast", "64 kbps · 单声道音乐": "64 kbps · 單聲道音樂", "80 kbps · 节省空间": "80 kbps · 節省空間", "96 kbps · 普通听音": "96 kbps · 一般聆聽", "112 kbps · 普通听音": "112 kbps · 一般聆聽", "128 kbps · 常用": "128 kbps · 常用", "160 kbps · 较好音乐": "160 kbps · 較好音樂", "192 kbps · 高质量": "192 kbps · 高品質", "224 kbps · 高质量": "224 kbps · 高品質", "256 kbps · 接近高保真": "256 kbps · 接近高傳真", "320 kbps · MP3 高质量": "320 kbps · MP3 高品質", "384 kbps · AAC 高质量": "384 kbps · AAC 高品質", "512 kbps · AAC 高质量": "512 kbps · AAC 高品質", "MP3 常用 128–320 kbps；AAC 可使用更高码率。": "MP3 常用 128–320 kbps；AAC 可使用更高位元率。", "VBR 质量等级": "VBR 品質等級", "Q0 · 最高": "Q0 · 最高", "Q1 · 很高": "Q1 · 很高", "Q2 · 高": "Q2 · 高", "Q3 · 良好": "Q3 · 良好", "Q4 · 标准": "Q4 · 標準", "Q5 · 节省空间": "Q5 · 節省空間", "Q6 · 低": "Q6 · 低", "Q7 · 更低": "Q7 · 更低", "Q8 · 最低": "Q8 · 最低", "Q9 · 极低": "Q9 · 極低", "仅在 VBR 模式下用于控制编码器质量倾向。": "僅在 VBR 模式下用於控制編碼器品質傾向。", "关闭截止": "關閉截止", "12 kHz · 低码率": "12 kHz · 低位元率", "16 kHz · 节省空间": "16 kHz · 節省空間", "18 kHz · 平衡": "18 kHz · 平衡", "20 kHz · 高质量": "20 kHz · 高品質", "低码率时适当截止高频可减少失真感。": "低位元率時適當截止高頻可減少失真感。", "音量与标准化": "音量與標準化", "可手动调整输出音量或使用统一响度标准": "可手動調整輸出音量或使用統一響度標準", "输出音量": "輸出音量", "不标准化": "不標準化", "峰值标准化 · -1 dBTP": "峰值標準化 · -1 dBTP", "流媒体 · -14 LUFS": "串流媒體 · -14 LUFS", "播客 · -16 LUFS": "Podcast · -16 LUFS", "广播 · -23 LUFS": "廣播 · -23 LUFS", "可避免不同音频之间的音量差异过大。": "可避免不同音訊之間的音量差異過大。", "已改音频": "已修改音訊", "0 条": "0 筆", "处理后的音频会显示在这里。": "處理後的音訊會顯示在這裡。", "v1.3.19 beta · 本地参数预览": "v1.3.19 beta · 本機參數預覽", "特点": "特點", "常见问题解答": "常見問題解答", "隐私政策": "隱私政策", "使用条款": "使用條款", "FLAC（最通用无损）": "FLAC（最通用無損）", "WAV（原始无压缩）": "WAV（原始無壓縮）", "MP3（万能通用）": "MP3（萬能通用）", "DSD（HiFi 顶级无损）": "DSD（HiFi 頂級無損）", "说明": "說明", "100% / 未标准化": "100% / 未標準化", "CBR / 320 kbps": "CBR / 320 kbps", "44.1 kHz / 16 bit": "44.1 kHz / 16 bit"};
+  const AUDIO_INFO = {"zh": {"features": ["特点", "音频工作台 v1.3.19 beta", "<p>支持音频修改、从视频抽取音频、片段范围选择、声道/采样率/位深/比特率/响度等专业参数，并使用浏览器端 FFmpeg WebAssembly 进行真实转码导出。</p><p>专业格式会真实调用编码器；若当前浏览器或内核不支持，会明确报错，不会假装导出成功。</p>"], "faq": ["常见问题解答", "点击问题查看详细说明", "<details open><summary>支持哪些格式？</summary><p>支持 FLAC、WAV、APE、ALAC、WV、TAK、MP3、AAC、M4A、OGG、MP4、WebM、DSD、OPUS。部分专业格式取决于 FFmpeg WebAssembly 当前内核的编码器支持。</p></details><details><summary>视频抽取如何选择片段？</summary><p>在“视频抽取”模式下输入起始帧和截止帧，或拖动双滑块选择范围；选择“全部抽取”则从整个视频导出音频。</p></details><details><summary>原文件会被覆盖吗？</summary><p>不会。工具默认导出新文件，原始音频或视频只作为输入源使用。</p></details><details><summary>为什么首次处理比较慢？</summary><p>首次需要加载 FFmpeg WebAssembly 内核和相关资源，加载完成后同一会话内会更快。</p></details>"], "privacy": ["隐私政策", "音频工作台 v1.3.19 beta", "<p>本工具优先在浏览器本地处理文件。你选择的音频或视频会作为当前页面会话中的输入源，用于读取时长、格式、预览和转码参数。</p><p>界面偏好例如语言、深浅色模式和部分参数可能保存在浏览器本地存储中，用于下次打开时恢复设置。你可以通过清除浏览器站点数据删除这些信息。</p><p>导出的文件会写入浏览器下载目录、ZIP 文件或你选择的本地文件夹。请自行管理导出文件，避免在公共设备或共享目录中保存敏感音频。</p><p>若页面加载 FFmpeg WebAssembly、ZIP 组件或其他静态资源，浏览器可能请求这些代码资源；这不等同于上传你的媒体文件内容。</p>"], "terms": ["使用条款", "音频工作台 v1.3.19 beta", "<p>请只处理你拥有合法权利或已获得授权的音频、视频和相关素材。不得用于侵犯版权、隐私、肖像、录音录像权或其他合法权益。</p><p>专业参数可能改变响度、声道、位深、采样率和编码质量。请保留原文件，先用小片段测试，再处理正式文件。</p><p>beta 版本按现状提供，不保证所有浏览器、设备、格式、时长和编码器组合都能成功处理。因设备性能、浏览器限制、内存不足或编码器缺失导致的失败，需要根据提示调整格式或参数。</p>"]}, "en": {"features": ["Features", "Audio Workspace v1.3.19 beta", "<p>Supports audio editing, audio extraction from video, segment selection, channel/sample-rate/bit-depth/bitrate/loudness controls, and real browser-side FFmpeg WebAssembly transcoding.</p><p>Professional formats are attempted with real encoders. If the current browser build does not support a codec, the tool reports it clearly instead of faking a successful export.</p>"], "faq": ["FAQ", "Open a question to view details", "<details open><summary>Which formats are supported?</summary><p>FLAC, WAV, APE, ALAC, WV, TAK, MP3, AAC, M4A, OGG, MP4, WebM, DSD, and OPUS are listed. Some professional formats depend on the codec support included in the current FFmpeg WebAssembly build.</p></details><details><summary>How do I extract only part of a video?</summary><p>In “Extract from video” mode, enter the start and end frame or drag the dual handles. Use “Extract all” to export audio from the whole video.</p></details><details><summary>Will the original file be overwritten?</summary><p>No. The original media is used only as the input source; the tool exports a new output file.</p></details><details><summary>Why is the first conversion slow?</summary><p>The first run loads FFmpeg WebAssembly and related resources. It is usually faster later in the same session.</p></details>"], "privacy": ["Privacy Policy", "Audio Workspace v1.3.19 beta", "<p>This tool is designed for local-first processing in your browser. The selected audio or video file is used in the current page session to read duration, format, preview data, and transcoding parameters.</p><p>Interface preferences such as language, theme, and some settings may be stored in browser local storage so the page can restore them next time. You can delete them by clearing site data.</p><p>Exported files are written to the browser download folder, a ZIP file, or a local folder you choose. Manage exported files carefully and avoid saving sensitive audio on shared devices.</p><p>If the page loads FFmpeg WebAssembly, ZIP components, or other static resources, the browser may request those code files. That is not the same as uploading your media content.</p>"], "terms": ["Terms of Use", "Audio Workspace v1.3.19 beta", "<p>Only process audio, video, and related materials that you own or are authorized to use. Do not use this tool to infringe copyright, privacy, portrait rights, recording rights, or other legal interests.</p><p>Professional parameters can change loudness, channels, bit depth, sample rate, and encoding quality. Keep the original file and test a short segment before processing important material.</p><p>This beta version is provided as is. It does not guarantee that every browser, device, format, duration, or codec combination will work. If conversion fails because of device limits, browser restrictions, memory, or missing encoders, adjust the format or parameters.</p>"]}, "yue": {"features": ["特點", "音訊工作台 v1.3.19 beta", "<p>支援音訊修改、從影片抽取音訊、片段範圍選擇、聲道/取樣率/位元深度/位元率/響度等專業參數，並使用瀏覽器端 FFmpeg WebAssembly 進行真實轉碼匯出。</p><p>專業格式會真實呼叫編碼器；若目前瀏覽器或內核不支援，會明確報錯，不會假裝匯出成功。</p>"], "faq": ["常見問題解答", "點擊問題查看詳細說明", "<details open><summary>支援哪些格式？</summary><p>支援 FLAC、WAV、APE、ALAC、WV、TAK、MP3、AAC、M4A、OGG、MP4、WebM、DSD、OPUS。部分專業格式取決於目前 FFmpeg WebAssembly 內核的編碼器支援。</p></details><details><summary>如何只抽取影片片段？</summary><p>在「影片抽取」模式下輸入起始幀和截止幀，或拖動雙滑塊選擇範圍；選擇「全部抽取」則從整個影片匯出音訊。</p></details><details><summary>原始檔案會被覆蓋嗎？</summary><p>不會。工具預設匯出新檔案，原始音訊或影片只作為輸入來源使用。</p></details>"], "privacy": ["隱私政策", "音訊工作台 v1.3.19 beta", "<p>本工具優先在瀏覽器本機處理檔案。你選擇的音訊或影片會作為目前頁面工作階段中的輸入來源，用於讀取時長、格式、預覽和轉碼參數。</p><p>語言、深淺色模式和部分設定可能保存在瀏覽器本機儲存中。你可以透過清除網站資料刪除這些資訊。</p><p>匯出的檔案會寫入瀏覽器下載目錄、ZIP 檔案或你選擇的本機資料夾。請自行管理匯出檔案，避免在公共設備或共享目錄保存敏感音訊。</p>"], "terms": ["使用條款", "音訊工作台 v1.3.19 beta", "<p>請只處理你擁有合法權利或已獲授權的音訊、影片和相關素材。不得用於侵犯著作權、私隱、肖像、錄音錄影權或其他合法權益。</p><p>專業參數可能改變響度、聲道、位元深度、取樣率和編碼品質。請保留原始檔案，先用小片段測試，再處理正式檔案。</p><p>beta 版本按現狀提供，不保證所有瀏覽器、設備、格式、時長和編碼器組合都能成功處理。</p>"]}};
+  const CJK_RE = /[一-鿿]/;
+  const STORAGE_KEY = 'frame-lab-language';
+  const getCode = () => {
+    try { const saved = localStorage.getItem(STORAGE_KEY); if (saved) return saved; } catch (_) {}
+    const lang = (ROOT.lang || '').toLowerCase();
+    if (lang.includes('hant') || lang.includes('zh-hk') || lang.includes('zh-tw')) return 'yue';
+    if (lang.startsWith('zh')) return 'zh';
+    if (lang.startsWith('en')) return 'en';
+    return lang.split('-')[0] || 'zh';
+  };
+  const activeMap = () => {
+    const code = getCode();
+    if (code === 'zh') return null;
+    if (code === 'yue') return AUDIO_HANT_MAP;
+    return AUDIO_EN_MAP;
+  };
+  const translateText = (txt) => {
+    const map = activeMap();
+    if (!map) return txt;
+    const clean = String(txt || '').trim();
+    if (map[clean]) return map[clean];
+    // For non-Chinese languages, avoid leaving Simplified Chinese remnants in the audio beta UI.
+    if (CJK_RE.test(clean) && getCode() !== 'yue') return AUDIO_EN_MAP[clean] || clean.replace(/[一-鿿]+/g, '').trim() || clean;
+    if (CJK_RE.test(clean) && getCode() === 'yue') return AUDIO_HANT_MAP[clean] || clean;
+    return txt;
+  };
+  function walkTranslate(root) {
+    if (!root || getCode() === 'zh') return;
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, { acceptNode(node) {
+      const t = node.nodeValue;
+      if (!t || !t.trim() || !CJK_RE.test(t)) return NodeFilter.FILTER_REJECT;
+      if (node.parentElement && ['SCRIPT','STYLE'].includes(node.parentElement.tagName)) return NodeFilter.FILTER_REJECT;
+      return NodeFilter.FILTER_ACCEPT;
+    }});
+    const nodes = [];
+    while (walker.nextNode()) nodes.push(walker.currentNode);
+    nodes.forEach(node => {
+      const original = node.nodeValue.trim();
+      const next = translateText(original);
+      if (next !== original) node.nodeValue = node.nodeValue.replace(original, next);
+    });
+  }
+  function fixLanguageLabels() {
+    document.querySelectorAll('[data-language-option="yue"] span:first-child').forEach(el => el.textContent = '繁体中文');
+    document.querySelectorAll('[data-audio-language="yue"]').forEach(el => el.textContent = '繁体中文');
+    if (getCode() === 'yue') {
+      const main = document.getElementById('languageMenuLabel');
+      const audio = document.getElementById('audioLanguageLabel');
+      if (main) main.textContent = '繁体中文';
+      if (audio) audio.textContent = '繁体中文';
+    }
+  }
+  function translateAttrs(root) {
+    if (!root || getCode() === 'zh') return;
+    root.querySelectorAll('[placeholder], [title], [aria-label]').forEach(el => {
+      ['placeholder','title','aria-label'].forEach(attr => {
+        const v = el.getAttribute(attr);
+        if (v && CJK_RE.test(v)) el.setAttribute(attr, translateText(v));
+      });
+    });
+  }
+  function translateAudioUI() {
+    fixLanguageLabels();
+    const shell = document.getElementById('audioBetaShell');
+    const modal = document.getElementById('audioInfoModal');
+    walkTranslate(shell); translateAttrs(shell);
+    walkTranslate(modal); translateAttrs(modal);
+  }
+  function openTranslatedInfo(kind) {
+    const code = getCode();
+    const lang = code === 'zh' ? 'zh' : (code === 'yue' ? 'yue' : 'en');
+    const item = (AUDIO_INFO[lang] || AUDIO_INFO.en)[kind] || AUDIO_INFO.en[kind];
+    const modal = document.getElementById('audioInfoModal');
+    const title = document.getElementById('audioInfoTitle');
+    const subtitle = document.getElementById('audioInfoSubtitle');
+    const body = document.getElementById('audioInfoBody');
+    const close = document.getElementById('audioInfoClose');
+    if (!modal || !title || !subtitle || !body || !item) return;
+    title.textContent = item[0];
+    subtitle.textContent = item[1];
+    body.innerHTML = item[2];
+    modal.hidden = false;
+    setTimeout(() => close && close.focus(), 0);
+  }
+  // Replace the old audio info modal so FAQ / Privacy / Terms are translated instead of showing Chinese.
+  document.addEventListener('click', (event) => {
+    const btn = event.target && event.target.closest && event.target.closest('[data-audio-info]');
+    if (!btn) return;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    openTranslatedInfo(btn.dataset.audioInfo);
+  }, true);
+  const obs = new MutationObserver(() => { clearTimeout(window.__audioTranslateTimer); window.__audioTranslateTimer = setTimeout(translateAudioUI, 30); });
+  obs.observe(document.documentElement, { attributes:true, attributeFilter:['lang','dir','data-theme'] });
+  obs.observe(document.body, { childList:true, subtree:true });
+  document.addEventListener('DOMContentLoaded', () => setTimeout(translateAudioUI, 200));
+  setTimeout(translateAudioUI, 500);
+  setTimeout(translateAudioUI, 1500);
 })();
 </script>
 
