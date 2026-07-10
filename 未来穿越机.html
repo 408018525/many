@@ -1,0 +1,1440 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>未来穿越机 · 自定义时间</title>
+<style>
+  :root {
+    --desktop-a: #daf1ff;
+    --desktop-b: #9dcbe8;
+    --window: #f7f7f7;
+    --panel: #ffffff;
+    --line: #b6b6b6;
+    --line-dark: #7f7f7f;
+    --text: #181818;
+    --muted: #666;
+    --blue: #0b67c2;
+    --blue-dark: #09589f;
+    --green: #16a23a;
+    --pink: #cb2f69;
+    --danger: #b32a2a;
+    --shadow: 0 20px 55px rgba(16, 38, 57, .28), 0 4px 12px rgba(16, 38, 57, .18);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { width: 100%; min-height: 100%; margin: 0; }
+  body {
+    overflow-x: hidden;
+    color: var(--text);
+    font-family: "Microsoft YaHei UI", "Microsoft YaHei", "Segoe UI", Arial, sans-serif;
+    background:
+      linear-gradient(rgba(255,255,255,.1), rgba(255,255,255,.1)),
+      radial-gradient(circle at 25% 20%, rgba(255,255,255,.95), transparent 26%),
+      linear-gradient(150deg, var(--desktop-a) 0%, #c7e8f8 42%, var(--desktop-b) 100%);
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: auto -8vw -24vh -8vw;
+    height: 55vh;
+    background:
+      radial-gradient(ellipse at 25% 20%, rgba(255,255,255,.72), transparent 44%),
+      linear-gradient(170deg, rgba(20,100,155,.08), rgba(255,255,255,.42));
+    transform: skewY(-5deg);
+    pointer-events: none;
+  }
+
+  button, input, select { font: inherit; }
+  button { cursor: pointer; }
+
+  .desktop {
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    padding: 28px 16px 44px;
+  }
+
+  .window {
+    width: min(760px, 96vw);
+    border: 1px solid #7c8c99;
+    border-radius: 8px;
+    overflow: hidden;
+    background: var(--window);
+    box-shadow: var(--shadow);
+    position: relative;
+  }
+
+  .titlebar {
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-left: 12px;
+    background: linear-gradient(#fbfdff, #e8edf1);
+    border-bottom: 1px solid #aeb8c0;
+    user-select: none;
+  }
+
+  .titlebar-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .app-icon {
+    width: 18px;
+    height: 18px;
+    display: grid;
+    place-items: center;
+    border-radius: 4px;
+    color: white;
+    background: linear-gradient(135deg, #224f80, #0b8bc2);
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,.35);
+    font-size: 12px;
+  }
+
+  .window-controls { display: flex; height: 100%; }
+  .window-controls span {
+    width: 46px;
+    display: grid;
+    place-items: center;
+    color: #222;
+    font-size: 14px;
+  }
+  .window-controls span:hover { background: rgba(0,0,0,.07); }
+  .window-controls .close:hover { color: white; background: #d63b35; }
+
+  .content {
+    padding: 34px 42px 30px;
+    background: linear-gradient(#fafafa, #f1f1f1);
+  }
+
+  .hero { text-align: center; margin-bottom: 28px; }
+  .hero h1 {
+    margin: 0 0 8px;
+    font-size: clamp(27px, 4.4vw, 38px);
+    letter-spacing: .08em;
+    font-weight: 800;
+  }
+  .hero p { margin: 0; color: var(--muted); font-size: 14px; }
+
+  .status-strip {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border: 1px solid #c9c9c9;
+    background: #fff;
+    margin: 0 auto 22px;
+  }
+  .status-item {
+    min-height: 58px;
+    padding: 9px 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+    border-right: 1px solid #d6d6d6;
+  }
+  .status-item:last-child { border-right: 0; }
+  .status-label { color: #727272; font-size: 12px; }
+  .status-value { font-size: 13px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .status-value.ok { color: #128333; }
+
+  .mode-tabs {
+    display: flex;
+    gap: 6px;
+    padding: 5px;
+    background: #e7e7e7;
+    border: 1px solid #bdbdbd;
+    margin-bottom: 18px;
+  }
+  .mode-tab {
+    flex: 1;
+    border: 1px solid transparent;
+    background: transparent;
+    padding: 9px 12px;
+    color: #555;
+    font-weight: 700;
+  }
+  .mode-tab.active {
+    color: #111;
+    border-color: #aaa;
+    background: linear-gradient(#fff, #e9e9e9);
+    box-shadow: inset 0 1px #fff;
+  }
+
+  .panel {
+    border: 1px solid var(--line);
+    background: var(--panel);
+    padding: 20px;
+  }
+
+  .panel-title {
+    margin: 0 0 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    font-size: 15px;
+  }
+  .panel-title small { color: #777; font-weight: 400; }
+
+  .time-grid {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(72px, 1fr));
+    gap: 10px;
+  }
+
+  .time-field label,
+  .absolute-field label {
+    display: block;
+    margin-bottom: 6px;
+    color: #5f5f5f;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .number-wrap { position: relative; }
+  .number-wrap input,
+  .absolute-field input,
+  select {
+    width: 100%;
+    height: 38px;
+    padding: 6px 10px;
+    color: #111;
+    border: 1px solid #929292;
+    border-radius: 0;
+    background: #fff;
+    outline: none;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,.09);
+  }
+  input:focus, select:focus { border-color: var(--blue); box-shadow: 0 0 0 1px var(--blue); }
+  input[type="number"] { appearance: textfield; -moz-appearance: textfield; padding-right: 36px; }
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+
+  .spin-buttons {
+    position: absolute;
+    top: 1px;
+    right: 1px;
+    width: 28px;
+    height: 36px;
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    border-left: 1px solid #b4b4b4;
+  }
+  .spin-buttons button {
+    border: 0;
+    padding: 0;
+    line-height: 1;
+    font-size: 10px;
+    background: #eee;
+  }
+  .spin-buttons button:first-child { border-bottom: 1px solid #c6c6c6; }
+  .spin-buttons button:hover { background: #d9e9f7; }
+
+  .absolute-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr;
+    gap: 12px;
+  }
+
+  .hint {
+    margin-top: 13px;
+    min-height: 43px;
+    padding: 10px 12px;
+    border-left: 4px solid var(--blue);
+    background: #f1f7fd;
+    color: #3e4c58;
+    font-size: 13px;
+    line-height: 1.65;
+  }
+
+  .preset-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 14px;
+  }
+  .preset {
+    padding: 7px 11px;
+    border: 1px solid #aaa;
+    background: linear-gradient(#fff, #e9e9e9);
+    color: #222;
+  }
+  .preset:hover { border-color: #6f91ad; background: #eff8ff; }
+
+  .actions {
+    margin-top: 22px;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .btn {
+    min-width: 130px;
+    min-height: 40px;
+    padding: 8px 18px;
+    border: 1px solid #777;
+    background: linear-gradient(#fff, #dedede);
+    color: #111;
+    font-weight: 700;
+    box-shadow: inset 0 1px #fff;
+  }
+  .btn:hover { filter: brightness(.97); }
+  .btn:active { transform: translateY(1px); }
+  .btn-primary {
+    color: white;
+    border-color: #07528f;
+    background: linear-gradient(#1380dc, #0a62ad);
+  }
+  .btn-danger { color: var(--danger); }
+  .btn-pink { color: var(--pink); }
+
+  .footer-note {
+    margin: 18px 0 0;
+    color: #777;
+    text-align: center;
+    font-size: 12px;
+  }
+
+  .hidden { display: none !important; }
+
+  .modal-layer {
+    position: fixed;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    padding: 18px;
+    background: rgba(18, 26, 33, .22);
+    backdrop-filter: blur(2px);
+    z-index: 30;
+  }
+
+  .travel-dialog {
+    width: min(610px, 96vw);
+    border: 1px solid #7f8c96;
+    border-radius: 7px;
+    overflow: hidden;
+    background: #f5f5f5;
+    box-shadow: 0 24px 80px rgba(0,0,0,.38);
+    animation: dialogIn .18s ease-out;
+  }
+  @keyframes dialogIn {
+    from { opacity: 0; transform: scale(.96) translateY(8px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  .dialog-body { padding: 24px 28px 28px; text-align: center; }
+  .countdown-line {
+    font-size: clamp(18px, 3.3vw, 26px);
+    margin: 3px 0 13px;
+  }
+  .countdown-line strong { font-variant-numeric: tabular-nums; }
+  .travel-message {
+    min-height: 54px;
+    margin: 0 0 18px;
+    font-weight: 800;
+    line-height: 1.6;
+  }
+
+  .progress-shell {
+    width: 100%;
+    height: 22px;
+    padding: 2px;
+    border: 1px solid #8d8d8d;
+    background: #e8e8e8;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,.15);
+    overflow: hidden;
+  }
+  .progress-bar {
+    width: 0;
+    height: 100%;
+    background: repeating-linear-gradient(90deg, #13a73a 0 18px, #21b447 18px 20px);
+    transition: width .25s linear;
+  }
+
+  .dialog-details {
+    margin: 14px 0 2px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    text-align: left;
+    color: #5e5e5e;
+    font-size: 12px;
+  }
+  .detail-box { border: 1px solid #c9c9c9; background: #fff; padding: 9px 10px; }
+  .detail-box b { display: block; color: #222; margin-top: 3px; font-variant-numeric: tabular-nums; }
+
+  .result-icon {
+    width: 58px;
+    height: 58px;
+    margin: 0 auto 12px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    color: white;
+    font-size: 31px;
+    font-weight: 900;
+    background: var(--green);
+  }
+
+  .toast {
+    position: fixed;
+    left: 50%;
+    bottom: 28px;
+    transform: translate(-50%, 20px);
+    z-index: 80;
+    opacity: 0;
+    max-width: min(520px, calc(100vw - 28px));
+    padding: 11px 16px;
+    border: 1px solid #4a4a4a;
+    background: rgba(32,32,32,.94);
+    color: white;
+    font-size: 13px;
+    box-shadow: 0 8px 25px rgba(0,0,0,.28);
+    pointer-events: none;
+    transition: .22s ease;
+  }
+  .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+
+
+  body.modal-open { overflow: hidden; }
+
+  .captcha-layer {
+    position: fixed;
+    inset: 0;
+    z-index: 70;
+    display: grid;
+    place-items: center;
+    padding: max(14px, env(safe-area-inset-top)) max(14px, env(safe-area-inset-right)) max(14px, env(safe-area-inset-bottom)) max(14px, env(safe-area-inset-left));
+    background: rgba(9, 17, 24, .66);
+    backdrop-filter: blur(5px);
+  }
+
+  .captcha-dialog {
+    width: min(680px, 100%);
+    max-height: calc(100dvh - 28px);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid #657681;
+    border-radius: 9px;
+    background: #f5f5f5;
+    box-shadow: 0 28px 90px rgba(0,0,0,.48);
+    animation: dialogIn .18s ease-out;
+  }
+
+  .captcha-scroll {
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    padding: 22px 26px calc(24px + env(safe-area-inset-bottom));
+  }
+
+  .captcha-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 14px;
+  }
+
+  .captcha-kicker {
+    color: #737373;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .08em;
+  }
+
+  .captcha-counter {
+    margin: 4px 0 0;
+    font-size: clamp(21px, 4vw, 30px);
+    line-height: 1.2;
+  }
+
+  .captcha-security {
+    flex: 0 0 auto;
+    padding: 6px 9px;
+    border: 1px solid #9fbcaa;
+    background: #edf8f0;
+    color: #177b36;
+    font-size: 12px;
+    font-weight: 800;
+  }
+
+  .captcha-progress-shell {
+    height: 12px;
+    overflow: hidden;
+    border: 1px solid #8d8d8d;
+    background: #dedede;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,.16);
+  }
+
+  .captcha-progress-bar {
+    width: 0;
+    height: 100%;
+    background: repeating-linear-gradient(90deg, #0f78c8 0 16px, #1a88dc 16px 18px);
+    transition: width .22s ease;
+  }
+
+  .captcha-meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 7px 0 17px;
+    color: #676767;
+    font-size: 12px;
+  }
+
+  .captcha-card {
+    border: 1px solid #b3b3b3;
+    background: #fff;
+    padding: 20px;
+    min-height: 220px;
+  }
+
+  .captcha-card.shake { animation: captchaShake .28s linear; }
+  @keyframes captchaShake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-7px); }
+    50% { transform: translateX(7px); }
+    75% { transform: translateX(-4px); }
+  }
+
+  .captcha-type {
+    display: inline-flex;
+    align-items: center;
+    min-height: 26px;
+    padding: 4px 9px;
+    border: 1px solid #aeb8c0;
+    background: #eef3f7;
+    color: #455660;
+    font-size: 12px;
+    font-weight: 800;
+  }
+
+  .captcha-question {
+    margin: 17px 0 16px;
+    font-size: clamp(18px, 4.4vw, 25px);
+    line-height: 1.55;
+    font-weight: 800;
+    word-break: break-word;
+  }
+
+  .captcha-question code {
+    display: inline-block;
+    max-width: 100%;
+    padding: 2px 7px;
+    border: 1px solid #c8c8c8;
+    background: #f4f4f4;
+    font-family: Consolas, Monaco, monospace;
+    white-space: normal;
+    word-break: break-all;
+  }
+
+  .captcha-input {
+    width: 100%;
+    min-height: 48px;
+    padding: 10px 12px;
+    border: 1px solid #7e7e7e;
+    background: #fff;
+    outline: none;
+    font-size: 17px;
+  }
+
+  .captcha-input:focus {
+    border-color: var(--blue);
+    box-shadow: 0 0 0 2px rgba(11,103,194,.18);
+  }
+
+  .captcha-options {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .captcha-option {
+    min-height: 48px;
+    padding: 9px 12px;
+    border: 1px solid #8e8e8e;
+    background: linear-gradient(#fff, #e9e9e9);
+    color: #171717;
+    font-weight: 750;
+    word-break: break-word;
+  }
+
+  .captcha-option:hover { border-color: #397db5; background: #eef7ff; }
+  .captcha-option.selected {
+    border-color: #075a9e;
+    color: #064b83;
+    background: #dcefff;
+    box-shadow: inset 0 0 0 1px #4c9bd6;
+  }
+
+  .captcha-feedback {
+    min-height: 24px;
+    margin: 12px 0 0;
+    color: #b12626;
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .captcha-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 16px;
+  }
+
+  .captcha-actions-right {
+    display: flex;
+    gap: 10px;
+  }
+
+  .captcha-note {
+    margin: 15px 0 0;
+    color: #6d6d6d;
+    font-size: 12px;
+    line-height: 1.65;
+    text-align: center;
+  }
+
+  @media (max-width: 760px) {
+    html, body { min-height: 100dvh; }
+    body { background-attachment: fixed; }
+    button, input, select { touch-action: manipulation; }
+    input, select { font-size: 16px; }
+    .desktop {
+      min-height: 100dvh;
+      align-items: start;
+      padding: max(8px, env(safe-area-inset-top)) max(8px, env(safe-area-inset-right)) max(14px, env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-left));
+    }
+    .window { width: 100%; border-radius: 7px; }
+    .content { padding: 23px 15px 22px; }
+    .hero h1 { font-size: clamp(27px, 9vw, 36px); }
+    .hero p { padding: 0 4px; line-height: 1.65; }
+    .status-strip { grid-template-columns: 1fr; }
+    .status-item { min-height: 52px; border-right: 0; border-bottom: 1px solid #d6d6d6; }
+    .status-item:last-child { border-bottom: 0; }
+    .mode-tab { min-height: 44px; padding: 9px 7px; }
+    .panel-title { align-items: flex-start; flex-direction: column; gap: 4px; }
+    .time-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .absolute-grid { grid-template-columns: 1fr 1fr; }
+    .absolute-field:first-child { grid-column: 1 / -1; }
+    .number-wrap input, .absolute-field input, select { height: 44px; }
+    .spin-buttons { height: 42px; width: 31px; }
+    .preset { flex: 1 1 calc(33.333% - 8px); min-height: 42px; }
+    .btn { min-height: 46px; }
+    .travel-dialog { width: 100%; max-height: calc(100dvh - 28px); }
+    .dialog-body { overflow-y: auto; -webkit-overflow-scrolling: touch; }
+  }
+
+  @media (max-width: 520px) {
+    .titlebar { height: 42px; padding-left: 10px; }
+    .titlebar-left { font-size: 12px; }
+    .window-controls span { width: 38px; }
+    .window > .titlebar .window-controls span:not(.close) { display: none; }
+    .hero { margin-bottom: 19px; }
+    .content { padding: 20px 12px 20px; }
+    .panel { padding: 14px; }
+    .time-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; }
+    .absolute-grid { grid-template-columns: 1fr; }
+    .absolute-field:first-child { grid-column: auto; }
+    .preset { flex-basis: calc(50% - 8px); }
+    .actions { flex-direction: column; }
+    .btn { width: 100%; min-width: 0; }
+    .footer-note { line-height: 1.6; }
+    .dialog-body { padding: 20px 14px calc(22px + env(safe-area-inset-bottom)); }
+    .dialog-details { grid-template-columns: 1fr; }
+
+    .captcha-layer {
+      place-items: stretch;
+      padding: 0;
+      background: rgba(9,17,24,.76);
+    }
+    .captcha-dialog {
+      width: 100%;
+      height: 100dvh;
+      max-height: none;
+      border: 0;
+      border-radius: 0;
+    }
+    .captcha-dialog > .titlebar {
+      padding-top: env(safe-area-inset-top);
+      height: calc(44px + env(safe-area-inset-top));
+      flex: 0 0 auto;
+    }
+    .captcha-scroll { padding: 17px 13px calc(18px + env(safe-area-inset-bottom)); }
+    .captcha-head { gap: 8px; }
+    .captcha-security { padding: 5px 7px; }
+    .captcha-card { padding: 16px 13px; min-height: 0; }
+    .captcha-question { margin: 14px 0; }
+    .captcha-options { grid-template-columns: 1fr; gap: 8px; }
+    .captcha-option { min-height: 46px; }
+    .captcha-actions { flex-direction: column-reverse; }
+    .captcha-actions-right { display: grid; grid-template-columns: 1fr 1fr; width: 100%; }
+    .captcha-actions .btn { min-height: 46px; }
+    .captcha-meta { flex-wrap: wrap; }
+  }
+
+  @media (max-width: 360px) {
+    .time-grid { grid-template-columns: 1fr; }
+    .preset { flex-basis: 100%; }
+    .mode-tabs { flex-direction: column; }
+    .captcha-actions-right { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+  <main class="desktop">
+    <section class="window" aria-label="未来穿越机">
+      <header class="titlebar">
+        <div class="titlebar-left">
+          <span class="app-icon">➤</span>
+          <span>未来穿越机 · 时间控制台</span>
+        </div>
+        <div class="window-controls" aria-hidden="true">
+          <span>—</span><span>□</span><span class="close">×</span>
+        </div>
+      </header>
+
+      <div class="content">
+        <div class="hero">
+          <h1>未来穿越机</h1>
+          <p>请选择需要穿越的时间，系统将生成实时倒计时与进度模拟。</p>
+        </div>
+
+        <div class="status-strip">
+          <div class="status-item">
+            <span class="status-label">系统时间</span>
+            <span class="status-value" id="currentClock">--</span>
+          </div>
+          <div class="status-item">
+            <span class="status-label">时空核心</span>
+            <span class="status-value ok">● 运行正常</span>
+          </div>
+          <div class="status-item">
+            <span class="status-label">安全状态</span>
+            <span class="status-value ok">本地网页演示</span>
+          </div>
+        </div>
+
+        <div class="mode-tabs" role="tablist" aria-label="时间设置模式">
+          <button class="mode-tab active" data-mode="relative" role="tab">自定义时长</button>
+          <button class="mode-tab" data-mode="absolute" role="tab">指定年月日</button>
+        </div>
+
+        <section class="panel" id="relativePanel">
+          <h2 class="panel-title">
+            <span>自定义穿越时长</span>
+            <small>支持年 / 月 / 日 / 时 / 分 / 秒</small>
+          </h2>
+          <div class="time-grid">
+            <div class="time-field">
+              <label for="years">年</label>
+              <div class="number-wrap"><input id="years" type="number" min="0" max="999" value="0" inputmode="numeric"><span class="spin-buttons"><button data-spin="1" aria-label="增加年">▲</button><button data-spin="-1" aria-label="减少年">▼</button></span></div>
+            </div>
+            <div class="time-field">
+              <label for="months">月</label>
+              <div class="number-wrap"><input id="months" type="number" min="0" max="11" value="0" inputmode="numeric"><span class="spin-buttons"><button data-spin="1" aria-label="增加月">▲</button><button data-spin="-1" aria-label="减少月">▼</button></span></div>
+            </div>
+            <div class="time-field">
+              <label for="days">日</label>
+              <div class="number-wrap"><input id="days" type="number" min="0" max="365" value="0" inputmode="numeric"><span class="spin-buttons"><button data-spin="1" aria-label="增加日">▲</button><button data-spin="-1" aria-label="减少日">▼</button></span></div>
+            </div>
+            <div class="time-field">
+              <label for="hours">时</label>
+              <div class="number-wrap"><input id="hours" type="number" min="0" max="23" value="0" inputmode="numeric"><span class="spin-buttons"><button data-spin="1" aria-label="增加时">▲</button><button data-spin="-1" aria-label="减少时">▼</button></span></div>
+            </div>
+            <div class="time-field">
+              <label for="minutes">分</label>
+              <div class="number-wrap"><input id="minutes" type="number" min="0" max="59" value="0" inputmode="numeric"><span class="spin-buttons"><button data-spin="1" aria-label="增加分">▲</button><button data-spin="-1" aria-label="减少分">▼</button></span></div>
+            </div>
+            <div class="time-field">
+              <label for="seconds">秒</label>
+              <div class="number-wrap"><input id="seconds" type="number" min="0" max="59" value="10" inputmode="numeric"><span class="spin-buttons"><button data-spin="1" aria-label="增加秒">▲</button><button data-spin="-1" aria-label="减少秒">▼</button></span></div>
+            </div>
+          </div>
+
+          <div class="preset-row" aria-label="快捷设置">
+            <button class="preset" data-preset="10">10 秒后</button>
+            <button class="preset" data-preset="60">1 分钟后</button>
+            <button class="preset" data-preset="3600">1 小时后</button>
+            <button class="preset" data-preset="86400">1 天后</button>
+            <button class="preset" data-preset="315360000">10 年后</button>
+          </div>
+          <div class="hint" id="relativeHint">目标时间：正在计算……</div>
+        </section>
+
+        <section class="panel hidden" id="absolutePanel">
+          <h2 class="panel-title">
+            <span>指定目标年月日</span>
+            <small>秒数可独立设置</small>
+          </h2>
+          <div class="absolute-grid">
+            <div class="absolute-field">
+              <label for="targetDate">目标日期</label>
+              <input id="targetDate" type="date">
+            </div>
+            <div class="absolute-field">
+              <label for="targetTime">目标时分</label>
+              <input id="targetTime" type="time" step="60">
+            </div>
+            <div class="absolute-field">
+              <label for="targetSecond">目标秒数</label>
+              <input id="targetSecond" type="number" min="0" max="59" value="0" inputmode="numeric">
+            </div>
+          </div>
+          <div class="hint" id="absoluteHint">请选择未来的日期和时间。</div>
+        </section>
+
+        <div class="actions">
+          <button class="btn" id="resetBtn">恢复默认</button>
+          <button class="btn btn-primary" id="startBtn">立即开始穿越</button>
+        </div>
+        <p class="footer-note">本页面仅进行视觉与倒计时模拟，不会关闭电脑、修改系统或自动扣费。</p>
+      </div>
+    </section>
+  </main>
+
+  <div class="modal-layer hidden" id="travelModal" role="dialog" aria-modal="true" aria-labelledby="travelTitle">
+    <section class="travel-dialog">
+      <header class="titlebar">
+        <div class="titlebar-left"><span class="app-icon">➤</span><span id="travelTitle">穿越加载中</span></div>
+        <div class="window-controls"><span class="close" id="modalClose">×</span></div>
+      </header>
+      <div class="dialog-body" id="travelBody">
+        <div class="countdown-line">预计还有 <strong id="countdownText">--</strong></div>
+        <p class="travel-message" id="travelMessage">穿越准备中，请耐心等待<br>期间请勿断电，否则会失败。</p>
+        <div class="progress-shell" aria-label="穿越进度"><div class="progress-bar" id="progressBar"></div></div>
+        <div class="dialog-details">
+          <div class="detail-box">起始时间<b id="startTimeText">--</b></div>
+          <div class="detail-box">目标时间<b id="targetTimeText">--</b></div>
+        </div>
+        <div class="actions">
+          <button class="btn" id="cancelBtn">取消穿越</button>
+          <button class="btn btn-pink" id="skipBtn">VIP 跳过等待</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+
+  <div class="captcha-layer hidden" id="captchaModal" role="dialog" aria-modal="true" aria-labelledby="captchaTitle">
+    <section class="captcha-dialog">
+      <header class="titlebar">
+        <div class="titlebar-left"><span class="app-icon">✓</span><span id="captchaTitle">VIP 高强度人机验证中心</span></div>
+        <div class="window-controls"><span class="close" id="captchaClose" role="button" tabindex="0" aria-label="退出验证">×</span></div>
+      </header>
+      <div class="captcha-scroll">
+        <div class="captcha-head">
+          <div>
+            <div class="captcha-kicker">200-STEP HUMAN VERIFICATION</div>
+            <h2 class="captcha-counter">验证 <span id="captchaCurrent">1</span> / <span id="captchaTotal">200</span></h2>
+          </div>
+          <span class="captcha-security">本地验证</span>
+        </div>
+        <div class="captcha-progress-shell" aria-label="验证总进度"><div class="captcha-progress-bar" id="captchaProgress"></div></div>
+        <div class="captcha-meta">
+          <span id="captchaProgressText">已完成 0 题</span>
+          <span id="captchaMistakeText">错误 0 次</span>
+        </div>
+
+        <div class="captcha-card" id="captchaCard">
+          <span class="captcha-type" id="captchaType">题型</span>
+          <div class="captcha-question" id="captchaQuestion">正在生成验证题……</div>
+          <div id="captchaAnswerArea"></div>
+          <p class="captcha-feedback" id="captchaFeedback" aria-live="polite"></p>
+        </div>
+
+        <div class="captcha-actions">
+          <button class="btn btn-danger" id="captchaExitBtn">退出验证</button>
+          <div class="captcha-actions-right">
+            <button class="btn" id="captchaRestartBtn">重新开始</button>
+            <button class="btn btn-primary" id="captchaSubmitBtn">提交答案</button>
+          </div>
+        </div>
+        <p class="captcha-note">必须完成全部 200 道内容不重复的验证题，VIP 跳过等待才会生效。答案错误不会跳题。</p>
+      </div>
+    </section>
+  </div>
+
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(() => {
+  'use strict';
+
+  const $ = (selector, root = document) => root.querySelector(selector);
+  const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
+
+  const fields = {
+    years: $('#years'), months: $('#months'), days: $('#days'),
+    hours: $('#hours'), minutes: $('#minutes'), seconds: $('#seconds')
+  };
+
+  let activeMode = 'relative';
+  let timerId = null;
+  let startTimestamp = 0;
+  let targetTimestamp = 0;
+  let totalDuration = 0;
+  let messageIndex = 0;
+  let toastTimer = null;
+  let verificationChallenges = [];
+  let verificationIndex = 0;
+  let selectedCaptchaValue = null;
+  let captchaMistakes = 0;
+  let verificationPausedRemaining = 0;
+
+  const messages = [
+    '穿越准备中，请耐心等待<br>期间请勿断电，否则会失败。',
+    '正在校准时空坐标<br>已启用多重时间基准校验。',
+    '正在建立目标时间通道<br>系统运行稳定，请保持页面开启。',
+    '正在进行最终同步<br>即将抵达设定的目标时间。'
+  ];
+
+  function pad(value, length = 2) {
+    return String(value).padStart(length, '0');
+  }
+
+  function formatDate(date) {
+    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+  }
+
+  function daysInMonth(year, monthIndex) {
+    return new Date(year, monthIndex + 1, 0).getDate();
+  }
+
+  function clampInput(input) {
+    const min = Number(input.min || 0);
+    const max = Number(input.max || Number.MAX_SAFE_INTEGER);
+    let value = Number.parseInt(input.value, 10);
+    if (!Number.isFinite(value)) value = min;
+    value = Math.min(max, Math.max(min, value));
+    input.value = String(value);
+    return value;
+  }
+
+  function addRelativeTime(baseDate) {
+    const date = new Date(baseDate.getTime());
+    const years = clampInput(fields.years);
+    const months = clampInput(fields.months);
+    const days = clampInput(fields.days);
+    const hours = clampInput(fields.hours);
+    const minutes = clampInput(fields.minutes);
+    const seconds = clampInput(fields.seconds);
+
+    const originalDay = date.getDate();
+    date.setDate(1);
+    date.setFullYear(date.getFullYear() + years);
+    date.setMonth(date.getMonth() + months);
+    date.setDate(Math.min(originalDay, daysInMonth(date.getFullYear(), date.getMonth())));
+    date.setDate(date.getDate() + days);
+    date.setHours(date.getHours() + hours);
+    date.setMinutes(date.getMinutes() + minutes);
+    date.setSeconds(date.getSeconds() + seconds);
+    return date;
+  }
+
+  function getAbsoluteTarget() {
+    const dateValue = $('#targetDate').value;
+    const timeValue = $('#targetTime').value;
+    const second = Math.min(59, Math.max(0, Number.parseInt($('#targetSecond').value, 10) || 0));
+    $('#targetSecond').value = second;
+    if (!dateValue || !timeValue) return null;
+    const [year, month, day] = dateValue.split('-').map(Number);
+    const [hour, minute] = timeValue.split(':').map(Number);
+    return new Date(year, month - 1, day, hour, minute, second, 0);
+  }
+
+  function getTargetDate() {
+    return activeMode === 'relative' ? addRelativeTime(new Date()) : getAbsoluteTarget();
+  }
+
+  function describeDuration(ms) {
+    if (!Number.isFinite(ms) || ms < 0) return '时间设置无效';
+    let seconds = Math.floor(ms / 1000);
+    const year = Math.floor(seconds / 31536000); seconds %= 31536000;
+    const day = Math.floor(seconds / 86400); seconds %= 86400;
+    const hour = Math.floor(seconds / 3600); seconds %= 3600;
+    const minute = Math.floor(seconds / 60); seconds %= 60;
+
+    const parts = [];
+    if (year) parts.push(`${year}年`);
+    if (day) parts.push(`${day}天`);
+    if (hour) parts.push(`${hour}小时`);
+    if (minute) parts.push(`${minute}分`);
+    if (seconds || parts.length === 0) parts.push(`${seconds}秒`);
+    return parts.join('');
+  }
+
+  function refreshHints() {
+    const now = new Date();
+    const target = getTargetDate();
+    if (activeMode === 'relative') {
+      const duration = target ? target.getTime() - now.getTime() : 0;
+      $('#relativeHint').innerHTML = `目标时间：<b>${formatDate(target)}</b><br>预计间隔：${describeDuration(duration)}`;
+    } else {
+      if (!target) {
+        $('#absoluteHint').textContent = '请选择未来的日期和时间。';
+      } else {
+        const delta = target.getTime() - now.getTime();
+        $('#absoluteHint').innerHTML = delta <= 0
+          ? '<b style="color:#ad2424">目标时间必须晚于当前时间。</b>'
+          : `目标时间：<b>${formatDate(target)}</b><br>距离现在：${describeDuration(delta)}`;
+      }
+    }
+  }
+
+  function setDefaultAbsolute() {
+    const future = new Date(Date.now() + 10 * 60 * 1000);
+    $('#targetDate').value = `${future.getFullYear()}-${pad(future.getMonth() + 1)}-${pad(future.getDate())}`;
+    $('#targetTime').value = `${pad(future.getHours())}:${pad(future.getMinutes())}`;
+    $('#targetSecond').value = future.getSeconds();
+  }
+
+  function switchMode(mode) {
+    activeMode = mode;
+    $$('.mode-tab').forEach(btn => btn.classList.toggle('active', btn.dataset.mode === mode));
+    $('#relativePanel').classList.toggle('hidden', mode !== 'relative');
+    $('#absolutePanel').classList.toggle('hidden', mode !== 'absolute');
+    refreshHints();
+  }
+
+  function resetRelative() {
+    fields.years.value = 0;
+    fields.months.value = 0;
+    fields.days.value = 0;
+    fields.hours.value = 0;
+    fields.minutes.value = 0;
+    fields.seconds.value = 10;
+  }
+
+  function applyPreset(totalSeconds) {
+    resetRelative();
+    if (totalSeconds === 315360000) {
+      fields.years.value = 10;
+    } else {
+      fields.days.value = Math.floor(totalSeconds / 86400);
+      totalSeconds %= 86400;
+      fields.hours.value = Math.floor(totalSeconds / 3600);
+      totalSeconds %= 3600;
+      fields.minutes.value = Math.floor(totalSeconds / 60);
+      fields.seconds.value = totalSeconds % 60;
+    }
+    switchMode('relative');
+    refreshHints();
+  }
+
+  function showToast(text) {
+    const toast = $('#toast');
+    toast.textContent = text;
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 2600);
+  }
+
+  function formatCountdown(ms) {
+    let totalSeconds = Math.max(0, Math.ceil(ms / 1000));
+    const years = Math.floor(totalSeconds / 31536000); totalSeconds %= 31536000;
+    const days = Math.floor(totalSeconds / 86400); totalSeconds %= 86400;
+    const hours = Math.floor(totalSeconds / 3600); totalSeconds %= 3600;
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    const parts = [];
+    if (years) parts.push(`${years}年`);
+    if (days) parts.push(`${days}天`);
+    if (hours || years || days) parts.push(`${hours}小时`);
+    if (minutes || years || days || hours) parts.push(`${minutes}分`);
+    parts.push(`${seconds}秒`);
+    return parts.join('');
+  }
+
+  function renderTravel() {
+    const now = Date.now();
+    const remaining = Math.max(0, targetTimestamp - now);
+    const elapsed = Math.max(0, now - startTimestamp);
+    const naturalProgress = totalDuration > 0 ? elapsed / totalDuration : 1;
+    const visualProgress = Math.min(1, Math.max(0, naturalProgress));
+
+    $('#countdownText').textContent = formatCountdown(remaining);
+    $('#progressBar').style.width = `${(visualProgress * 100).toFixed(3)}%`;
+
+    const nextMessageIndex = Math.min(messages.length - 1, Math.floor(visualProgress * messages.length));
+    if (nextMessageIndex !== messageIndex) {
+      messageIndex = nextMessageIndex;
+      $('#travelMessage').innerHTML = messages[messageIndex];
+    }
+
+    if (remaining <= 0) finishTravel(false);
+  }
+
+
+  function makeChoiceOptions(correct, decoys) {
+    const options = [String(correct), ...decoys.map(String)];
+    return [...new Set(options)].sort((a, b) => {
+      const aCode = [...a].reduce((sum, ch) => sum + ch.charCodeAt(0), 0);
+      const bCode = [...b].reduce((sum, ch) => sum + ch.charCodeAt(0), 0);
+      return (aCode % 17) - (bCode % 17) || a.localeCompare(b, 'zh-CN');
+    });
+  }
+
+  function buildVerificationChallenges() {
+    const list = [];
+
+    for (let i = 0; i < 30; i++) {
+      const a = 7 + i * 3;
+      const b = 4 + (i * 7) % 29;
+      list.push({ type: '算术校验', mode: 'input', inputMode: 'numeric', question: `请输入计算结果：<code>${a} + ${b} = ?</code>`, answer: String(a + b) });
+    }
+
+    for (let i = 0; i < 25; i++) {
+      const a = 96 + i * 6;
+      const b = 13 + (i * 5) % 41;
+      list.push({ type: '差值判断', mode: 'input', inputMode: 'numeric', question: `请输入计算结果：<code>${a} − ${b} = ?</code>`, answer: String(a - b) });
+    }
+
+    for (let i = 0; i < 20; i++) {
+      const a = 2 + (i % 8);
+      const b = 4 + i;
+      list.push({ type: '乘法校验', mode: 'input', inputMode: 'numeric', question: `请输入计算结果：<code>${a} × ${b} = ?</code>`, answer: String(a * b) });
+    }
+
+    for (let i = 0; i < 20; i++) {
+      const start = 3 + i * 2;
+      const step = 2 + (i % 6);
+      const seq = [start, start + step, start + step * 2, start + step * 3];
+      list.push({ type: '数字规律', mode: 'input', inputMode: 'numeric', question: `请填写下一个数字：<code>${seq.join('，')}，?</code>`, answer: String(start + step * 4) });
+    }
+
+    for (let i = 0; i < 20; i++) {
+      const nums = [31 + i * 3, 18 + i * 2, 74 + i * 4, 49 + i];
+      const answer = Math.max(...nums);
+      list.push({ type: '最大值识别', mode: 'choice', question: `请选择下面四个数字中的最大值：`, options: makeChoiceOptions(answer, nums.filter(n => n !== answer)), answer: String(answer) });
+    }
+
+    for (let i = 0; i < 20; i++) {
+      const nums = [12 + i * 5, 27 + i * 3, 9 + i * 2, 41 + i * 4];
+      const answer = Math.min(...nums);
+      list.push({ type: '最小值识别', mode: 'choice', question: `请选择下面四个数字中的最小值：`, options: makeChoiceOptions(answer, nums.filter(n => n !== answer)), answer: String(answer) });
+    }
+
+    const symbols = ['●', '▲', '■', '◆', '★'];
+    for (let i = 0; i < 15; i++) {
+      const target = symbols[i % symbols.length];
+      const targetCount = 3 + (i % 6);
+      const otherA = symbols[(i + 1) % symbols.length];
+      const otherB = symbols[(i + 2) % symbols.length];
+      let sequence = '';
+      for (let j = 0; j < targetCount; j++) sequence += target + (j % 2 === 0 ? otherA : otherB);
+      sequence += otherA + otherB + otherA;
+      list.push({ type: '图形计数', mode: 'input', inputMode: 'numeric', question: `请数出下面字符串中“${target}”的数量：<br><code>${sequence}</code>`, answer: String(targetCount) });
+    }
+
+    const words = ['VIPTIME', 'FUTURE', 'TRAVEL', 'SECOND', 'MINUTE', 'YEAR2026', 'MOBILE', 'VERIFY', 'PORTAL', 'QUANTUM', 'CLOCK', 'TARGET', 'SYSTEM', 'HUMAN', 'ACCESS'];
+    words.forEach((word, i) => {
+      const token = `${word}${i + 1}`;
+      list.push({ type: '字符倒序', mode: 'input', inputMode: 'text', question: `请将字符倒序输入：<code>${token}</code>`, answer: [...token].reverse().join(''), caseInsensitive: true });
+    });
+
+    for (let i = 0; i < 15; i++) {
+      const number = 47 + i * 7;
+      const answer = number % 2 === 0 ? '偶数' : '奇数';
+      list.push({ type: '奇偶判断', mode: 'choice', question: `数字 <code>${number}</code> 属于哪一类？`, options: ['奇数', '偶数', '都不是', '无法判断'], answer });
+    }
+
+    for (let i = 0; i < 10; i++) {
+      const minutes = i + 2;
+      list.push({ type: '时间换算', mode: 'input', inputMode: 'numeric', question: `<code>${minutes} 分钟</code>等于多少秒？`, answer: String(minutes * 60) });
+    }
+
+    for (let i = 0; i < 10; i++) {
+      const code = `VIP-${191 + i}-${String.fromCharCode(65 + i)}`;
+      list.push({
+        type: '指令匹配',
+        mode: 'choice',
+        question: `请点击与指令完全一致的验证码：<code>${code}</code>`,
+        options: makeChoiceOptions(code, [`VIP-${191 + i}-${String.fromCharCode(66 + i)}`, `V1P-${191 + i}-${String.fromCharCode(65 + i)}`, `VIP-${190 + i}-${String.fromCharCode(65 + i)}`]),
+        answer: code
+      });
+    }
+
+    if (list.length !== 200) throw new Error(`验证题数量错误：${list.length}`);
+    return list;
+  }
+
+  function normalizeCaptchaValue(value, challenge) {
+    const normalized = String(value ?? '').trim().replace(/\s+/g, ' ');
+    return challenge.caseInsensitive ? normalized.toLowerCase() : normalized;
+  }
+
+  function renderCaptchaChallenge() {
+    const challenge = verificationChallenges[verificationIndex];
+    if (!challenge) {
+      completeVipVerification();
+      return;
+    }
+
+    selectedCaptchaValue = null;
+    const completed = verificationIndex;
+    const total = verificationChallenges.length;
+    $('#captchaCurrent').textContent = String(verificationIndex + 1);
+    $('#captchaTotal').textContent = String(total);
+    $('#captchaProgress').style.width = `${(completed / total) * 100}%`;
+    $('#captchaProgressText').textContent = `已完成 ${completed} 题`;
+    $('#captchaMistakeText').textContent = `错误 ${captchaMistakes} 次`;
+    $('#captchaType').textContent = challenge.type;
+    $('#captchaQuestion').innerHTML = challenge.question;
+    $('#captchaFeedback').textContent = '';
+    $('#captchaSubmitBtn').disabled = false;
+
+    const area = $('#captchaAnswerArea');
+    if (challenge.mode === 'choice') {
+      area.innerHTML = `<div class="captcha-options">${challenge.options.map((option, index) => `<button class="captcha-option" type="button" data-value="${option.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}">${option}</button>`).join('')}</div>`;
+      $$('.captcha-option', area).forEach(button => {
+        button.addEventListener('click', () => {
+          selectedCaptchaValue = button.dataset.value;
+          $$('.captcha-option', area).forEach(item => item.classList.toggle('selected', item === button));
+          $('#captchaFeedback').textContent = '';
+        });
+      });
+    } else {
+      area.innerHTML = `<input class="captcha-input" id="captchaInput" type="text" inputmode="${challenge.inputMode || 'text'}" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="请输入答案" aria-label="验证答案">`;
+      const input = $('#captchaInput');
+      input.addEventListener('keydown', event => {
+        if (event.key === 'Enter') submitCaptchaAnswer();
+      });
+      setTimeout(() => input.focus({ preventScroll: true }), 40);
+    }
+
+    const scroll = $('.captcha-scroll');
+    if (scroll) scroll.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function submitCaptchaAnswer() {
+    const challenge = verificationChallenges[verificationIndex];
+    if (!challenge) return;
+
+    const rawValue = challenge.mode === 'choice' ? selectedCaptchaValue : ($('#captchaInput') ? $('#captchaInput').value : '');
+    if (rawValue === null || String(rawValue).trim() === '') {
+      $('#captchaFeedback').textContent = challenge.mode === 'choice' ? '请先选择一个答案。' : '请输入答案后再提交。';
+      return;
+    }
+
+    const submitted = normalizeCaptchaValue(rawValue, challenge);
+    const expected = normalizeCaptchaValue(challenge.answer, challenge);
+    if (submitted !== expected) {
+      captchaMistakes += 1;
+      $('#captchaMistakeText').textContent = `错误 ${captchaMistakes} 次`;
+      $('#captchaFeedback').textContent = '答案不正确，请重新核对。本题不会自动跳过。';
+      const card = $('#captchaCard');
+      card.classList.remove('shake');
+      void card.offsetWidth;
+      card.classList.add('shake');
+      if ($('#captchaInput')) {
+        $('#captchaInput').select();
+        $('#captchaInput').focus();
+      }
+      return;
+    }
+
+    verificationIndex += 1;
+    $('#captchaFeedback').style.color = '#177b36';
+    $('#captchaFeedback').textContent = '验证通过，正在进入下一题……';
+    $('#captchaSubmitBtn').disabled = true;
+    $('#captchaProgress').style.width = `${(verificationIndex / verificationChallenges.length) * 100}%`;
+    $('#captchaProgressText').textContent = `已完成 ${verificationIndex} 题`;
+    setTimeout(() => {
+      $('#captchaFeedback').style.color = '';
+      renderCaptchaChallenge();
+    }, 130);
+  }
+
+  function pauseTravelForVerification() {
+    verificationPausedRemaining = Math.max(0, targetTimestamp - Date.now());
+    clearInterval(timerId);
+    timerId = null;
+  }
+
+  function resumeTravelAfterVerification() {
+    $('#captchaModal').classList.add('hidden');
+    document.body.classList.remove('modal-open');
+    verificationIndex = 0;
+    selectedCaptchaValue = null;
+    captchaMistakes = 0;
+
+    if (verificationPausedRemaining <= 0) {
+      finishTravel(false);
+      return;
+    }
+
+    const elapsedBeforePause = Math.max(0, totalDuration - verificationPausedRemaining);
+    startTimestamp = Date.now() - elapsedBeforePause;
+    targetTimestamp = Date.now() + verificationPausedRemaining;
+    renderTravel();
+    clearInterval(timerId);
+    timerId = setInterval(renderTravel, 250);
+  }
+
+  function openVipVerification() {
+    pauseTravelForVerification();
+    verificationChallenges = buildVerificationChallenges();
+    verificationIndex = 0;
+    selectedCaptchaValue = null;
+    captchaMistakes = 0;
+    $('#captchaModal').classList.remove('hidden');
+    document.body.classList.add('modal-open');
+    renderCaptchaChallenge();
+  }
+
+  function restartVipVerification() {
+    verificationIndex = 0;
+    selectedCaptchaValue = null;
+    captchaMistakes = 0;
+    verificationChallenges = buildVerificationChallenges();
+    renderCaptchaChallenge();
+    showToast('200 道验证已从第 1 题重新开始。');
+  }
+
+  function completeVipVerification() {
+    $('#captchaProgress').style.width = '100%';
+    $('#captchaProgressText').textContent = '已完成 200 题';
+    $('#captchaModal').classList.add('hidden');
+    document.body.classList.remove('modal-open');
+    showToast('200 道人机验证全部通过，VIP 跳过已生效。');
+    finishTravel(true);
+  }
+
+  function startTravel() {
+    const target = getTargetDate();
+    if (!target || Number.isNaN(target.getTime())) {
+      showToast('请先填写完整、有效的目标时间。');
+      return;
+    }
+
+    const now = new Date();
+    const duration = target.getTime() - now.getTime();
+    if (duration <= 0) {
+      showToast('目标时间必须晚于当前时间。');
+      return;
+    }
+
+    startTimestamp = now.getTime();
+    targetTimestamp = target.getTime();
+    totalDuration = duration;
+    messageIndex = 0;
+
+    $('#startTimeText').textContent = formatDate(now);
+    $('#targetTimeText').textContent = formatDate(target);
+    $('#travelMessage').innerHTML = messages[0];
+    $('#progressBar').style.width = '0%';
+    $('#travelModal').classList.remove('hidden');
+
+    clearInterval(timerId);
+    renderTravel();
+    timerId = setInterval(renderTravel, 250);
+  }
+
+  function cancelTravel() {
+    clearInterval(timerId);
+    timerId = null;
+    $('#travelModal').classList.add('hidden');
+    showToast('穿越任务已取消。');
+  }
+
+  function finishTravel(skipped) {
+    clearInterval(timerId);
+    timerId = null;
+    $('#progressBar').style.width = '100%';
+    $('#countdownText').textContent = '0秒';
+
+    $('#travelBody').innerHTML = `
+      <div class="result-icon">✓</div>
+      <div class="countdown-line"><strong>穿越完成</strong></div>
+      <p class="travel-message">${skipped ? '演示模式已跳过等待。' : '已抵达设定的目标时间。'}<br>欢迎来到新的时间坐标。</p>
+      <div class="dialog-details">
+        <div class="detail-box">原始起点<b>${formatDate(new Date(startTimestamp))}</b></div>
+        <div class="detail-box">目标坐标<b>${formatDate(new Date(targetTimestamp))}</b></div>
+      </div>
+      <div class="actions"><button class="btn btn-primary" id="finishCloseBtn">返回控制台</button></div>`;
+
+    $('#finishCloseBtn').addEventListener('click', () => location.reload());
+  }
+
+  $$('.mode-tab').forEach(btn => btn.addEventListener('click', () => switchMode(btn.dataset.mode)));
+
+  Object.values(fields).forEach(input => {
+    input.addEventListener('input', refreshHints);
+    input.addEventListener('blur', () => { clampInput(input); refreshHints(); });
+  });
+
+  $$('.spin-buttons').forEach(group => {
+    const input = group.parentElement.querySelector('input');
+    group.querySelectorAll('button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const step = Number(btn.dataset.spin);
+        input.value = clampInput(input) + step;
+        clampInput(input);
+        input.dispatchEvent(new Event('input'));
+      });
+    });
+  });
+
+  $$('.preset').forEach(btn => btn.addEventListener('click', () => applyPreset(Number(btn.dataset.preset))));
+
+  ['targetDate', 'targetTime', 'targetSecond'].forEach(id => {
+    $('#' + id).addEventListener('input', refreshHints);
+  });
+
+  $('#resetBtn').addEventListener('click', () => {
+    resetRelative();
+    setDefaultAbsolute();
+    switchMode('relative');
+    showToast('已恢复默认设置。');
+  });
+
+  $('#startBtn').addEventListener('click', startTravel);
+  $('#cancelBtn').addEventListener('click', cancelTravel);
+  $('#modalClose').addEventListener('click', cancelTravel);
+  $('#skipBtn').addEventListener('click', openVipVerification);
+  $('#captchaSubmitBtn').addEventListener('click', submitCaptchaAnswer);
+  $('#captchaRestartBtn').addEventListener('click', restartVipVerification);
+  $('#captchaExitBtn').addEventListener('click', resumeTravelAfterVerification);
+  $('#captchaClose').addEventListener('click', resumeTravelAfterVerification);
+  $('#captchaClose').addEventListener('keydown', event => {
+    if (event.key === 'Enter' || event.key === ' ') resumeTravelAfterVerification();
+  });
+
+  $('#travelModal').addEventListener('click', event => {
+    if (event.target === $('#travelModal')) cancelTravel();
+  });
+
+  document.addEventListener('keydown', event => {
+    const captchaOpen = !$('#captchaModal').classList.contains('hidden');
+    if (event.key === 'Escape' && captchaOpen) {
+      resumeTravelAfterVerification();
+      return;
+    }
+    if (event.key === 'Escape' && !$('#travelModal').classList.contains('hidden')) cancelTravel();
+    if (event.key === 'Enter' && $('#travelModal').classList.contains('hidden') && !captchaOpen) startTravel();
+  });
+
+  setDefaultAbsolute();
+  refreshHints();
+  setInterval(() => {
+    $('#currentClock').textContent = formatDate(new Date());
+    refreshHints();
+  }, 1000);
+  $('#currentClock').textContent = formatDate(new Date());
+})();
+</script>
+</body>
+</html>

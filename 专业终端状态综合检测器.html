@@ -1,0 +1,1593 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="color-scheme" content="dark" />
+  <title>终端状态综合检测器</title>
+  <style>
+    :root {
+      --bg: #061316;
+      --panel: rgba(8, 34, 39, 0.88);
+      --panel-2: rgba(10, 43, 49, 0.78);
+      --line: rgba(151, 227, 222, 0.16);
+      --text: #edfafa;
+      --muted: #91aeb1;
+      --green: #55f06f;
+      --green-soft: rgba(85, 240, 111, 0.14);
+      --cyan: #2bcfe8;
+      --cyan-soft: rgba(43, 207, 232, 0.14);
+      --yellow: #ffcf5b;
+      --yellow-soft: rgba(255, 207, 91, 0.14);
+      --red: #ff6474;
+      --red-soft: rgba(255, 100, 116, 0.14);
+      --blue: #5d8dff;
+      --shadow: 0 24px 70px rgba(0,0,0,.36);
+      --radius: 22px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      font-family: Inter, "PingFang SC", "Microsoft YaHei", system-ui, -apple-system, sans-serif;
+      background:
+        radial-gradient(circle at 12% 10%, rgba(0, 205, 180, .14), transparent 32%),
+        radial-gradient(circle at 88% 18%, rgba(0, 124, 160, .16), transparent 30%),
+        linear-gradient(145deg, #030b0d 0%, #071b20 50%, #041114 100%);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: .18;
+      background-image:
+        linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
+      background-size: 34px 34px;
+      mask-image: linear-gradient(to bottom, #000, transparent 80%);
+    }
+
+    button, select { font: inherit; }
+    button { -webkit-tap-highlight-color: transparent; }
+
+    .page {
+      width: min(1240px, calc(100% - 30px));
+      margin: 0 auto;
+      padding: 28px 0 48px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+    }
+
+    .brand-mark {
+      width: 44px;
+      height: 44px;
+      border: 1px solid rgba(93, 240, 224, .34);
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(145deg, rgba(47, 232, 207, .18), rgba(35, 130, 148, .08));
+      box-shadow: inset 0 0 24px rgba(48, 234, 211, .08), 0 10px 30px rgba(0,0,0,.22);
+    }
+
+    .brand-mark svg { width: 24px; height: 24px; }
+    .brand-title { font-size: 17px; font-weight: 800; letter-spacing: .04em; }
+    .brand-sub { margin-top: 3px; color: var(--muted); font-size: 12px; }
+
+    .live-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(3, 18, 21, .58);
+      color: #c8dfe1;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .live-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 0 5px rgba(85,240,111,.08), 0 0 15px var(--green);
+      animation: pulse 1.8s infinite;
+    }
+
+    @keyframes pulse {
+      50% { transform: scale(.72); opacity: .55; }
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(310px, .85fr);
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: linear-gradient(145deg, rgba(10, 41, 46, .88), rgba(6, 25, 29, .84));
+      box-shadow: var(--shadow), inset 0 1px rgba(255,255,255,.035);
+      backdrop-filter: blur(18px);
+    }
+
+    .hero-main { padding: clamp(22px, 4vw, 38px); position: relative; overflow: hidden; }
+    .hero-main::after {
+      content: "";
+      position: absolute;
+      width: 360px;
+      height: 360px;
+      border-radius: 50%;
+      right: -170px;
+      top: -180px;
+      background: radial-gradient(circle, rgba(55, 239, 215, .16), transparent 68%);
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: #7fe8dd;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 24px;
+      height: 1px;
+      background: currentColor;
+      box-shadow: 0 0 10px currentColor;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(30px, 5vw, 56px);
+      line-height: 1.06;
+      letter-spacing: -.045em;
+      max-width: 760px;
+    }
+
+    .hero-desc {
+      margin: 18px 0 0;
+      color: #abc2c4;
+      font-size: 14px;
+      line-height: 1.9;
+      max-width: 760px;
+    }
+
+    .hero-notice {
+      margin-top: 18px;
+      padding: 13px 15px;
+      border: 1px solid rgba(43, 207, 232, .16);
+      border-radius: 14px;
+      background: rgba(43, 207, 232, .055);
+      color: #a9cfd3;
+      font-size: 12px;
+      line-height: 1.75;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 24px;
+    }
+
+    .btn {
+      min-height: 44px;
+      border: 0;
+      border-radius: 13px;
+      padding: 0 17px;
+      cursor: pointer;
+      font-weight: 800;
+      transition: .2s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn:disabled { cursor: not-allowed; opacity: .45; }
+    .btn-primary {
+      color: #041209;
+      background: linear-gradient(135deg, #78ff87, #35e665);
+      box-shadow: 0 9px 25px rgba(53,230,101,.22);
+    }
+    .btn-primary:not(:disabled):hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(53,230,101,.3); }
+    .btn-secondary {
+      color: #d9eff0;
+      border: 1px solid rgba(183, 224, 226, .18);
+      background: rgba(255,255,255,.045);
+    }
+    .btn-secondary:not(:disabled):hover { background: rgba(255,255,255,.08); }
+    .btn-ghost {
+      color: #8fcdd0;
+      border: 1px dashed rgba(143,205,208,.22);
+      background: transparent;
+    }
+
+    .summary-panel {
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      min-height: 100%;
+    }
+
+    .section-kicker {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .score-wrap {
+      min-height: 225px;
+      display: grid;
+      place-items: center;
+      position: relative;
+      margin: 6px 0 2px;
+    }
+
+    .score-ring {
+      --score-angle: 0deg;
+      width: 190px;
+      height: 190px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: conic-gradient(var(--green) var(--score-angle), rgba(255,255,255,.075) 0);
+      position: relative;
+      transition: background 500ms ease;
+      box-shadow: 0 0 45px rgba(85,240,111,.08);
+    }
+
+    .score-ring::before {
+      content: "";
+      position: absolute;
+      inset: 12px;
+      border-radius: inherit;
+      background: linear-gradient(145deg, #08262b, #061b1f);
+      border: 1px solid rgba(255,255,255,.04);
+    }
+
+    .score-content { position: relative; text-align: center; }
+    .score-number { font-size: 52px; font-weight: 900; letter-spacing: -.06em; }
+    .score-unit { color: var(--muted); font-size: 12px; margin-top: -3px; }
+
+    .overall-state {
+      text-align: center;
+      font-size: 19px;
+      font-weight: 900;
+      margin-top: -2px;
+    }
+    .overall-detail {
+      text-align: center;
+      min-height: 42px;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    .mini-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: auto;
+      padding-top: 16px;
+    }
+    .mini-stat {
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      padding: 11px 8px;
+      text-align: center;
+      background: rgba(255,255,255,.025);
+    }
+    .mini-stat strong { display: block; font-size: 19px; }
+    .mini-stat span { display: block; margin-top: 4px; color: var(--muted); font-size: 10px; }
+
+    .progress-card { padding: 22px; margin-bottom: 18px; }
+    .progress-head {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 12px;
+    }
+    .progress-title { font-size: 15px; font-weight: 900; }
+    .progress-stage { color: var(--muted); font-size: 12px; text-align: right; }
+    .progress-track {
+      height: 12px;
+      border: 1px solid rgba(255,255,255,.055);
+      border-radius: 999px;
+      background: rgba(255,255,255,.055);
+      overflow: hidden;
+      position: relative;
+    }
+    .progress-bar {
+      width: 0%;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #42e964, #2bcfe8);
+      box-shadow: 0 0 20px rgba(43,207,232,.3);
+      transition: width .35s ease;
+      position: relative;
+    }
+    .progress-bar::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      width: 28%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.28), transparent);
+      animation: sweep 1.25s linear infinite;
+    }
+    @keyframes sweep { from { transform: translateX(-110%); } to { transform: translateX(430%); } }
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .dashboard {
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(300px, .65fr);
+      gap: 18px;
+    }
+
+    .checks-card, .log-card { padding: 22px; min-width: 0; }
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+    .section-title { font-size: 16px; font-weight: 900; }
+    .section-note { color: var(--muted); font-size: 11px; }
+
+    .checks-list { display: grid; gap: 10px; }
+    .check-category {
+      position: sticky;
+      top: 8px;
+      z-index: 2;
+      margin: 10px 0 2px;
+      padding: 11px 13px;
+      border: 1px solid rgba(43, 207, 232, .16);
+      border-radius: 13px;
+      background: rgba(4, 24, 28, .94);
+      color: #84e8df;
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: .08em;
+      box-shadow: 0 10px 28px rgba(0,0,0,.22);
+      backdrop-filter: blur(14px);
+    }
+    .check-category:first-child { margin-top: 0; }
+    .check-item {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 15px;
+      background: rgba(255,255,255,.022);
+      transition: .22s ease;
+    }
+    .check-item.running {
+      border-color: rgba(43,207,232,.42);
+      background: rgba(43,207,232,.055);
+      transform: translateY(-1px);
+    }
+    .check-item.ok { border-color: rgba(85,240,111,.18); }
+    .check-item.warn { border-color: rgba(255,207,91,.22); }
+    .check-item.bad { border-color: rgba(255,100,116,.25); }
+
+    .check-top {
+      display: grid;
+      grid-template-columns: 34px minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 11px;
+    }
+    .check-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 11px;
+      display: grid;
+      place-items: center;
+      background: rgba(255,255,255,.05);
+      color: #a8c4c7;
+      font-size: 15px;
+      font-weight: 900;
+    }
+    .check-item.running .check-icon { color: var(--cyan); background: var(--cyan-soft); }
+    .check-item.ok .check-icon { color: var(--green); background: var(--green-soft); }
+    .check-item.warn .check-icon { color: var(--yellow); background: var(--yellow-soft); }
+    .check-item.bad .check-icon { color: var(--red); background: var(--red-soft); }
+    .check-name { font-size: 13px; font-weight: 900; }
+    .check-brief { color: var(--muted); font-size: 10px; margin-top: 4px; line-height: 1.45; }
+    .status-badge {
+      min-width: 60px;
+      text-align: center;
+      padding: 6px 9px;
+      border-radius: 999px;
+      color: #a9c2c4;
+      background: rgba(255,255,255,.06);
+      font-size: 10px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+    .check-item.running .status-badge { color: var(--cyan); background: var(--cyan-soft); }
+    .check-item.ok .status-badge { color: var(--green); background: var(--green-soft); }
+    .check-item.warn .status-badge { color: var(--yellow); background: var(--yellow-soft); }
+    .check-item.bad .status-badge { color: var(--red); background: var(--red-soft); }
+
+    .check-detail {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(255,255,255,.055);
+      color: #afc6c8;
+      font-size: 11px;
+      line-height: 1.7;
+      display: none;
+    }
+    .check-detail.visible { display: block; }
+    .evidence {
+      margin-top: 8px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      background: rgba(0,0,0,.17);
+      color: #80a7aa;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 10px;
+      word-break: break-word;
+    }
+    .advice { margin-top: 8px; color: #d0dfe0; }
+    .advice b { color: #fff; }
+
+    .terminal {
+      height: 480px;
+      overflow: auto;
+      padding: 14px;
+      border: 1px solid rgba(255,255,255,.06);
+      border-radius: 15px;
+      background: #041013;
+      box-shadow: inset 0 0 24px rgba(0,0,0,.24);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(115, 220, 212, .28) transparent;
+    }
+    .terminal-line {
+      display: grid;
+      grid-template-columns: 66px 54px minmax(0,1fr);
+      gap: 8px;
+      padding: 4px 0;
+      color: #8ca8aa;
+      font-size: 10px;
+      line-height: 1.55;
+      word-break: break-word;
+    }
+    .terminal-line .time { color: #587a7e; }
+    .terminal-line .level { font-weight: 900; }
+    .terminal-line.info .level { color: var(--cyan); }
+    .terminal-line.pass .level { color: var(--green); }
+    .terminal-line.warn .level { color: var(--yellow); }
+    .terminal-line.error .level { color: var(--red); }
+
+    .report-box {
+      margin-top: 14px;
+      border: 1px solid var(--line);
+      border-radius: 15px;
+      padding: 14px;
+      background: rgba(255,255,255,.025);
+    }
+    .report-box h3 { margin: 0 0 8px; font-size: 13px; }
+    .report-box p { margin: 0; color: var(--muted); font-size: 11px; line-height: 1.75; }
+
+    .footer {
+      margin-top: 18px;
+      padding: 16px 4px 0;
+      color: #708e91;
+      font-size: 10px;
+      line-height: 1.75;
+      text-align: center;
+    }
+
+    .spinner {
+      width: 13px;
+      height: 13px;
+      border: 2px solid rgba(43,207,232,.22);
+      border-top-color: var(--cyan);
+      border-radius: 50%;
+      animation: spin .75s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 24px;
+      transform: translate(-50%, 20px);
+      opacity: 0;
+      pointer-events: none;
+      z-index: 10;
+      padding: 11px 15px;
+      border-radius: 12px;
+      background: rgba(7, 31, 35, .96);
+      border: 1px solid rgba(107, 225, 216, .25);
+      color: #d9f1f1;
+      font-size: 12px;
+      box-shadow: 0 18px 45px rgba(0,0,0,.42);
+      transition: .25s ease;
+    }
+    .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+    @media (max-width: 900px) {
+      .hero, .dashboard { grid-template-columns: 1fr; }
+      .summary-panel { min-height: 420px; }
+      .terminal { height: 340px; }
+    }
+
+    @media (max-width: 560px) {
+      .page { width: min(100% - 20px, 1240px); padding-top: 14px; }
+      .topbar { align-items: flex-start; }
+      .brand-sub { max-width: 220px; line-height: 1.45; }
+      .live-pill { padding: 7px 9px; }
+      .live-pill span:last-child { display: none; }
+      .hero-main, .summary-panel, .progress-card, .checks-card, .log-card { padding: 17px; }
+      .hero-desc { font-size: 13px; line-height: 1.78; }
+      .actions { display: grid; grid-template-columns: 1fr 1fr; }
+      .btn-primary { grid-column: 1 / -1; }
+      .score-wrap { min-height: 215px; }
+      .score-ring { width: 174px; height: 174px; }
+      .check-top { grid-template-columns: 32px minmax(0,1fr); }
+      .status-badge { grid-column: 2; justify-self: start; margin-top: 2px; }
+      .terminal-line { grid-template-columns: 60px 48px minmax(0,1fr); gap: 5px; }
+      .progress-head { align-items: flex-start; flex-direction: column; }
+      .progress-stage { text-align: left; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: .001ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <rect x="3" y="4" width="18" height="12" rx="2.5" stroke="#67f2dc" stroke-width="1.6"/>
+            <path d="M8 20h8M12 16v4" stroke="#67f2dc" stroke-width="1.6" stroke-linecap="round"/>
+            <path d="m8 10 2 2 4-5" stroke="#55f06f" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div>
+          <div class="brand-title">终端状态综合检测器</div>
+          <div class="brand-sub">Browser-side Terminal Health & Capability Diagnostic</div>
+        </div>
+      </div>
+      <div class="live-pill"><span class="live-dot"></span><span id="clock">本地诊断服务就绪</span></div>
+    </header>
+
+    <section class="hero">
+      <article class="card hero-main">
+        <div class="eyebrow">Local Diagnostic Console</div>
+        <h1>对当前设备与浏览器运行环境进行分层检测</h1>
+        <p class="hero-desc">
+          本工具将按照十二个专业类别执行七十余项核验，覆盖终端身份、安全与隐私、网络通信、存储缓存、文件处理、图形显示、音视频、输入设备、处理性能、平台兼容性、稳定性及无障碍适配。检测仅在当前页面本地执行，不上传文件、不读取个人文档，也不会主动申请摄像头、麦克风或定位权限。
+        </p>
+        <div class="hero-notice">
+          <strong>检测边界说明：</strong>浏览器受隐私沙箱和权限模型限制，无法直接读取硬盘健康度、CPU 温度、物理内存故障、系统驱动状态或杀毒软件运行情况。因此，本报告属于“网页运行环境与终端可用性评估”，不能替代操作系统级硬件诊断、专业运维审计或安全取证。
+        </div>
+        <div class="actions">
+          <button class="btn btn-primary" id="startBtn">▶ 开始综合检测</button>
+          <button class="btn btn-secondary" id="resetBtn">↻ 重置结果</button>
+          <button class="btn btn-ghost" id="exportBtn" disabled>⇩ 导出检测报告</button>
+        </div>
+      </article>
+
+      <aside class="card summary-panel">
+        <div class="section-kicker">综合健康度</div>
+        <div class="score-wrap">
+          <div class="score-ring" id="scoreRing">
+            <div class="score-content">
+              <div class="score-number" id="scoreNumber">--</div>
+              <div class="score-unit">Health Score / 100</div>
+            </div>
+          </div>
+        </div>
+        <div class="overall-state" id="overallState">等待检测</div>
+        <div class="overall-detail" id="overallDetail">点击“开始综合检测”，系统将按预定顺序执行各项核验。</div>
+        <div class="mini-grid">
+          <div class="mini-stat"><strong id="passCount">0</strong><span>正常项目</span></div>
+          <div class="mini-stat"><strong id="warnCount">0</strong><span>提示项目</span></div>
+          <div class="mini-stat"><strong id="badCount">0</strong><span>风险项目</span></div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="card progress-card">
+      <div class="progress-head">
+        <div>
+          <div class="section-kicker">检测进度</div>
+          <div class="progress-title" id="progressTitle">尚未开始</div>
+        </div>
+        <div class="progress-stage" id="progressStage">0 / 0 项 · 未生成检测结论</div>
+      </div>
+      <div class="progress-track" aria-label="检测进度">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+      <div class="progress-meta">
+        <span id="elapsedText">耗时：0.00 秒</span>
+        <span id="percentText">0%</span>
+      </div>
+    </section>
+
+    <section class="dashboard">
+      <article class="card checks-card">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">Diagnostic Matrix</div>
+            <div class="section-title">检测项目与技术判定</div>
+          </div>
+          <div class="section-note">结果会随浏览器能力与权限策略变化</div>
+        </div>
+        <div class="checks-list" id="checksList"></div>
+      </article>
+
+      <aside class="card log-card">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">Execution Log</div>
+            <div class="section-title">实时检测日志</div>
+          </div>
+          <button class="btn btn-ghost" id="copyLogBtn" style="min-height:34px;padding:0 11px;font-size:11px;">复制日志</button>
+        </div>
+        <div class="terminal" id="terminal" aria-live="polite"></div>
+        <div class="report-box">
+          <h3>结论解释</h3>
+          <p id="conclusionText">尚未执行检测。完成后，这里会给出综合结论、限制条件与建议处理顺序。</p>
+        </div>
+      </aside>
+    </section>
+
+    <footer class="footer">
+      本页面为单文件本地工具，检测数据默认仅保存在当前标签页内。由于不同浏览器会隐藏部分硬件信息，“未公开”或“接口不可用”不等同于设备故障。报告中的性能结果受电源模式、后台程序、浏览器节流、设备温度及当前负载影响，仅适合作为即时参考。
+    </footer>
+  </main>
+
+  <div class="toast" id="toast">操作完成</div>
+
+  <script>
+    (() => {
+      'use strict';
+
+      const $ = (id) => document.getElementById(id);
+      const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+      const nowTime = () => new Date().toLocaleTimeString('zh-CN', { hour12: false });
+      const formatBytes = (bytes) => {
+        if (!Number.isFinite(bytes)) return '未知';
+        const units = ['B', 'KB', 'MB', 'GB', 'TB'];
+        let n = bytes, i = 0;
+        while (n >= 1024 && i < units.length - 1) { n /= 1024; i++; }
+        return `${n.toFixed(i === 0 ? 0 : 2)} ${units[i]}`;
+      };
+      const safe = (fn, fallback = null) => { try { return fn(); } catch { return fallback; } };
+
+      const els = {
+        startBtn: $('startBtn'), resetBtn: $('resetBtn'), exportBtn: $('exportBtn'), copyLogBtn: $('copyLogBtn'),
+        checksList: $('checksList'), terminal: $('terminal'), progressBar: $('progressBar'), progressTitle: $('progressTitle'),
+        progressStage: $('progressStage'), elapsedText: $('elapsedText'), percentText: $('percentText'), scoreRing: $('scoreRing'),
+        scoreNumber: $('scoreNumber'), overallState: $('overallState'), overallDetail: $('overallDetail'),
+        passCount: $('passCount'), warnCount: $('warnCount'), badCount: $('badCount'), conclusionText: $('conclusionText'),
+        toast: $('toast'), clock: $('clock')
+      };
+
+      let running = false;
+      let startedAt = 0;
+      let timer = null;
+      let report = null;
+      const logs = [];
+
+      const makeResult = (status, label, detail, evidence, advice) => ({ status, label, detail, evidence, advice });
+      const apiResult = (available, label, apiName, purpose, extra = '') => available
+        ? makeResult('ok', label || '接口可用', `当前浏览器已提供 ${apiName}。${purpose}`, `${apiName}=available${extra ? `；${extra}` : ''}`, '接口存在仅代表具备调用基础，正式业务仍应结合权限、数据规模和异常分支进行实测。')
+        : makeResult('warn', '接口受限', `当前环境未公开 ${apiName}。${purpose}相关功能可能降级，但该现象也可能来自浏览器版本、隐私策略、非安全上下文或内嵌 WebView 限制。`, `${apiName}=unavailable${extra ? `；${extra}` : ''}`, '建议使用最新版主流浏览器，并在 HTTPS 安全上下文中重新核验；若业务依赖该能力，应提供兼容或降级方案。');
+
+      const checks = [
+        {
+          category: '01 · 终端身份与运行环境', id: 'identity', icon: '01', name: '客户端基础身份识别', brief: '识别桌面端或移动端特征、浏览器公开平台、语言与基础视口信息。',
+          run: async () => {
+            const ua = navigator.userAgent || '未公开';
+            const platform = navigator.userAgentData?.platform || navigator.platform || '未公开';
+            const mobile = navigator.userAgentData?.mobile ?? /Mobi|Android/i.test(ua);
+            return makeResult('ok', '已识别', `当前页面运行于${mobile ? '移动终端' : '桌面或大屏终端'}环境。浏览器公开信息可用于基础兼容性判断，但可能被隐私保护机制模糊化，不能代替企业级资产盘点。`, `平台=${platform}；移动端=${mobile}；语言=${navigator.language || '未知'}；视口=${innerWidth}×${innerHeight} CSS px`, '如需获取精确设备型号、序列号、系统补丁和软件清单，应结合操作系统命令、MDM、EDR 或资产管理平台。');
+          }
+        },
+        {
+          category: '01 · 终端身份与运行环境', id: 'clientHints', icon: '02', name: 'User-Agent Client Hints', brief: '检查结构化客户端提示信息是否开放，判断浏览器现代身份接口支持程度。',
+          run: async () => {
+            const d = navigator.userAgentData;
+            if (!d) return makeResult('warn', '未公开', '浏览器未提供 User-Agent Client Hints。传统 User-Agent 仍可用于有限兼容判断，但其内容可能不准确且正逐步被弱化。', 'navigator.userAgentData=undefined', '不要依赖 User-Agent 进行安全鉴权；应优先使用能力检测和服务端会话验证。');
+            return makeResult('ok', '结构化信息可用', '浏览器支持结构化客户端提示，可更规范地公开品牌、平台和移动端标识。高熵信息通常需要额外请求且仍受隐私策略控制。', `品牌=${d.brands?.map(x => `${x.brand} ${x.version}`).join(', ') || '未公开'}；平台=${d.platform || '未公开'}；移动端=${d.mobile}`, '将该信息用于体验适配而非身份认证，并为不支持 Client Hints 的浏览器保留兼容逻辑。');
+          }
+        },
+        {
+          category: '01 · 终端身份与运行环境', id: 'locale', icon: '03', name: '语言、区域与国际化环境', brief: '核验首选语言列表、数字格式化和日期国际化能力。',
+          run: async () => {
+            const langs = navigator.languages || [navigator.language].filter(Boolean);
+            const intl = typeof Intl !== 'undefined' && !!Intl.DateTimeFormat;
+            return makeResult(intl ? 'ok' : 'bad', intl ? '国际化可用' : '国际化缺失', intl ? '当前环境支持标准国际化格式化，可依据区域设置处理日期、时间、数字和货币展示。' : '标准国际化接口不可用，日期、数字和语言相关显示可能出现兼容问题。', `首选语言=${langs.join(', ') || '未公开'}；Intl=${intl}；文档语言=${document.documentElement.lang || '未设置'}`, intl ? '业务页面仍应显式声明语言，并避免仅依赖系统区域推断用户偏好。' : '升级浏览器或补充可靠的国际化兼容库。');
+          }
+        },
+        {
+          category: '01 · 终端身份与运行环境', id: 'timezone', icon: '04', name: '时区与本地时钟环境', brief: '读取浏览器时区、UTC 偏移和高精度计时接口可用性。',
+          run: async () => {
+            const zone = safe(() => Intl.DateTimeFormat().resolvedOptions().timeZone, '未公开');
+            const offset = -new Date().getTimezoneOffset();
+            const precise = !!performance?.now;
+            return makeResult('ok', '时钟接口正常', '浏览器能够提供本地时间、时区与单调递增计时器。系统时间仍可能因人工修改、同步失败或虚拟机配置产生偏差，本检测不连接权威授时服务器。', `时区=${zone}；UTC偏移=${offset >= 0 ? '+' : ''}${offset} 分钟；performance.now=${precise}`, '对审计、支付或签名场景，应以服务端时间或可信 NTP 时间为准，不能只信任客户端时钟。');
+          }
+        },
+        {
+          category: '01 · 终端身份与运行环境', id: 'screen', icon: '05', name: '屏幕、视口与像素密度', brief: '检测物理屏幕公开尺寸、可用区域、色深和设备像素比。',
+          run: async () => {
+            const dpr = devicePixelRatio || 1;
+            const status = screen.width < 320 || screen.height < 320 ? 'warn' : 'ok';
+            return makeResult(status, `${screen.width}×${screen.height}`, '已读取浏览器公开的屏幕与视口参数。屏幕尺寸为 CSS 像素，并不等同于面板真实物理分辨率；缩放、外接显示器和系统缩放都会影响结果。', `屏幕=${screen.width}×${screen.height}；可用=${screen.availWidth}×${screen.availHeight}；视口=${innerWidth}×${innerHeight}；DPR=${dpr}；色深=${screen.colorDepth}`, '界面应采用响应式布局，并在高像素密度屏幕上提供足够清晰的图像资源。');
+          }
+        },
+        {
+          category: '01 · 终端身份与运行环境', id: 'documentState', icon: '06', name: '文档生命周期与页面状态', brief: '检查文档就绪状态、页面可见性、焦点和历史记录基础信息。',
+          run: async () => makeResult(document.readyState === 'complete' ? 'ok' : 'warn', document.readyState, '当前页面文档生命周期接口工作正常。页面失焦或进入后台时，浏览器可能降低定时器频率和动画帧率，从而影响性能测试结果。', `readyState=${document.readyState}；visibility=${document.visibilityState}；hasFocus=${document.hasFocus()}；history.length=${history.length}`, '进行性能复测时请保持页面前台、窗口未最小化，并尽量关闭高负载后台任务。')
+        },
+
+        {
+          category: '02 · 安全上下文与隐私保护', id: 'secure', icon: '07', name: '安全上下文与传输协议', brief: '判断页面是否运行于 HTTPS、localhost 或浏览器认可的可信上下文。',
+          run: async () => {
+            const secure = isSecureContext;
+            const localFile = location.protocol === 'file:';
+            const status = secure ? 'ok' : localFile ? 'warn' : 'bad';
+            return makeResult(status, secure ? '安全上下文' : localFile ? '本地文件模式' : '非安全上下文', secure ? '页面处于浏览器认可的安全上下文，受保护接口具备启用基础。' : localFile ? '当前以本地 HTML 文件运行。离线展示可以正常使用，但 Service Worker、部分媒体、剪贴板和权限接口可能受限。' : '当前页面未处于安全上下文，敏感能力和现代浏览器接口可能被禁用。', `协议=${location.protocol}；isSecureContext=${secure}；来源=${location.origin}`, secure ? '继续核对域名和证书有效性；HTTPS 不能自动证明页面内容可信。' : '正式部署建议使用有效 HTTPS；本地测试可通过 localhost 可信开发服务器运行。');
+          }
+        },
+        {
+          category: '02 · 安全上下文与隐私保护', id: 'crypto', icon: '08', name: '加密随机数与 Web Crypto', brief: '核验安全随机数、摘要和现代浏览器密码学基础接口。',
+          run: async () => {
+            const random = !!crypto?.getRandomValues;
+            const subtle = !!crypto?.subtle;
+            let sample = '未生成';
+            if (random) { const a = new Uint32Array(2); crypto.getRandomValues(a); sample = Array.from(a).map(v => v.toString(16)).join('-'); }
+            const status = random && subtle ? 'ok' : random ? 'warn' : 'bad';
+            return makeResult(status, random && subtle ? '加密接口完整' : '能力不完整', 'Web Crypto 可为摘要、密钥导入和浏览器侧加密提供底层能力。接口存在不代表应用实现一定安全，密钥管理、协议设计和服务端验证仍是核心。', `getRandomValues=${random}；subtle=${subtle}；随机样本=${sample}`, '严禁用 Math.random 生成密码学令牌；涉及认证和支付时应采用成熟协议与服务端安全控制。');
+          }
+        },
+        {
+          category: '02 · 安全上下文与隐私保护', id: 'isolation', icon: '09', name: '跨源隔离与共享内存条件', brief: '检测 crossOriginIsolated、SharedArrayBuffer 和 Atomics 基础能力。',
+          run: async () => {
+            const iso = crossOriginIsolated;
+            const sab = typeof SharedArrayBuffer !== 'undefined';
+            const atomics = typeof Atomics !== 'undefined';
+            return makeResult(iso && sab ? 'ok' : 'warn', iso ? '已隔离' : '未启用隔离', '跨源隔离是高性能共享内存、部分 WebAssembly 多线程和更高精度计时能力的重要前提。普通网页不启用该模式也属常见情况。', `crossOriginIsolated=${iso}；SharedArrayBuffer=${sab}；Atomics=${atomics}`, '若业务需要 WebAssembly 多线程，应正确配置 COOP/COEP 响应头，并完成第三方资源兼容检查。');
+          }
+        },
+        {
+          category: '02 · 安全上下文与隐私保护', id: 'cookies', icon: '10', name: 'Cookie 与会话保持基础能力', brief: '检查第一方 Cookie 基础开关，评估登录态与会话机制兼容性。',
+          run: async () => {
+            const enabled = navigator.cookieEnabled;
+            return makeResult(enabled ? 'ok' : 'warn', enabled ? '允许' : '已禁用', enabled ? '浏览器报告 Cookie 基础能力可用。实际站点仍可能受到 SameSite、Secure、分区存储、第三方 Cookie 淘汰和企业策略影响。' : '浏览器报告 Cookie 已禁用，登录、购物车和会话验证可能无法保持。', `navigator.cookieEnabled=${enabled}；document.cookie长度=${safe(() => document.cookie.length, 0)}`, enabled ? '敏感会话 Cookie 应使用 Secure、HttpOnly 与合适的 SameSite 策略。' : '仅对可信站点开放必要的第一方 Cookie，不建议全面放开第三方跟踪 Cookie。');
+          }
+        },
+        {
+          category: '02 · 安全上下文与隐私保护', id: 'privacySignals', icon: '11', name: '隐私偏好与反跟踪信号', brief: '读取 Do Not Track、Global Privacy Control 等浏览器公开偏好。',
+          run: async () => {
+            const dnt = navigator.doNotTrack ?? window.doNotTrack ?? '未公开';
+            const gpc = navigator.globalPrivacyControl;
+            return makeResult('ok', '偏好已读取', '浏览器可能向网站传递用户隐私偏好。此类信号表达用户意愿，但不同网站、地区法规和浏览器实现的执行效果并不完全一致。', `DoNotTrack=${dnt}；GlobalPrivacyControl=${gpc ?? '未公开'}；referrerPolicy=${document.referrerPolicy || '默认'}`, '网站应遵循适用隐私法规并提供清晰的同意和撤回机制；用户仍需定期检查浏览器隐私设置。');
+          }
+        },
+        {
+          category: '02 · 安全上下文与隐私保护', id: 'permissions', icon: '12', name: '权限状态可见性', brief: '仅查询可见权限状态，不弹窗、不读取摄像头、麦克风和位置内容。',
+          run: async () => {
+            if (!navigator.permissions?.query) return makeResult('warn', '接口未公开', '浏览器未提供统一 Permissions API。权限仍可能正常工作，但页面无法在不弹窗的情况下统一查询状态。', 'navigator.permissions.query=unavailable', '请在浏览器站点设置中逐项核对权限，并遵循最小授权原则。');
+            const names = ['notifications', 'geolocation', 'camera', 'microphone'];
+            const states = {};
+            for (const name of names) { try { states[name] = (await navigator.permissions.query({ name })).state; } catch { states[name] = 'unsupported'; } }
+            return makeResult('ok', '查询完成', '已完成权限元数据查询，未发起任何设备访问。拒绝状态通常代表用户选择，不应直接判为设备故障。', Object.entries(states).map(([k,v]) => `${k}=${v}`).join('；'), '只有在功能明确需要且站点可信时才授予权限，使用完毕后可主动撤销。');
+          }
+        },
+
+        {
+          category: '03 · 网络与通信能力', id: 'online', icon: '13', name: '浏览器在线状态', brief: '检查浏览器网络在线标记与当前离线事件基础状态。',
+          run: async () => makeResult(navigator.onLine ? 'ok' : 'bad', navigator.onLine ? '在线' : '离线', navigator.onLine ? '浏览器报告当前具备网络连接。该标记只反映网络接口状态，不能证明 DNS、代理、目标站点或公网链路一定可用。' : '浏览器报告当前离线，外部服务访问大概率受阻。', `navigator.onLine=${navigator.onLine}；online事件=${'ononline' in window}；offline事件=${'onoffline' in window}`, navigator.onLine ? '重要业务应结合真实接口请求、超时、重试和错误码判断可用性。' : '检查网络适配器、Wi-Fi、网线、代理、VPN、DNS 和防火墙。')
+        },
+        {
+          category: '03 · 网络与通信能力', id: 'connection', icon: '14', name: '链路类型与估计质量', brief: '读取 Network Information API 提供的网络类型、估计带宽与 RTT。',
+          run: async () => {
+            const c = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+            if (!c) return makeResult('warn', '信息未公开', '当前浏览器未提供网络质量估计接口。这是常见兼容或隐私限制，不表示网络异常。', 'NetworkInformation=unavailable', '需要准确测速时应使用可信节点测试延迟、抖动、丢包和上下行带宽。');
+            const rtt = Number(c.rtt);
+            const status = rtt > 500 ? 'warn' : 'ok';
+            return makeResult(status, c.effectiveType || '链路可用', '浏览器公开了网络质量估计值。该值可能经过分档和缓存，不能代替专业测速。', `type=${c.type || '未公开'}；effectiveType=${c.effectiveType || '未公开'}；downlink=${c.downlink ?? '未公开'} Mbps；RTT=${c.rtt ?? '未公开'} ms；saveData=${c.saveData}`, status === 'warn' ? '估计延迟偏高，实时会议、云桌面和在线控制可能受影响，建议独立复测。' : '当前估计未显示明显链路风险。');
+          }
+        },
+        {
+          category: '03 · 网络与通信能力', id: 'fetchApi', icon: '15', name: 'Fetch 与请求中止能力', brief: '确认现代 HTTP 请求、Headers、Request、Response 与 AbortController 接口。',
+          run: async () => {
+            const map = { fetch: typeof fetch === 'function', Headers: typeof Headers !== 'undefined', Request: typeof Request !== 'undefined', Response: typeof Response !== 'undefined', AbortController: typeof AbortController !== 'undefined' };
+            const ok = Object.values(map).every(Boolean);
+            return makeResult(ok ? 'ok' : 'warn', ok ? '请求栈完整' : '请求栈不完整', '现代网页通常依赖 Fetch 请求栈完成接口通信、流式响应和超时中止。本检测不向外部服务器发送请求。', Object.entries(map).map(([k,v]) => `${k}=${v}`).join('；'), ok ? '正式业务应配置超时、取消、幂等重试、状态码处理和离线策略。' : '升级浏览器或提供 XMLHttpRequest/兼容库降级方案。');
+          }
+        },
+        {
+          category: '03 · 网络与通信能力', id: 'webSocket', icon: '16', name: 'WebSocket 实时通信接口', brief: '检查双向长连接接口是否存在，不建立外部连接。',
+          run: async () => apiResult(typeof WebSocket !== 'undefined', '接口可用', 'WebSocket', '该接口用于聊天、实时状态、远程控制和推送场景。')
+        },
+        {
+          category: '03 · 网络与通信能力', id: 'webRTC', icon: '17', name: 'WebRTC 点对点通信接口', brief: '检查音视频会议、数据通道与实时连接基础对象是否可用。',
+          run: async () => apiResult(typeof RTCPeerConnection !== 'undefined', '接口可用', 'RTCPeerConnection', '该接口是浏览器实时音视频和数据通道的基础。本检测不访问摄像头、不创建实际连接。')
+        },
+        {
+          category: '03 · 网络与通信能力', id: 'serviceWorker', icon: '18', name: 'Service Worker 与离线应用条件', brief: '核验离线缓存、后台代理和 PWA 基础接口及上下文条件。',
+          run: async () => {
+            const sw = 'serviceWorker' in navigator;
+            const secure = isSecureContext;
+            return makeResult(sw && secure ? 'ok' : 'warn', sw && secure ? '条件满足' : '当前受限', 'Service Worker 可支持离线缓存、请求代理和部分后台能力。它通常要求安全上下文，本地 file:// 页面不能直接注册。', `serviceWorker=${sw}；isSecureContext=${secure}；protocol=${location.protocol}`, sw && secure ? '注册时应设置合理作用域、版本更新和缓存淘汰机制。' : '通过 HTTPS 或 localhost 运行，并确认浏览器未禁用站点后台能力。');
+          }
+        },
+
+        {
+          category: '04 · 存储、缓存与数据持久化', id: 'localStorage', icon: '19', name: 'LocalStorage 读写完整性', brief: '执行最小写入、读取、校验和删除测试。',
+          run: async () => {
+            let ok = false, err = '';
+            try { const k='__diag_local__'; const v=`${Date.now()}-${Math.random()}`; localStorage.setItem(k,v); ok=localStorage.getItem(k)===v; localStorage.removeItem(k); } catch(e) { err=e.message; }
+            return makeResult(ok ? 'ok' : 'bad', ok ? '读写正常' : '写入失败', ok ? '本地键值存储完成写入、回读和清理，适合保存少量非敏感设置。' : 'LocalStorage 最小读写失败，依赖本地设置和会话缓存的功能可能异常。', `localStorage=${ok}；异常=${err || '无'}`, ok ? '重要数据不应只保存在 LocalStorage，且其中内容不能视为安全加密存储。' : '检查无痕模式、站点数据权限、企业策略和存储空间。');
+          }
+        },
+        {
+          category: '04 · 存储、缓存与数据持久化', id: 'sessionStorage', icon: '20', name: 'SessionStorage 会话存储', brief: '验证标签页级临时存储是否可写、可读和可清理。',
+          run: async () => {
+            let ok=false, err='';
+            try { const k='__diag_session__'; sessionStorage.setItem(k,'ok'); ok=sessionStorage.getItem(k)==='ok'; sessionStorage.removeItem(k); } catch(e){ err=e.message; }
+            return makeResult(ok ? 'ok' : 'warn', ok ? '会话可用' : '会话受限', 'SessionStorage 仅在当前标签页会话内保存少量数据，关闭标签页后通常清除。', `sessionStorage=${ok}；异常=${err || '无'}`, ok ? '不要将长期业务数据或敏感凭据只保存在会话存储中。' : '检查浏览器隐私策略和站点存储权限。');
+          }
+        },
+        {
+          category: '04 · 存储、缓存与数据持久化', id: 'indexedDB', icon: '21', name: 'IndexedDB 数据库能力', brief: '创建临时数据库并执行对象仓库写入与读取验证。',
+          run: async () => {
+            if (typeof indexedDB === 'undefined') return makeResult('bad','接口缺失','当前环境未提供 IndexedDB，大型离线数据和结构化浏览器存储将无法使用。','indexedDB=undefined','升级浏览器或提供服务端存储降级。');
+            const dbName=`__diag_${Date.now()}`;
+            let ok=false, err='';
+            try {
+              ok = await new Promise((resolve,reject)=>{
+                const req=indexedDB.open(dbName,1);
+                const timeout=setTimeout(()=>reject(new Error('open timeout')),2500);
+                req.onupgradeneeded=()=>req.result.createObjectStore('s');
+                req.onerror=()=>{clearTimeout(timeout);reject(req.error||new Error('open error'));};
+                req.onsuccess=()=>{
+                  const db=req.result; const tx=db.transaction('s','readwrite'); const store=tx.objectStore('s'); store.put('verified','key');
+                  const get=store.get('key'); get.onsuccess=()=>{ok=get.result==='verified';};
+                  tx.oncomplete=()=>{clearTimeout(timeout);db.close(); indexedDB.deleteDatabase(dbName); resolve(ok);};
+                  tx.onerror=()=>{clearTimeout(timeout);db.close();reject(tx.error||new Error('transaction error'));};
+                };
+              });
+            } catch(e){ err=e.message; try{indexedDB.deleteDatabase(dbName);}catch{} }
+            return makeResult(ok?'ok':'warn',ok?'事务正常':'事务异常','IndexedDB 临时数据库已执行打开、升级、写入、读取和删除流程。该能力适合较大规模结构化离线数据。',`IndexedDB事务=${ok}；异常=${err||'无'}`,ok?'正式应用应设计数据库版本迁移、异常恢复和容量清理机制。':'检查无痕模式、站点数据权限和浏览器实现。');
+          }
+        },
+        {
+          category: '04 · 存储、缓存与数据持久化', id: 'storageQuota', icon: '22', name: '站点存储配额与使用率', brief: '读取浏览器公开的站点级使用量、动态配额和占用比例。',
+          run: async () => {
+            let e=null; try{e=await navigator.storage?.estimate?.();}catch{}
+            if(!e) return makeResult('warn','信息未公开','浏览器未公开站点存储估算。存储仍可能可用，但无法在本页获知配额。','StorageManager.estimate=unavailable','对大文件或离线数据库应捕获 QuotaExceededError，并提供导出和清理功能。');
+            const ratio=e.quota?e.usage/e.quota:null; const status=ratio!==null&&ratio>.9?'warn':'ok';
+            return makeResult(status,ratio===null?'估算可用':`${(ratio*100).toFixed(2)}%`,'浏览器返回的是站点级动态估算，不等于整块磁盘容量，且可能随系统空间和清理策略变化。',`使用=${formatBytes(e.usage)}；配额=${formatBytes(e.quota)}；比例=${ratio===null?'未知':(ratio*100).toFixed(2)+'%'}`,status==='warn'?'站点存储接近上限，建议导出重要数据并清理缓存。':'当前站点存储占用未显示明显压力。');
+          }
+        },
+        {
+          category: '04 · 存储、缓存与数据持久化', id: 'persistentStorage', icon: '23', name: '持久存储授权状态', brief: '查询站点数据是否被授予更不易自动清理的持久化属性。',
+          run: async () => {
+            if(!navigator.storage?.persisted) return makeResult('warn','接口受限','浏览器未提供持久存储状态查询。','storage.persisted=unavailable','重要数据仍应建立服务端或文件备份，不应依赖浏览器缓存永久存在。');
+            let p=false; try{p=await navigator.storage.persisted();}catch{}
+            return makeResult('ok',p?'已持久化':'普通存储','浏览器已返回站点持久化状态。普通存储在系统空间紧张或用户清理数据时可能被回收。',`persisted=${p}`,'即使已持久化，也应为关键数据提供导出、同步和恢复方案。');
+          }
+        },
+        {
+          category: '04 · 存储、缓存与数据持久化', id: 'cacheApi', icon: '24', name: 'Cache Storage 离线缓存接口', brief: '检查 PWA 和 Service Worker 常用的请求响应缓存能力。',
+          run: async () => apiResult('caches' in window, '接口可用', 'Cache Storage API', '该接口可缓存请求与响应，支持离线访问和资源版本管理。')
+        },
+
+        {
+          category: '05 · 文件处理与本地交互', id: 'fileApi', icon: '25', name: 'File 与 Blob 对象支持', brief: '检测浏览器内存文件对象、二进制片段及文件元数据能力。',
+          run: async () => {
+            const ok=typeof File!=='undefined'&&typeof Blob!=='undefined';
+            let size=0; if(ok) size=new Blob(['terminal-diagnostic'],{type:'text/plain'}).size;
+            return makeResult(ok?'ok':'bad',ok?'对象可用':'对象缺失','File 和 Blob 是浏览器文件选择、上传、下载、媒体处理和二进制操作的基础。',`File=${typeof File!=='undefined'}；Blob=${typeof Blob!=='undefined'}；测试Blob=${size} B`,ok?'处理超大文件时应采用分片、流式读取和内存上限控制。':'升级浏览器或更换受支持的 WebView。');
+          }
+        },
+        {
+          category: '05 · 文件处理与本地交互', id: 'blobUrl', icon: '26', name: '对象 URL 创建与释放', brief: '创建临时 Blob URL 并立即释放，验证本地预览与下载基础链路。',
+          run: async () => {
+            let ok=false, sample=''; try{const u=URL.createObjectURL(new Blob(['x'])); sample=u.slice(0,32); ok=u.startsWith('blob:'); URL.revokeObjectURL(u);}catch{}
+            return makeResult(ok?'ok':'warn',ok?'创建正常':'创建失败','对象 URL 可用于本地图片、视频、文件预览和下载。未及时释放会造成内存占用积累。',`createObjectURL=${ok}；样本=${sample||'无'}`,ok?'应用完成预览或下载后应及时调用 URL.revokeObjectURL。':'检查 URL 与 Blob 接口支持。');
+          }
+        },
+        {
+          category: '05 · 文件处理与本地交互', id: 'fileReader', icon: '27', name: 'FileReader 本地读取能力', brief: '执行内存 Blob 文本读取，不访问用户真实文件。',
+          run: async () => {
+            if(typeof FileReader==='undefined') return makeResult('warn','接口缺失','FileReader 不可用，本地文件预览和传统读取流程可能受限。','FileReader=undefined','使用现代浏览器或采用 Blob.text()/arrayBuffer() 兼容方案。');
+            let text='',err=''; try{text=await new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(String(r.result));r.onerror=()=>rej(r.error);r.readAsText(new Blob(['reader-ok']));});}catch(e){err=e.message;}
+            return makeResult(text==='reader-ok'?'ok':'warn',text==='reader-ok'?'读取正常':'读取异常','已使用内存 Blob 完成异步文本读取，不涉及用户磁盘文件。',`读取结果=${text||'空'}；异常=${err||'无'}`,'处理用户文件时应校验类型、大小和内容，不要仅信任扩展名。');
+          }
+        },
+        {
+          category: '05 · 文件处理与本地交互', id: 'dragDrop', icon: '28', name: '拖放与 DataTransfer 支持', brief: '检查浏览器拖拽文件和数据传递的基础事件与对象。',
+          run: async () => apiResult('ondrop' in document.documentElement && typeof DataTransfer !== 'undefined', '拖放可用', 'HTML Drag and Drop / DataTransfer', '该能力可用于桌面端文件拖入和项目排序。移动端通常需要额外触摸交互。')
+        },
+        {
+          category: '05 · 文件处理与本地交互', id: 'fileSystemAccess', icon: '29', name: 'File System Access 高级接口', brief: '检查打开、保存和目录选择器是否可用，不触发权限请求。',
+          run: async () => {
+            const open=typeof showOpenFilePicker==='function', save=typeof showSaveFilePicker==='function', dir=typeof showDirectoryPicker==='function';
+            return makeResult(open||save||dir?'ok':'warn',open&&save?'高级接口可用':'接口受限','该高级接口允许用户明确授权后直接打开、保存或访问目录。Safari、Firefox、移动端和非安全上下文可能不支持。',`open=${open}；save=${save}；directory=${dir}`,'必须由用户手势触发并清晰说明访问范围；同时保留传统 input/download 降级方案。');
+          }
+        },
+        {
+          category: '05 · 文件处理与本地交互', id: 'downloadSupport', icon: '30', name: '本地下载与文件名支持', brief: '检查 anchor download、Blob 下载和 UTF-8 文件名基础能力。',
+          run: async () => {
+            const a=document.createElement('a'); const ok='download' in a && typeof URL.createObjectURL==='function';
+            return makeResult(ok?'ok':'warn',ok?'下载能力可用':'下载受限','页面具备构建本地文件并触发浏览器下载的基础条件。浏览器安全策略、企业策略和移动端文件管理仍可能影响实际保存。',`anchor.download=${'download' in a}；BlobURL=${typeof URL.createObjectURL==='function'}`,'正式下载应明确文件来源、类型和大小，避免自动下载大量文件。');
+          }
+        },
+
+        {
+          category: '06 · 图形渲染与显示质量', id: 'canvas2d', icon: '31', name: 'Canvas 2D 绘图完整性', brief: '创建离屏画布、绘制图形并读取像素结果。',
+          run: async () => {
+            const c=document.createElement('canvas'); c.width=8;c.height=8; const ctx=c.getContext('2d');
+            if(!ctx) return makeResult('bad','上下文失败','浏览器无法创建 Canvas 2D 上下文，图表、图像处理和部分验证码功能可能异常。','2D context=null','检查浏览器配置、图形栈和受限 WebView。');
+            ctx.fillStyle='#12ab34';ctx.fillRect(0,0,8,8);const p=ctx.getImageData(2,2,1,1).data;const ok=p[1]>100;
+            return makeResult(ok?'ok':'warn',ok?'绘制正常':'像素异常','Canvas 2D 已完成绘制和像素回读，说明基础位图处理链路可用。',`像素RGBA=${Array.from(p).join(',')}；最大尺寸未专项压测`,'大型画布应控制分辨率和内存，移动端需防止因像素过大导致页面崩溃。');
+          }
+        },
+        {
+          category: '06 · 图形渲染与显示质量', id: 'webgl', icon: '32', name: 'WebGL 1 图形上下文', brief: '检查基础 GPU 加速或兼容渲染能力及公开渲染器信息。',
+          run: async () => {
+            const c=document.createElement('canvas'); const gl=c.getContext('webgl')||c.getContext('experimental-webgl');
+            if(!gl) return makeResult('bad','不可用','无法创建 WebGL 1 上下文，三维模型、地图和依赖 GPU 的可视化可能无法运行。','WebGL1=context failed','检查浏览器硬件加速、显卡驱动、远程桌面和企业策略。');
+            const dbg=gl.getExtension('WEBGL_debug_renderer_info'); const renderer=dbg?gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL):gl.getParameter(gl.RENDERER);
+            return makeResult('ok','渲染可用','WebGL 1 上下文创建成功。渲染器信息可能被浏览器隐藏或模糊，不能据此推断完整显卡性能。',`版本=${gl.getParameter(gl.VERSION)}；渲染器=${renderer||'未公开'}；最大纹理=${gl.getParameter(gl.MAX_TEXTURE_SIZE)}`,'复杂场景仍需进行持续帧率、显存压力和驱动稳定性专项测试。');
+          }
+        },
+        {
+          category: '06 · 图形渲染与显示质量', id: 'webgl2', icon: '33', name: 'WebGL 2 高级渲染能力', brief: '检查更现代的纹理、着色器和缓冲区图形接口。',
+          run: async () => {
+            const gl=document.createElement('canvas').getContext('webgl2');
+            return gl?makeResult('ok','WebGL 2 可用','当前浏览器可创建 WebGL 2 上下文，适合更复杂的三维与计算型图形任务。',`版本=${gl.getParameter(gl.VERSION)}；最大纹理=${gl.getParameter(gl.MAX_TEXTURE_SIZE)}；最大采样=${gl.getParameter(gl.MAX_SAMPLES)}`,'实际性能仍取决于 GPU、驱动、分辨率、场景复杂度和热管理。'):makeResult('warn','WebGL 2 不可用','当前环境仅可能支持 WebGL 1 或软件兼容渲染，部分高级三维应用会降级。','WebGL2=context failed','升级浏览器和显卡驱动，并确认硬件加速开启。');
+          }
+        },
+        {
+          category: '06 · 图形渲染与显示质量', id: 'svg', icon: '34', name: 'SVG 矢量图形支持', brief: '创建 SVG 元素并检查矢量图、图标和路径渲染基础能力。',
+          run: async () => {
+            const el=document.createElementNS('http://www.w3.org/2000/svg','svg'); const ok=!!el.createSVGRect;
+            return makeResult(ok?'ok':'warn',ok?'矢量能力可用':'矢量接口受限','SVG 用于无损缩放图标、图表和技术图形。现代浏览器通常均支持。',`createSVGRect=${ok}；SVGElement=${typeof SVGElement!=='undefined'}`,'不可信 SVG 可能包含脚本或外部引用，上传和展示时应进行安全净化。');
+          }
+        },
+        {
+          category: '06 · 图形渲染与显示质量', id: 'cssVisual', icon: '35', name: '现代视觉 CSS 能力', brief: '检测 backdrop-filter、渐变、遮罩、滤镜和混合模式支持。',
+          run: async () => {
+            const map={backdrop:CSS.supports('backdrop-filter','blur(4px)')||CSS.supports('-webkit-backdrop-filter','blur(4px)'),filter:CSS.supports('filter','blur(1px)'),mask:CSS.supports('mask-image','linear-gradient(#000,#000)')||CSS.supports('-webkit-mask-image','linear-gradient(#000,#000)'),blend:CSS.supports('mix-blend-mode','multiply'),gradient:CSS.supports('background','linear-gradient(red,blue)')};
+            const n=Object.values(map).filter(Boolean).length; return makeResult(n>=4?'ok':'warn',`${n}/5 支持`,'视觉 CSS 能力影响毛玻璃、遮罩、滤镜和高级界面效果。缺失时通常可降级为普通背景。',Object.entries(map).map(([k,v])=>`${k}=${v}`).join('；'),'关键交互不要依赖纯视觉特效，确保降级后仍可读、可操作。');
+          }
+        },
+        {
+          category: '06 · 图形渲染与显示质量', id: 'displayQuality', icon: '36', name: '色域、动态范围与显示偏好', brief: '读取 P3 色域、HDR 动态范围、颜色方案和对比度媒体查询。',
+          run: async () => {
+            const p3=matchMedia('(color-gamut: p3)').matches, rec2020=matchMedia('(color-gamut: rec2020)').matches, hdr=matchMedia('(dynamic-range: high)').matches;
+            return makeResult('ok',p3?'广色域':'标准色域','浏览器通过媒体查询公开显示能力倾向。结果受操作系统、显示器、浏览器色彩管理和当前输出链路影响，不等同于专业校色报告。',`P3=${p3}；Rec2020=${rec2020}；HDR=${hdr}；colorDepth=${screen.colorDepth}；pixelDepth=${screen.pixelDepth}`,'专业设计与印刷场景仍需使用经过校准的显示器、ICC 工作流和实物打样。');
+          }
+        },
+
+        {
+          category: '07 · 音视频与媒体处理', id: 'mediaDevices', icon: '37', name: '媒体设备枚举接口', brief: '检查媒体设备管理接口，并在不申请权限时读取可见设备数量。',
+          run: async () => {
+            if(!navigator.mediaDevices?.enumerateDevices) return makeResult('warn','接口受限','当前浏览器未提供媒体设备枚举接口。','enumerateDevices=unavailable','使用 HTTPS 和现代浏览器，并检查企业设备策略。');
+            let list=[],err=''; try{list=await navigator.mediaDevices.enumerateDevices();}catch(e){err=e.message;}
+            const counts=list.reduce((a,d)=>(a[d.kind]=(a[d.kind]||0)+1,a),{});
+            return makeResult(err?'warn':'ok',err?'枚举失败':'接口可用','未申请摄像头或麦克风权限，仅查询浏览器允许公开的设备元数据；未授权时设备名称通常为空。',`audioinput=${counts.audioinput||0}；videoinput=${counts.videoinput||0}；audiooutput=${counts.audiooutput||0}；异常=${err||'无'}`,'设备数量为零不一定代表硬件故障，也可能是权限、隐私或系统策略限制。');
+          }
+        },
+        {
+          category: '07 · 音视频与媒体处理', id: 'cameraMicApi', icon: '38', name: '摄像头与麦克风请求接口', brief: '仅检查 getUserMedia 是否存在，不弹出授权请求。',
+          run: async () => apiResult(!!navigator.mediaDevices?.getUserMedia, '接口可用', 'getUserMedia', '该接口是网页摄像头、麦克风、扫码和会议功能的基础。本检测不实际调用设备。')
+        },
+        {
+          category: '07 · 音视频与媒体处理', id: 'audioContext', icon: '39', name: 'Web Audio 音频上下文', brief: '创建并关闭音频上下文，检查浏览器音频处理图基础能力。',
+          run: async () => {
+            const AC=window.AudioContext||window.webkitAudioContext; if(!AC) return makeResult('warn','接口缺失','Web Audio 不可用，实时音频处理、可视化和合成能力受限。','AudioContext=undefined','升级浏览器或采用普通 HTMLAudioElement 降级。');
+            let ctx, state='',rate='',err=''; try{ctx=new AC();state=ctx.state;rate=ctx.sampleRate;await ctx.close();}catch(e){err=e.message;}
+            return makeResult(err?'warn':'ok',err?'创建异常':'上下文可用','音频上下文创建成功。由于自动播放策略，未经过用户手势的上下文可能处于 suspended 状态，这是正常安全行为。',`state=${state||'未知'}；sampleRate=${rate||'未知'} Hz；异常=${err||'无'}`,'实际播放应由用户手势触发，并处理蓝牙设备切换和系统静音场景。');
+          }
+        },
+        {
+          category: '07 · 音视频与媒体处理', id: 'videoCodec', icon: '40', name: '常见音视频格式声明支持', brief: '查询浏览器对 MP4、WebM、Ogg、H.264、VP9 和 AV1 的声明能力。',
+          run: async () => {
+            const v=document.createElement('video'); const a=document.createElement('audio');
+            const map={H264:v.canPlayType('video/mp4; codecs="avc1.42E01E"')||'no',VP9:v.canPlayType('video/webm; codecs="vp9"')||'no',AV1:v.canPlayType('video/mp4; codecs="av01.0.05M.08"')||'no',WebM:v.canPlayType('video/webm')||'no',MP3:a.canPlayType('audio/mpeg')||'no',Ogg:a.canPlayType('audio/ogg; codecs="vorbis"')||'no'};
+            const supported=Object.values(map).filter(x=>x!=='no').length;
+            return makeResult(supported>=4?'ok':'warn',`${supported}/6 声明支持`,'canPlayType 返回浏览器的能力声明，不保证所有分辨率、码率、硬件解码和受 DRM 保护内容均可播放。',Object.entries(map).map(([k,v])=>`${k}=${v}`).join('；'),'面向多端发布时应准备 H.264/AAC 与 WebM 等兼容组合，并进行真实文件播放测试。');
+          }
+        },
+        {
+          category: '07 · 音视频与媒体处理', id: 'mediaRecorder', icon: '41', name: 'MediaRecorder 录制接口', brief: '检查浏览器侧音视频流录制与编码封装能力。',
+          run: async () => apiResult(typeof MediaRecorder!=='undefined', '录制接口可用', 'MediaRecorder', '该能力可将媒体流录制为浏览器支持的容器格式，实际编码类型因平台而异。')
+        },
+        {
+          category: '07 · 音视频与媒体处理', id: 'speech', icon: '42', name: '语音合成与识别能力', brief: '检查浏览器朗读与语音识别接口，不启动录音。',
+          run: async () => {
+            const synth='speechSynthesis' in window; const rec=typeof SpeechRecognition!=='undefined'||typeof webkitSpeechRecognition!=='undefined'; const voices=synth?speechSynthesis.getVoices().length:0;
+            return makeResult(synth||rec?'ok':'warn',synth&&rec?'合成与识别可用':synth?'仅合成可用':rec?'仅识别可用':'均不可用','语音接口支持情况高度依赖浏览器、操作系统语言包和在线服务。接口存在不代表离线可用。',`speechSynthesis=${synth}；voices=${voices}；speechRecognition=${rec}`,'无障碍和关键业务不应只依赖语音入口，应保留文本与键盘操作方式。');
+          }
+        },
+
+        {
+          category: '08 · 输入设备与交互能力', id: 'pointer', icon: '43', name: '指针事件与输入精度', brief: '检查 Pointer Events、主指针粗细和悬停能力。',
+          run: async () => {
+            const pe='PointerEvent' in window; const coarse=matchMedia('(pointer: coarse)').matches; const hover=matchMedia('(hover: hover)').matches;
+            return makeResult(pe?'ok':'warn',pe?'统一指针可用':'接口缺失','Pointer Events 可统一处理鼠标、触摸笔和触控输入。媒体查询反映当前主要输入方式倾向。',`PointerEvent=${pe}；coarse=${coarse}；hover=${hover}；maxTouchPoints=${navigator.maxTouchPoints||0}`,'交互目标应保证足够尺寸，并同时兼容点击、触摸和键盘。');
+          }
+        },
+        {
+          category: '08 · 输入设备与交互能力', id: 'touch', icon: '44', name: '触控能力与多点输入', brief: '读取最大触控点数和触摸事件基础支持。',
+          run: async () => {
+            const points=navigator.maxTouchPoints||0; const event='ontouchstart' in window;
+            return makeResult('ok',points?`${points} 点触控`:'非触控或未公开','浏览器公开的触控点数可用于界面适配，但部分混合设备会同时支持鼠标与触控。',`maxTouchPoints=${points}；touchEvent=${event}`,'不要仅按设备类型判断交互方式，应让所有关键功能同时支持鼠标和触控。');
+          }
+        },
+        {
+          category: '08 · 输入设备与交互能力', id: 'keyboard', icon: '45', name: '键盘事件与焦点导航基础', brief: '检查 KeyboardEvent、焦点管理和可编程聚焦能力。',
+          run: async () => {
+            const event=typeof KeyboardEvent!=='undefined'; const focus=typeof HTMLElement.prototype.focus==='function';
+            return makeResult(event&&focus?'ok':'warn',event&&focus?'键盘接口可用':'接口不完整','键盘和焦点能力是桌面端效率与无障碍访问的基础。接口可用不代表页面本身已经实现正确的 Tab 顺序和快捷键。',`KeyboardEvent=${event}；HTMLElement.focus=${focus}；activeElement=${document.activeElement?.tagName||'未知'}`,'所有按钮、表单和弹窗都应可通过键盘操作，并提供明显焦点样式。');
+          }
+        },
+        {
+          category: '08 · 输入设备与交互能力', id: 'gamepad', icon: '46', name: '游戏手柄与控制器接口', brief: '检查 Gamepad API，并读取当前已连接控制器数量。',
+          run: async () => {
+            const api=typeof navigator.getGamepads==='function'; const pads=api?Array.from(navigator.getGamepads()||[]).filter(Boolean).length:0;
+            return makeResult(api?'ok':'warn',api?`${pads} 个已连接`:'接口缺失','Gamepad API 用于游戏、模拟器和特定控制场景。零个设备表示当前未检测到已授权或已交互的控制器。',`getGamepads=${api}；connected=${pads}`,'部分浏览器要求用户先按下手柄按键，设备才会暴露给页面。');
+          }
+        },
+        {
+          category: '08 · 输入设备与交互能力', id: 'vibration', icon: '47', name: '振动反馈接口', brief: '检查移动设备触觉反馈 API，不实际触发振动。',
+          run: async () => apiResult(typeof navigator.vibrate==='function', '接口可用', 'Vibration API', '该能力主要用于移动端短促触觉反馈，iOS 浏览器通常不开放。')
+        },
+        {
+          category: '08 · 输入设备与交互能力', id: 'shareClipboard', icon: '48', name: '系统分享与剪贴板能力', brief: '检查 Web Share、异步剪贴板和传统复制命令支持。',
+          run: async () => {
+            const share=typeof navigator.share==='function'; const clip=!!navigator.clipboard; const exec=typeof document.execCommand==='function';
+            return makeResult(share||clip||exec?'ok':'warn',clip?'剪贴板接口可用':'能力有限','系统分享在移动端更常见；异步剪贴板通常要求安全上下文和用户手势。当前检测不会读写用户剪贴板。',`share=${share}；clipboard=${clip}；execCommand=${exec}；secure=${isSecureContext}`,'复制和分享操作应由用户明确触发，并对失败提供手动选择文本的降级方式。');
+          }
+        },
+
+        {
+          category: '09 · 处理性能与主线程稳定性', id: 'cpu', icon: '49', name: '单线程即时计算样本', brief: '执行短时数学运算，观察当前标签页的即时计算耗时。',
+          run: async () => {
+            const cores=navigator.hardwareConcurrency||null; const t=performance.now(); let acc=0; for(let i=1;i<=700000;i++) acc+=Math.sqrt(i)*Math.sin(i%360); const ms=performance.now()-t;
+            const status=ms>700?'bad':ms>260?'warn':'ok';
+            return makeResult(status,`${ms.toFixed(0)} ms`,'该样本只反映当前时刻浏览器主线程的短时计算表现，会受到后台程序、节能、温度、虚拟化和浏览器调度影响，不能替代专业 CPU 跑分。',`逻辑核心=${cores??'未公开'}；耗时=${ms.toFixed(2)} ms；校验=${acc.toFixed(2)}`,status==='ok'?'即时计算响应处于可接受范围。':'关闭高负载程序、接通电源并保持页面前台后复测。');
+          }
+        },
+        {
+          category: '09 · 处理性能与主线程稳定性', id: 'responsiveness', icon: '50', name: '事件循环与定时器延迟', brief: '多轮采样定时器偏移，判断主线程是否存在明显阻塞。',
+          run: async () => {
+            const s=[]; for(let i=0;i<6;i++){const t=performance.now();await sleep(40);s.push(Math.max(0,performance.now()-t-40));}
+            const avg=s.reduce((a,b)=>a+b,0)/s.length,max=Math.max(...s);const status=avg>120||max>350?'bad':avg>45||max>160?'warn':'ok';
+            return makeResult(status,`平均 ${avg.toFixed(1)} ms`,'定时器偏移反映页面事件循环被长任务或节流延后的程度。页面失焦、系统繁忙和移动端节能都会放大结果。',`样本=${s.map(x=>x.toFixed(1)).join(', ')} ms；平均=${avg.toFixed(2)}；最大=${max.toFixed(2)}`,status==='ok'?'主线程调度较平稳。':'关闭高负载标签页和程序，并在页面前台重新检测。');
+          }
+        },
+        {
+          category: '09 · 处理性能与主线程稳定性', id: 'raf', icon: '51', name: '动画帧调度与刷新间隔', brief: '采样 requestAnimationFrame，估计前台页面帧间隔与调度波动。',
+          run: async () => {
+            if(typeof requestAnimationFrame!=='function') return makeResult('bad','接口缺失','requestAnimationFrame 不可用，现代网页动画和渲染调度会受影响。','requestAnimationFrame=undefined','升级浏览器。');
+            const times=[]; await new Promise(resolve=>{let last=performance.now(),n=0;const step=t=>{times.push(t-last);last=t;if(++n>=12)resolve();else requestAnimationFrame(step);};requestAnimationFrame(step);});
+            const arr=times.slice(2);const avg=arr.reduce((a,b)=>a+b,0)/arr.length;const fps=1000/avg;const max=Math.max(...arr);const status=fps<25||max>100?'warn':'ok';
+            return makeResult(status,`${fps.toFixed(1)} FPS 估计`,'短时帧间隔用于观察页面前台渲染调度，不等于游戏或三维场景的实际持续帧率。高刷新率屏幕和浏览器节流会影响结果。',`平均帧间隔=${avg.toFixed(2)} ms；最大=${max.toFixed(2)} ms；样本=${arr.length}`,status==='ok'?'动画调度未显示明显异常。':'确保页面前台、关闭省电模式和高负载程序后复测。');
+          }
+        },
+        {
+          category: '09 · 处理性能与主线程稳定性', id: 'worker', icon: '52', name: 'Web Worker 后台线程执行', brief: '创建临时 Worker 完成计算并回传结果，随后立即释放。',
+          run: async () => {
+            if(typeof Worker==='undefined') return makeResult('bad','接口缺失','Web Worker 不可用，CPU 密集型任务只能占用主线程，页面更容易卡顿。','Worker=undefined','升级浏览器或将重计算移至服务端。');
+            let ok=false,ms=0,err='';let url='';try{url=URL.createObjectURL(new Blob([`onmessage=()=>{let x=0;for(let i=0;i<200000;i++)x+=Math.sqrt(i);postMessage(x)}`],{type:'text/javascript'}));const t=performance.now();ok=await new Promise((res,rej)=>{const w=new Worker(url);const to=setTimeout(()=>{w.terminate();rej(new Error('timeout'))},2500);w.onmessage=()=>{clearTimeout(to);w.terminate();res(true)};w.onerror=e=>{clearTimeout(to);w.terminate();rej(new Error(e.message))};});ms=performance.now()-t;}catch(e){err=e.message;}finally{if(url)URL.revokeObjectURL(url);}
+            return makeResult(ok?'ok':'warn',ok?`${ms.toFixed(0)} ms`:'执行失败','Worker 可将计算移出主线程，改善交互响应。本测试使用临时内存脚本，不访问网络。',`Worker执行=${ok}；耗时=${ms.toFixed(2)} ms；异常=${err||'无'}`,ok?'长任务应合理拆分并控制 Worker 数量，避免额外内存压力。':'检查 CSP、Blob Worker 限制和浏览器兼容性。');
+          }
+        },
+        {
+          category: '09 · 处理性能与主线程稳定性', id: 'wasm', icon: '53', name: 'WebAssembly 编译与实例化', brief: '实例化最小有效模块，确认高性能二进制执行基础。',
+          run: async () => {
+            if(typeof WebAssembly==='undefined') return makeResult('bad','接口缺失','WebAssembly 不可用，依赖高性能编译模块的应用无法运行。','WebAssembly=undefined','升级到现代浏览器。');
+            let ok=false,ms=0,err='';try{const bytes=new Uint8Array([0,97,115,109,1,0,0,0]);const t=performance.now();await WebAssembly.instantiate(bytes);ms=performance.now()-t;ok=true;}catch(e){err=e.message;}
+            return makeResult(ok?'ok':'warn',ok?'实例化成功':'实例化失败','已完成最小 WebAssembly 模块验证。复杂模块仍可能受 SIMD、线程、内存和 CSP 策略影响。',`instantiate=${ok}；耗时=${ms.toFixed(3)} ms；异常=${err||'无'}`,ok?'大型模块应采用流式编译、缓存和失败降级。':'检查浏览器版本与内容安全策略。');
+          }
+        },
+        {
+          category: '09 · 处理性能与主线程稳定性', id: 'memory', icon: '54', name: '设备内存等级与 JS 堆状态', brief: '读取浏览器允许公开的内存分档和当前页面脚本堆数据。',
+          run: async () => {
+            const dm=navigator.deviceMemory||null,mem=performance.memory||null,ratio=mem?.jsHeapSizeLimit?mem.usedJSHeapSize/mem.jsHeapSizeLimit:null;const status=ratio!==null&&ratio>.85?'warn':'ok';
+            return makeResult(status,ratio!==null?`${(ratio*100).toFixed(1)}% 堆占用`:'信息受限','设备内存通常是模糊分档值；JS 堆只覆盖当前页面脚本，不代表系统总内存，也无法诊断内存条物理故障。',`deviceMemory=${dm?dm+' GB 分档':'未公开'}；usedHeap=${formatBytes(mem?.usedJSHeapSize)}；heapLimit=${formatBytes(mem?.jsHeapSizeLimit)}`,status==='warn'?'页面脚本堆接近上限，建议刷新并减少大型任务。':'系统内存压力应结合任务管理器或系统监控工具确认。');
+          }
+        },
+
+        {
+          category: '10 · Web 平台核心兼容性', id: 'promise', icon: '55', name: '异步任务与 Promise 机制', brief: '核验 Promise、async/await 运行基础和 queueMicrotask 微任务接口。',
+          run: async () => {
+            const p=typeof Promise!=='undefined',q=typeof queueMicrotask==='function';let micro=false;if(q)await new Promise(r=>queueMicrotask(()=>{micro=true;r();}));
+            return makeResult(p&&(!q||micro)?'ok':'bad',p?'异步机制可用':'Promise 缺失','现代网页大量依赖 Promise 和微任务队列完成异步控制。',`Promise=${p}；queueMicrotask=${q}；microtaskExecuted=${micro}`,'若核心异步接口缺失，应升级浏览器，不建议继续使用过旧兼容环境。');
+          }
+        },
+        {
+          category: '10 · Web 平台核心兼容性', id: 'observers', icon: '56', name: '页面观察器接口集合', brief: '检查 Resize、Intersection、Mutation 与 Performance Observer。',
+          run: async () => {
+            const map={ResizeObserver:typeof ResizeObserver!=='undefined',IntersectionObserver:typeof IntersectionObserver!=='undefined',MutationObserver:typeof MutationObserver!=='undefined',PerformanceObserver:typeof PerformanceObserver!=='undefined'};const n=Object.values(map).filter(Boolean).length;
+            return makeResult(n>=3?'ok':'warn',`${n}/4 支持`,'观察器接口可用于响应尺寸变化、懒加载、DOM 变更和性能采样，减少低效轮询。',Object.entries(map).map(([k,v])=>`${k}=${v}`).join('；'),'缺失接口可使用事件监听或兼容库降级，但应避免高频轮询。');
+          }
+        },
+        {
+          category: '10 · Web 平台核心兼容性', id: 'webComponents', icon: '57', name: 'Web Components 组件化能力', brief: '检测 Custom Elements、Shadow DOM 和 HTML Template 支持。',
+          run: async () => {
+            const map={customElements:'customElements'in window,attachShadow:typeof Element.prototype.attachShadow==='function',template:'content'in document.createElement('template')};const ok=Object.values(map).every(Boolean);
+            return makeResult(ok?'ok':'warn',ok?'组件能力完整':'组件能力不完整','Web Components 提供浏览器原生组件封装、样式隔离和模板能力。',Object.entries(map).map(([k,v])=>`${k}=${v}`).join('；'),ok?'使用 Shadow DOM 时仍需关注可访问性、主题和自动化测试。':'升级浏览器或使用框架级降级方案。');
+          }
+        },
+        {
+          category: '10 · Web 平台核心兼容性', id: 'intl', icon: '58', name: '高级 Intl 格式化能力', brief: '检查日期、数字、相对时间、列表和分段器国际化接口。',
+          run: async () => {
+            const map={DateTimeFormat:!!Intl?.DateTimeFormat,NumberFormat:!!Intl?.NumberFormat,RelativeTimeFormat:!!Intl?.RelativeTimeFormat,ListFormat:!!Intl?.ListFormat,Segmenter:!!Intl?.Segmenter};const n=Object.values(map).filter(Boolean).length;
+            return makeResult(n>=4?'ok':'warn',`${n}/5 支持`,'高级 Intl 接口可提升多语言日期、数字、列表、相对时间和文本分词质量。',Object.entries(map).map(([k,v])=>`${k}=${v}`).join('；'),'面向多国家产品时应测试实际区域格式，不要手工拼接日期和货币字符串。');
+          }
+        },
+        {
+          category: '10 · Web 平台核心兼容性', id: 'encoding', icon: '59', name: '文本编码与二进制转换', brief: '验证 TextEncoder、TextDecoder 和 UTF-8 往返转换。',
+          run: async () => {
+            const ok=typeof TextEncoder!=='undefined'&&typeof TextDecoder!=='undefined';let round='';if(ok){const bytes=new TextEncoder().encode('终端OK');round=new TextDecoder().decode(bytes);}
+            return makeResult(ok&&round==='终端OK'?'ok':'warn',ok?'UTF-8 正常':'接口缺失','文本编码接口用于网络协议、文件处理、加密摘要和二进制数据转换。',`TextEncoder=${typeof TextEncoder!=='undefined'}；TextDecoder=${typeof TextDecoder!=='undefined'}；往返=${round||'未执行'}`,'业务文件应明确编码并正确处理 BOM、换行和异常字符。');
+          }
+        },
+        {
+          category: '10 · Web 平台核心兼容性', id: 'layout', icon: '60', name: '现代布局与响应式 CSS', brief: '检测 Grid、Flex、Container Query、clamp 与安全区变量能力。',
+          run: async () => {
+            const map={Grid:CSS.supports('display','grid'),Flex:CSS.supports('display','flex'),Container:CSS.supports('container-type','inline-size'),Clamp:CSS.supports('width','clamp(1px,2vw,3px)'),Logical:CSS.supports('margin-inline','1px')};const n=Object.values(map).filter(Boolean).length;
+            return makeResult(n>=4?'ok':'warn',`${n}/5 支持`,'现代布局能力影响复杂响应式界面和多语言排版。Grid 与 Flex 属于核心基础，Container Query 属于较新能力。',Object.entries(map).map(([k,v])=>`${k}=${v}`).join('；'),'关键页面应测试窄屏、横屏、系统缩放和长文本，不要只依赖单一桌面分辨率。');
+          }
+        },
+
+        {
+          category: '11 · 页面稳定性与诊断可观测性', id: 'pageVisibility', icon: '61', name: '页面可见性与后台节流状态', brief: '读取页面前后台状态并确认 visibilitychange 事件基础。',
+          run: async () => makeResult(document.visibilityState==='visible'?'ok':'warn',document.visibilityState==='visible'?'页面前台':'页面后台','浏览器会对后台标签页降低定时器、动画和网络活动频率，因此后台状态会使性能结果失真。',`visibilityState=${document.visibilityState}；hidden=${document.hidden}；visibilitychange=${'onvisibilitychange'in document}`,'执行性能检测时保持页面可见且窗口未最小化。')
+        },
+        {
+          category: '11 · 页面稳定性与诊断可观测性', id: 'history', icon: '62', name: '历史记录与 URL 状态管理', brief: '检查 History API、URL、URLSearchParams 和导航状态能力。',
+          run: async () => {
+            const map={pushState:typeof history.pushState==='function',replaceState:typeof history.replaceState==='function',URL:typeof URL!=='undefined',URLSearchParams:typeof URLSearchParams!=='undefined'};const ok=Object.values(map).every(Boolean);
+            return makeResult(ok?'ok':'warn',ok?'路由接口完整':'路由接口不完整','单页应用依赖 History 与 URL 接口管理路由和参数。错误使用可能造成返回键异常或不可分享链接。',Object.entries(map).map(([k,v])=>`${k}=${v}`).join('；')+`；history.length=${history.length}`,'应用应保持可恢复 URL，并正确处理前进、后退和刷新。');
+          }
+        },
+        {
+          category: '11 · 页面稳定性与诊断可观测性', id: 'performanceTimeline', icon: '63', name: 'Performance Timeline 性能时间线', brief: '检查导航、资源、标记、测量和高精度时间采集能力。',
+          run: async () => {
+            const p=window.performance;const nav=p?.getEntriesByType?.('navigation')?.[0];const ok=!!p?.mark&&!!p?.measure&&!!p?.getEntriesByType;
+            return makeResult(ok?'ok':'warn',ok?'时间线可用':'接口不完整','Performance Timeline 可用于页面加载和自定义业务阶段耗时分析。当前本地页面的导航数据不代表公网加载性能。',`performance=${!!p}；navigationEntry=${!!nav}；timeOrigin=${p?.timeOrigin||'未知'}；duration=${nav?.duration?.toFixed?.(2)||'未知'} ms`,'生产环境应结合真实用户监控、服务端日志和网络指标分析性能。');
+          }
+        },
+        {
+          category: '11 · 页面稳定性与诊断可观测性', id: 'longTask', icon: '64', name: '长任务观测能力', brief: '检查 PerformanceObserver 是否支持 longtask 条目类型。',
+          run: async () => {
+            const types=typeof PerformanceObserver!=='undefined'?(PerformanceObserver.supportedEntryTypes||[]):[];const ok=types.includes('longtask');
+            return makeResult(ok?'ok':'warn',ok?'可观测长任务':'类型未公开','Long Tasks API 可发现阻塞主线程超过约 50 ms 的任务，但并非所有浏览器都开放。',`supportedEntryTypes=${types.join(', ')||'未公开'}；longtask=${ok}`,'即使接口不可用，也应通过分片、Worker 和性能录制减少长任务。');
+          }
+        },
+        {
+          category: '11 · 页面稳定性与诊断可观测性', id: 'errorCapture', icon: '65', name: '脚本错误与 Promise 拒绝捕获接口', brief: '检查全局 error、unhandledrejection 与控制台诊断基础。',
+          run: async () => {
+            const e='onerror'in window,u='onunhandledrejection'in window,c=!!window.console;
+            return makeResult(e&&u&&c?'ok':'warn',e&&u?'错误事件可用':'事件不完整','全局错误接口可帮助记录未捕获脚本错误和 Promise 拒绝，但必须避免日志泄露敏感数据。',`window.onerror=${e}；unhandledrejection=${u}；console=${c}`,'生产环境应采样上报脱敏错误，并关联版本、页面和请求追踪标识。');
+          }
+        },
+        {
+          category: '11 · 页面稳定性与诊断可观测性', id: 'offlineEvents', icon: '66', name: '在线/离线状态事件', brief: '确认网络状态切换事件监听接口，便于应用进行提示和恢复。',
+          run: async () => {
+            const on='ononline'in window,off='onoffline'in window;
+            return makeResult(on&&off?'ok':'warn',on&&off?'状态事件可用':'事件不完整','在线/离线事件可用于界面提示和重试调度，但不能替代真实接口健康检查。',`onlineEvent=${on}；offlineEvent=${off}；currentOnline=${navigator.onLine}`,'恢复在线后应重新验证业务接口，而不是仅依据 online 事件宣告服务正常。');
+          }
+        },
+
+        {
+          category: '12 · 无障碍与用户偏好适配', id: 'colorScheme', icon: '67', name: '深浅色模式偏好', brief: '读取 prefers-color-scheme 并检查 color-scheme CSS 支持。',
+          run: async () => {
+            const dark=matchMedia('(prefers-color-scheme: dark)').matches,light=matchMedia('(prefers-color-scheme: light)').matches,support=CSS.supports('color-scheme','dark light');
+            return makeResult(support?'ok':'warn',dark?'偏好深色':light?'偏好浅色':'未指定','系统颜色模式偏好可帮助页面减少眩光并保持界面一致。用户偏好可能随系统计划自动切换。',`dark=${dark}；light=${light}；CSS color-scheme=${support}`,'提供手动主题切换并确保两种模式下文字、边框和状态色均具备足够对比度。');
+          }
+        },
+        {
+          category: '12 · 无障碍与用户偏好适配', id: 'reducedMotion', icon: '68', name: '减少动态效果偏好', brief: '读取 prefers-reduced-motion，判断是否应降低动画和视差效果。',
+          run: async () => {
+            const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+            return makeResult('ok',reduce?'请求减少动画':'允许常规动画','该偏好常用于降低眩晕、注意力干扰和不必要的运动效果。',`prefers-reduced-motion=${reduce}`,'页面应尊重该偏好，关闭持续闪烁、自动滚动和大幅视差动画。');
+          }
+        },
+        {
+          category: '12 · 无障碍与用户偏好适配', id: 'contrast', icon: '69', name: '高对比度偏好', brief: '读取 prefers-contrast，判断用户是否请求更强视觉区分。',
+          run: async () => {
+            const more=matchMedia('(prefers-contrast: more)').matches,less=matchMedia('(prefers-contrast: less)').matches;
+            return makeResult('ok',more?'偏好高对比度':less?'偏好低对比度':'未指定','对比度偏好可帮助低视力用户获得更清晰的边界和文本。浏览器支持程度存在差异。',`contrast-more=${more}；contrast-less=${less}`,'关键文字应满足 WCAG 对比度要求，不能仅依赖颜色区分状态。');
+          }
+        },
+        {
+          category: '12 · 无障碍与用户偏好适配', id: 'forcedColors', icon: '70', name: '强制颜色与系统高对比模式', brief: '检测 forced-colors 是否启用及系统颜色适配能力。',
+          run: async () => {
+            const active=matchMedia('(forced-colors: active)').matches;const support=CSS.supports('forced-color-adjust','auto');
+            return makeResult('ok',active?'强制颜色已启用':'未启用','Windows 高对比度等系统模式可能覆盖页面颜色。页面应保证控件边界、图标和焦点仍可见。',`forced-colors=${active}；forced-color-adjust=${support}`,'避免用背景图片承载唯一信息，并在强制颜色模式下测试按钮、输入框和状态图标。');
+          }
+        },
+        {
+          category: '12 · 无障碍与用户偏好适配', id: 'textScaling', icon: '71', name: '基础字号与文本缩放环境', brief: '读取根字号、视觉视口缩放和页面缩放相关公开信息。',
+          run: async () => {
+            const root=parseFloat(getComputedStyle(document.documentElement).fontSize)||16;const vv=window.visualViewport;const scale=vv?.scale||1;const status=root<12?'warn':'ok';
+            return makeResult(status,`${root}px 根字号`,'浏览器和系统文本缩放会改变布局密度。页面应允许文字放大而不遮挡按钮、截断内容或要求横向滚动。',`rootFontSize=${root}px；visualViewport.scale=${scale}；viewport=${vv?`${vv.width.toFixed(0)}×${vv.height.toFixed(0)}`:'未公开'}`,status==='warn'?'基础字号偏小，建议提高正文可读性。':'建议继续测试 200% 缩放和长文本场景。');
+          }
+        },
+        {
+          category: '12 · 无障碍与用户偏好适配', id: 'printSupport', icon: '72', name: '打印与文档输出基础能力', brief: '检查打印调用、打印媒体查询和分页 CSS 支持。',
+          run: async () => {
+            const print=typeof window.print==='function';const media=typeof matchMedia==='function';const page=CSS.supports('break-after','page')||CSS.supports('page-break-after','always');
+            return makeResult(print&&media?'ok':'warn',print?'打印接口可用':'打印接口缺失','浏览器打印能力可用于报告归档和 PDF 输出，但实际页眉、分页、背景图和字体取决于浏览器打印设置。',`window.print=${print}；matchMedia=${media}；pageBreakCSS=${page}`,'正式报告应提供专用打印样式，隐藏交互控件并避免重要内容跨页截断。');
+          }
+        }
+      ];
+
+      function renderChecks() {
+        let currentCategory = '';
+        els.checksList.innerHTML = checks.map(c => {
+          const category = c.category !== currentCategory
+            ? `<div class="check-category">${escapeHtml(c.category)}</div>`
+            : '';
+          currentCategory = c.category;
+          return `${category}
+          <div class="check-item" id="check-${c.id}">
+            <div class="check-top">
+              <div class="check-icon">${c.icon}</div>
+              <div>
+                <div class="check-name">${c.name}</div>
+                <div class="check-brief">${c.brief}</div>
+              </div>
+              <div class="status-badge">待检测</div>
+            </div>
+            <div class="check-detail"></div>
+          </div>`;
+        }).join('');
+      }
+
+      function log(level, message) {
+        const line = { time: nowTime(), level, message };
+        logs.push(line);
+        const div = document.createElement('div');
+        div.className = `terminal-line ${level}`;
+        const labelMap = { info: 'INFO', pass: 'PASS', warn: 'WARN', error: 'ERROR' };
+        div.innerHTML = `<span class="time">${line.time}</span><span class="level">${labelMap[level] || level}</span><span>${escapeHtml(message)}</span>`;
+        els.terminal.appendChild(div);
+        els.terminal.scrollTop = els.terminal.scrollHeight;
+      }
+
+      function escapeHtml(str) {
+        return String(str).replace(/[&<>'"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[ch]));
+      }
+
+      function setCheckRunning(check) {
+        const item = $(`check-${check.id}`);
+        item.className = 'check-item running';
+        item.querySelector('.status-badge').innerHTML = '<span style="display:inline-flex;align-items:center;gap:6px"><span class="spinner"></span>检测中</span>';
+        item.scrollIntoView({ behavior: 'auto', block: 'nearest' });
+      }
+
+      function setCheckResult(check, result) {
+        const item = $(`check-${check.id}`);
+        item.className = `check-item ${result.status}`;
+        item.querySelector('.status-badge').textContent = result.label;
+        const detail = item.querySelector('.check-detail');
+        detail.innerHTML = `
+          <div>${escapeHtml(result.detail)}</div>
+          <div class="evidence">证据记录：${escapeHtml(result.evidence || '无额外证据')}</div>
+          <div class="advice"><b>处理建议：</b>${escapeHtml(result.advice || '无需额外处理。')}</div>
+        `;
+        detail.classList.add('visible');
+      }
+
+      function updateProgress(done, total, title) {
+        const p = total ? Math.round(done / total * 100) : 0;
+        els.progressBar.style.width = `${p}%`;
+        els.progressTitle.textContent = title;
+        els.progressStage.textContent = `${done} / ${total} 项 · ${done === total && total ? '检测已完成' : '正在执行分层核验'}`;
+        els.percentText.textContent = `${p}%`;
+      }
+
+      function updateCounters(results) {
+        const pass = results.filter(r => r.result.status === 'ok').length;
+        const warn = results.filter(r => r.result.status === 'warn').length;
+        const bad = results.filter(r => r.result.status === 'bad').length;
+        els.passCount.textContent = pass;
+        els.warnCount.textContent = warn;
+        els.badCount.textContent = bad;
+        return { pass, warn, bad };
+      }
+
+      function calculateScore(results) {
+        const weights = { ok: 1, warn: .68, bad: .18 };
+        const raw = results.reduce((s, r) => s + weights[r.result.status], 0) / Math.max(1, results.length) * 100;
+        return Math.max(0, Math.min(100, Math.round(raw)));
+      }
+
+      function paintScore(score) {
+        els.scoreNumber.textContent = String(score);
+        els.scoreRing.style.setProperty('--score-angle', `${score * 3.6}deg`);
+        let color = 'var(--green)';
+        if (score < 85) color = 'var(--yellow)';
+        if (score < 65) color = 'var(--red)';
+        els.scoreRing.style.background = `conic-gradient(${color} ${score * 3.6}deg, rgba(255,255,255,.075) 0)`;
+      }
+
+      function buildConclusion(score, counts, results) {
+        const restricted = results.filter(r => /未公开|受限|隐私限制|接口未公开/.test(r.result.label + r.result.evidence)).length;
+        if (counts.bad > 0) {
+          return {
+            state: '检测到需处理的运行风险',
+            detail: `综合得分 ${score}。存在 ${counts.bad} 项风险和 ${counts.warn} 项提示，建议优先处理红色项目，再重新检测确认。`,
+            text: `本次检测发现至少一项会直接影响网页运行或网络可用性的风险。请先处理“风险项目”中的网络、安全上下文、存储写入、图形渲染或兼容性问题。黄色提示多属于性能波动、隐私限制或配置差异。共有 ${restricted} 项信息受浏览器隐私策略影响，因此本结论不应被解释为完整硬件体检。`
+          };
+        }
+        if (counts.warn >= 3 || score < 85) {
+          return {
+            state: '总体可用，存在优化提示',
+            detail: `综合得分 ${score}。未发现明确阻断性故障，但有 ${counts.warn} 项需要结合实际使用场景复核。`,
+            text: `当前终端能够满足一般网页运行需求，未发现明确的阻断性故障。提示项目可能来自网络延迟、即时性能波动、权限限制、低电量、浏览器接口不公开或兼容性差异。建议在设备接通电源、关闭高负载程序、保持页面前台的条件下再次检测，并对重要业务执行独立功能验证。共有 ${restricted} 项信息受到浏览器隐私策略限制。`
+          };
+        }
+        return {
+          state: '运行环境状态良好',
+          detail: `综合得分 ${score}。已完成 ${results.length} 项分层检查，未发现明显阻断性风险。`,
+          text: `本次网页运行环境检测结果良好，网络在线、安全上下文、存储、渲染、兼容性和即时响应未发现明显阻断性问题。该结论仅覆盖浏览器可观察范围，不代表硬盘、内存条、CPU 温度、系统驱动或恶意软件状态已通过专业检测。共有 ${restricted} 项信息受隐私策略或浏览器兼容性限制。`
+        };
+      }
+
+      async function runDiagnostics() {
+        if (running) return;
+        running = true;
+        report = null;
+        logs.length = 0;
+        els.terminal.innerHTML = '';
+        renderChecks();
+        els.startBtn.disabled = true;
+        els.resetBtn.disabled = true;
+        els.exportBtn.disabled = true;
+        els.scoreNumber.textContent = '--';
+        els.scoreRing.style.background = 'conic-gradient(var(--green) 0deg, rgba(255,255,255,.075) 0)';
+        els.overallState.textContent = '正在执行检测';
+        els.overallDetail.textContent = '请保持当前页面处于前台，部分性能采样会受到浏览器节流影响。';
+        els.conclusionText.textContent = '检测尚未完成，暂不生成最终结论。';
+        els.passCount.textContent = els.warnCount.textContent = els.badCount.textContent = '0';
+
+        startedAt = performance.now();
+        clearInterval(timer);
+        timer = setInterval(() => {
+          els.elapsedText.textContent = `耗时：${((performance.now() - startedAt) / 1000).toFixed(2)} 秒`;
+        }, 60);
+
+        log('info', '检测任务已创建，运行模式：本地浏览器侧诊断。');
+        log('info', `任务编号：THD-${Date.now().toString(36).toUpperCase()}；计划执行 ${checks.length} 项检查。`);
+        log('info', '隐私策略：不上传文件，不请求摄像头、麦克风或地理位置授权。');
+
+        const results = [];
+        for (let i = 0; i < checks.length; i++) {
+          const check = checks[i];
+          updateProgress(i, checks.length, `正在检测：${check.name}`);
+          setCheckRunning(check);
+          log('info', `[${String(i+1).padStart(2,'0')}/${checks.length}] 启动“${check.name}”检查。`);
+          await sleep(35);
+          let result;
+          try {
+            result = await check.run();
+          } catch (err) {
+            result = {
+              status: 'bad', label: '执行异常',
+              detail: '检测脚本在执行本项目时发生异常，当前结果不足以判断设备状态。异常可能来自浏览器兼容性、权限策略或临时运行错误。',
+              evidence: `${err?.name || 'Error'}: ${err?.message || String(err)}`,
+              advice: '刷新页面后重新检测；若持续出现，建议更换现代浏览器并查看开发者控制台。'
+            };
+          }
+          setCheckResult(check, result);
+          results.push({ id: check.id, category: check.category, name: check.name, result });
+          const level = result.status === 'ok' ? 'pass' : result.status === 'warn' ? 'warn' : 'error';
+          log(level, `“${check.name}”完成：${result.label}。${result.evidence}`);
+          updateCounters(results);
+          updateProgress(i + 1, checks.length, `已完成：${check.name}`);
+          await sleep(25);
+        }
+
+        clearInterval(timer);
+        const duration = performance.now() - startedAt;
+        els.elapsedText.textContent = `耗时：${(duration / 1000).toFixed(2)} 秒`;
+        const counts = updateCounters(results);
+        const score = calculateScore(results);
+        paintScore(score);
+        const conclusion = buildConclusion(score, counts, results);
+        els.overallState.textContent = conclusion.state;
+        els.overallDetail.textContent = conclusion.detail;
+        els.conclusionText.textContent = conclusion.text;
+        updateProgress(checks.length, checks.length, '全部检测项目已完成');
+        log('info', `综合计算完成：得分 ${score}/100；正常 ${counts.pass} 项；提示 ${counts.warn} 项；风险 ${counts.bad} 项。`);
+        log(counts.bad ? 'error' : counts.warn ? 'warn' : 'pass', `最终判定：${conclusion.state}。`);
+        log('info', '检测结束。报告仅反映当前时刻和浏览器可观察范围。');
+
+        report = {
+          title: '终端状态综合检测报告',
+          generatedAt: new Date().toISOString(),
+          durationMs: Number(duration.toFixed(2)),
+          score, counts, conclusion, results,
+          environment: {
+            userAgent: navigator.userAgent,
+            language: navigator.language,
+            platform: navigator.userAgentData?.platform || navigator.platform || null,
+            viewport: `${innerWidth}x${innerHeight}`,
+            screen: `${screen.width}x${screen.height}`,
+            devicePixelRatio: devicePixelRatio || 1,
+            secureContext: isSecureContext,
+            online: navigator.onLine
+          },
+          limitation: '本报告仅基于浏览器公开接口，不包含硬盘 SMART、CPU 温度、物理内存故障、系统驱动、杀毒软件或恶意代码扫描。'
+        };
+
+        running = false;
+        els.startBtn.disabled = false;
+        els.startBtn.textContent = '▶ 再次检测';
+        els.resetBtn.disabled = false;
+        els.exportBtn.disabled = false;
+        showToast('检测完成，已生成综合报告');
+      }
+
+      function resetAll() {
+        if (running) return;
+        report = null;
+        logs.length = 0;
+        els.terminal.innerHTML = '';
+        renderChecks();
+        els.progressBar.style.width = '0%';
+        els.progressTitle.textContent = '尚未开始';
+        els.progressStage.textContent = `0 / ${checks.length} 项 · 未生成检测结论`;
+        els.elapsedText.textContent = '耗时：0.00 秒';
+        els.percentText.textContent = '0%';
+        els.scoreNumber.textContent = '--';
+        els.scoreRing.style.background = 'conic-gradient(var(--green) 0deg, rgba(255,255,255,.075) 0)';
+        els.overallState.textContent = '等待检测';
+        els.overallDetail.textContent = '点击“开始综合检测”，系统将按预定顺序执行各项核验。';
+        els.conclusionText.textContent = '尚未执行检测。完成后，这里会给出综合结论、限制条件与建议处理顺序。';
+        els.passCount.textContent = els.warnCount.textContent = els.badCount.textContent = '0';
+        els.exportBtn.disabled = true;
+        els.startBtn.textContent = '▶ 开始综合检测';
+        log('info', '检测器已重置，历史结果已从当前页面状态中清除。');
+        showToast('已恢复到初始状态');
+      }
+
+      function exportReport() {
+        if (!report) return;
+        const lines = [
+          report.title,
+          '='.repeat(42),
+          `生成时间：${new Date(report.generatedAt).toLocaleString('zh-CN')}`,
+          `综合得分：${report.score}/100`,
+          `综合结论：${report.conclusion.state}`,
+          `结果统计：正常 ${report.counts.pass} 项；提示 ${report.counts.warn} 项；风险 ${report.counts.bad} 项`,
+          `检测耗时：${(report.durationMs/1000).toFixed(2)} 秒`,
+          '',
+          '综合说明：',
+          report.conclusion.text,
+          '',
+          '环境摘要：',
+          ...Object.entries(report.environment).map(([k,v]) => `- ${k}: ${v}`),
+          '',
+          '分项结果：',
+          ...report.results.flatMap((r, i) => [
+            '',
+            `${i+1}. [${r.category || '未分类'}] ${r.name} [${r.result.label}]`,
+            `判定级别：${r.result.status.toUpperCase()}`,
+            `说明：${r.result.detail}`,
+            `证据：${r.result.evidence}`,
+            `建议：${r.result.advice}`
+          ]),
+          '',
+          '检测边界：',
+          report.limitation
+        ];
+        const blob = new Blob([lines.join('\n')], { type: 'text/plain;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `终端状态检测报告_${new Date().toISOString().slice(0,19).replace(/[:T]/g,'-')}.txt`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+        showToast('检测报告已导出');
+      }
+
+      async function copyLogs() {
+        const text = logs.map(l => `[${l.time}] [${l.level.toUpperCase()}] ${l.message}`).join('\n');
+        try {
+          await navigator.clipboard.writeText(text);
+          showToast('日志已复制到剪贴板');
+        } catch {
+          const ta = document.createElement('textarea');
+          ta.value = text;
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand('copy');
+          ta.remove();
+          showToast('日志已复制');
+        }
+      }
+
+      let toastTimer;
+      function showToast(text) {
+        clearTimeout(toastTimer);
+        els.toast.textContent = text;
+        els.toast.classList.add('show');
+        toastTimer = setTimeout(() => els.toast.classList.remove('show'), 1800);
+      }
+
+      function updateClock() {
+        els.clock.textContent = `${new Date().toLocaleDateString('zh-CN')} ${nowTime()} · 本地诊断服务就绪`;
+      }
+
+      renderChecks();
+      els.progressStage.textContent = `0 / ${checks.length} 项 · 未生成检测结论`;
+      log('info', '终端状态综合检测器初始化完成。');
+      log('info', '等待用户启动检测任务。');
+      updateClock();
+      setInterval(updateClock, 1000);
+
+      els.startBtn.addEventListener('click', runDiagnostics);
+      els.resetBtn.addEventListener('click', resetAll);
+      els.exportBtn.addEventListener('click', exportReport);
+      els.copyLogBtn.addEventListener('click', copyLogs);
+      window.addEventListener('online', () => log('pass', '浏览器网络状态事件：已恢复在线。'));
+      window.addEventListener('offline', () => log('error', '浏览器网络状态事件：当前已离线。'));
+    })();
+  </script>
+</body>
+</html>
