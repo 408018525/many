@@ -2976,6 +2976,17 @@
     line-height:1.5;
   }
 
+
+  /* 关于栏目新增后，顶部导航在窄屏保持横向滚动 */
+  .app-nav{
+    max-width:100%;
+    overflow-x:auto;
+    scrollbar-width:thin;
+  }
+  .app-nav-btn{
+    white-space:nowrap;
+  }
+
 </style>
 </head>
 <body>
@@ -3267,6 +3278,9 @@
         <button class="app-nav-btn" type="button" data-section="center">中心简介</button>
         <button class="app-nav-btn" type="button" data-section="rollcall">点名程序</button>
         <button class="app-nav-btn" type="button" data-section="videoFrame">视频抽帧</button>
+        <button class="app-nav-btn" type="button" data-section="deviceTest">专业设备检测</button>
+        <button class="app-nav-btn" type="button" data-section="timeTravel">时空穿越</button>
+        <button class="app-nav-btn" type="button" data-section="about">关于</button>
       </nav>
       <button class="logout-btn" type="button" id="logoutBtn">退出登录</button>
     </header>
@@ -3675,6 +3689,29 @@
           web: { label: "网页版", file: "https://www.konglomg.cc.cd" },
           local1: { label: "本地1", file: "视频抽帧.html" }
         }
+      },
+      deviceTest: {
+        title: "专业设备检测",
+        description: "选择网页版或本地版本，进行专业终端状态综合检测。",
+        files: {
+          web: { label: "网页版", file: "https://test.flore.top/" },
+          local1: { label: "本地1", file: "专业终端状态综合检测器.html" }
+        }
+      },
+      timeTravel: {
+        title: "时空穿越",
+        description: "选择网页版或本地版本，打开未来穿越机体验界面。",
+        files: {
+          web: { label: "网页版", file: "https://travel.flore.top/" },
+          local1: { label: "本地1", file: "未来穿越机.html" }
+        }
+      },
+      about: {
+        title: "关于",
+        description: "查看 Flore 内容中心的详细信息、栏目说明、登录规则、访客权限与联系方式。",
+        files: {
+          details: { label: "详细信息", type: "about-info" }
+        }
       }
     };
 
@@ -3684,7 +3721,9 @@
       { name: "中心简介 · httpsyichenxie.com风格", file: "httpsyichenxie.com风格.html", type: "HTML" },
       { name: "中心简介 · httpswilliamle.design风格", file: "httpswilliamle.design风格.html", type: "HTML" },
       { name: "中心简介 · 原版", file: "原版.html", type: "HTML" },
-      { name: "点名程序 · 修改版", file: "课堂随机点名.html", type: "HTML" }
+      { name: "点名程序 · 修改版", file: "课堂随机点名.html", type: "HTML" },
+      { name: "专业设备检测 · 本地1", file: "专业终端状态综合检测器.html", type: "HTML" },
+      { name: "时空穿越 · 本地1", file: "未来穿越机.html", type: "HTML" }
     ];
 
     function setActiveTab(sectionKey) {
@@ -3758,6 +3797,133 @@
       }, 1500);
     }
 
+    function showAboutInfo(section, data) {
+      els.viewerPanel.classList.remove("empty-view");
+      els.downloadView.hidden = true;
+      els.viewerFullscreenBtn.hidden = false;
+      setCodeViewerVisible(false);
+      els.fileViewer.hidden = false;
+      els.viewerTitle.textContent = `${section.title} · ${data.label}`;
+      els.viewerPath.textContent = "Flore 内容中心详细信息";
+      els.fileViewer.removeAttribute("src");
+      els.fileViewer.srcdoc = `<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  :root{--ink:#112b32;--muted:#5f737b;--line:#dbe6e8;--soft:#f4f8f8;--brand:#1d6463}
+  *{box-sizing:border-box}
+  body{margin:0;background:#fff;color:var(--ink);font-family:"Microsoft YaHei","PingFang SC",Arial,sans-serif}
+  .about-wrap{min-height:100vh;padding:34px;background:linear-gradient(180deg,#ffffff,#f7fbfb)}
+  .hero{padding:32px 34px;border:1px solid var(--line);border-radius:24px;background:linear-gradient(135deg,#f8fcfc,#eef7f6);box-shadow:0 16px 45px rgba(18,58,66,.08)}
+  .kicker{margin:0 0 10px;color:var(--brand);font-size:13px;font-weight:900;letter-spacing:1.5px}
+  h1{margin:0;color:#0e2830;font-size:34px;line-height:1.15;letter-spacing:-1px}
+  .lead{max-width:850px;margin:14px 0 0;color:var(--muted);font-size:16px;line-height:1.85}
+  .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-top:22px}
+  .card{padding:22px;border:1px solid var(--line);border-radius:20px;background:#fff;box-shadow:0 8px 24px rgba(18,58,66,.05)}
+  .card h2{margin:0 0 12px;color:#12333b;font-size:20px}
+  .card p,.card li{color:#536970;font-size:15px;line-height:1.8}
+  .card p{margin:0 0 10px}
+  .card ul{margin:0;padding-left:20px}
+  .badge-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+  .badge{display:inline-flex;align-items:center;min-height:30px;padding:0 10px;border-radius:999px;background:#edf6f5;color:#1d6463;font-size:13px;font-weight:800}
+  .full{grid-column:1/-1}
+  .contact{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:10px}
+  .contact div{padding:12px 14px;border:1px solid #dfe9eb;border-radius:14px;background:#f8fbfb;color:#28464e;font-size:14px;font-weight:800}
+  .note{margin-top:20px;padding:16px 18px;border-left:5px solid var(--brand);border-radius:14px;background:#eef7f6;color:#3d5960;font-size:14px;line-height:1.75}
+  @media(max-width:760px){
+    .about-wrap{padding:18px}
+    .hero{padding:24px 20px}
+    h1{font-size:28px}
+    .grid{grid-template-columns:1fr}
+    .contact{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+  <main class="about-wrap">
+    <section class="hero">
+      <p class="kicker">ABOUT FLORE</p>
+      <h1>Flore 内容中心</h1>
+      <p class="lead">本页面用于集中管理和展示 Flore 相关内容，包括个人简介、中心简介、点名程序、视频抽帧工具以及访问权限说明。所有内容均在当前界面内打开，减少跳转，方便电脑端和手机端查看。</p>
+      <div class="badge-row">
+        <span class="badge">内容导航</span>
+        <span class="badge">权限访问</span>
+        <span class="badge">访客须知</span>
+        <span class="badge">本地文件预览</span>
+        <span class="badge">工具入口</span>
+      </div>
+    </section>
+
+    <section class="grid">
+      <article class="card">
+        <h2>一、系统定位</h2>
+        <p>Flore 内容中心是一个登录后访问的综合展示页面，用于统一放置个人资料、中心资料、课堂点名程序和视频抽帧工具。</p>
+        <p>页面支持本地 HTML 文件嵌入、网页链接打开、源码查看复制、访客权限控制和手机端全屏查看。</p>
+      </article>
+
+      <article class="card">
+        <h2>二、栏目说明</h2>
+        <ul>
+          <li><strong>个人简介：</strong>展示个人相关介绍页面。</li>
+          <li><strong>中心简介：</strong>展示 Flore / 中心相关介绍版本。</li>
+          <li><strong>点名程序：</strong>提供课堂随机点名工具、修改版入口和完整源码复制。</li>
+          <li><strong>视频抽帧：</strong>提供视频抽帧工具网页或本地版本入口。</li>
+          <li><strong>专业设备检测：</strong>提供网页版 test.flore.top 和本地“专业终端状态综合检测器.html”入口。</li>
+          <li><strong>时空穿越：</strong>提供网页版 travel.flore.top 和本地“未来穿越机.html”入口。</li>
+          <li><strong>关于：</strong>展示当前系统说明、权限规则和联系方式。</li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <h2>三、登录与验证</h2>
+        <ul>
+          <li>正式账号需要完成完整人机验证流程后登录。</li>
+          <li>密码末尾增加 <strong>@</strong> 时，可启用简化验证模式，只需完成前两个点击验证。</li>
+          <li>服务协议需勾选后才能完成登录。</li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <h2>四、访客权限</h2>
+        <ul>
+          <li>访客登录后会显示使用须知。</li>
+          <li>访客访问个人简介、中心简介、视频抽帧时，需要管理员密码。</li>
+          <li>点名程序和关于页面默认可查看。</li>
+        </ul>
+      </article>
+
+      <article class="card full">
+        <h2>五、联系信息</h2>
+        <p>如需获取访问密码、反馈页面问题或申请查看受限栏目，可通过以下方式联系管理员。</p>
+        <div class="contact">
+          <div>邮箱：408018525@qq.com</div>
+          <div>QQ：408018525</div>
+          <div>微信号：l13902256031</div>
+          <div>电话：15360009553</div>
+        </div>
+      </article>
+
+      <article class="card full">
+        <h2>六、当前版本更新重点</h2>
+        <ul>
+          <li>新增“关于”栏目，集中展示详细信息。</li>
+          <li>新增“专业设备检测”栏目，支持网页版与本地版本。</li>
+          <li>新增“时空穿越”栏目，支持网页版与本地版本。</li>
+          <li>优化访客模式与受限栏目访问逻辑。</li>
+          <li>新增密码末尾 @ 简化验证规则。</li>
+          <li>修复手机端滑块、服务协议滑动、拼图点击消失等交互问题。</li>
+          <li>点名程序完整代码已更新为当前指定版本。</li>
+        </ul>
+        <p class="note">说明：本页面仅用于 Flore 内容中心内部说明。具体文件展示内容以当前启动包内实际 HTML 文件和网页链接为准。</p>
+      </article>
+    </section>
+  </main>
+</body>
+</html>`;
+    }
+
     function resolveFileUrl(file) {
       try {
         // 关键：本地文件名会相对于当前主程序所在文件夹解析，
@@ -3791,6 +3957,11 @@
 
       if (data.type === "rollcall-code") {
         showRollcallCode(section, data);
+        return;
+      }
+
+      if (data.type === "about-info") {
+        showAboutInfo(section, data);
         return;
       }
 
@@ -3974,6 +4145,9 @@
         openSectionGate(sectionKey);
       } else {
         closeSectionGate();
+        if (sectionKey === "about") {
+          openMappedFile("about", "details");
+        }
       }
     }
 
