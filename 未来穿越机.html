@@ -520,79 +520,6 @@
     font-weight: 800;
   }
 
-
-
-  .captcha-badges {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 7px;
-  }
-
-  .captcha-badge {
-    display: inline-flex;
-    align-items: center;
-    min-height: 26px;
-    padding: 4px 9px;
-    border: 1px solid #aeb8c0;
-    background: #eef3f7;
-    color: #455660;
-    font-size: 12px;
-    font-weight: 800;
-  }
-
-  .captcha-grade { border-color: #7fa6c3; background: #e6f4ff; color: #07558e; }
-  .captcha-format { border-color: #b69a6a; background: #fff6df; color: #765112; }
-  .captcha-source { border-color: #8fb78f; background: #edf8ed; color: #2d6b32; }
-
-  .captcha-option {
-    display: flex;
-    align-items: center;
-    gap: 9px;
-    text-align: left;
-  }
-
-  .captcha-option-letter {
-    flex: 0 0 26px;
-    width: 26px;
-    height: 26px;
-    display: grid;
-    place-items: center;
-    border: 1px solid #a5a5a5;
-    border-radius: 50%;
-    background: #fff;
-    font-size: 12px;
-    font-weight: 900;
-  }
-
-  .captcha-option.selected .captcha-option-letter {
-    border-color: #075a9e;
-    color: #fff;
-    background: #075a9e;
-  }
-
-  .captcha-multi {
-    display: grid;
-    gap: 11px;
-  }
-
-  .captcha-part {
-    display: grid;
-    grid-template-columns: minmax(150px, .8fr) minmax(180px, 1.2fr);
-    align-items: center;
-    gap: 10px;
-    padding: 10px;
-    border: 1px solid #c9c9c9;
-    background: #f8f8f8;
-  }
-
-  .captcha-part > span {
-    color: #3c4650;
-    font-size: 13px;
-    font-weight: 800;
-    line-height: 1.45;
-  }
-
   .captcha-question {
     margin: 17px 0 16px;
     font-size: clamp(18px, 4.4vw, 25px);
@@ -679,6 +606,37 @@
     text-align: center;
   }
 
+
+
+  .captcha-question .question-context {
+    display: block;
+    margin-bottom: 9px;
+    color: #5f6870;
+    font-size: 13px;
+    line-height: 1.6;
+    font-weight: 650;
+  }
+
+  .captcha-question .answer-format {
+    display: block;
+    margin-top: 10px;
+    padding: 8px 10px;
+    border-left: 3px solid #7fa9cc;
+    background: #f4f8fb;
+    color: #52616d;
+    font-size: 13px;
+    line-height: 1.55;
+    font-weight: 650;
+  }
+
+  .captcha-bank-info {
+    display: inline-flex;
+    margin-left: 7px;
+    color: #6a737b;
+    font-size: 12px;
+    font-weight: 650;
+  }
+
   @media (max-width: 760px) {
     html, body { min-height: 100dvh; }
     body { background-attachment: fixed; }
@@ -748,10 +706,6 @@
     .captcha-head { gap: 8px; }
     .captcha-security { padding: 5px 7px; }
     .captcha-card { padding: 16px 13px; min-height: 0; }
-    .captcha-badges { gap: 5px; }
-    .captcha-badge { padding: 4px 7px; font-size: 11px; }
-    .captcha-part { grid-template-columns: 1fr; gap: 7px; padding: 9px; }
-
     .captcha-question { margin: 14px 0; }
     .captcha-options { grid-template-columns: 1fr; gap: 8px; }
     .captcha-option { min-height: 46px; }
@@ -907,30 +861,25 @@
   <div class="captcha-layer hidden" id="captchaModal" role="dialog" aria-modal="true" aria-labelledby="captchaTitle">
     <section class="captcha-dialog">
       <header class="titlebar">
-        <div class="titlebar-left"><span class="app-icon">✓</span><span id="captchaTitle">VIP 500 题数学综合验证中心</span></div>
+        <div class="titlebar-left"><span class="app-icon">✓</span><span id="captchaTitle">VIP 数学综合人机验证中心</span></div>
         <div class="window-controls"><span class="close" id="captchaClose" role="button" tabindex="0" aria-label="退出验证">×</span></div>
       </header>
       <div class="captcha-scroll">
         <div class="captcha-head">
           <div>
-            <div class="captcha-kicker">500-STEP GRADE 5–9 MATH VERIFICATION</div>
-            <h2 class="captcha-counter">验证 <span id="captchaCurrent">1</span> / <span id="captchaTotal">500</span></h2>
+            <div class="captcha-kicker">4000-QUESTION BANK · RANDOM 100</div>
+            <h2 class="captcha-counter">本轮第 <span id="captchaCurrent">1</span> / <span id="captchaTotal">100</span> 题</h2>
           </div>
-          <span class="captcha-security">本地验证</span>
+          <span class="captcha-security">内置 4000 题</span>
         </div>
         <div class="captcha-progress-shell" aria-label="验证总进度"><div class="captcha-progress-bar" id="captchaProgress"></div></div>
         <div class="captcha-meta">
-          <span id="captchaProgressText">已完成 0 题</span>
+          <span id="captchaProgressText">已完成 0 题</span><span class="captcha-bank-info">题库总量 4000</span>
           <span id="captchaMistakeText">错误 0 次</span>
         </div>
 
         <div class="captcha-card" id="captchaCard">
-          <div class="captcha-badges">
-            <span class="captcha-badge captcha-grade" id="captchaGrade">五年级</span>
-            <span class="captcha-badge captcha-format" id="captchaFormat">选择题</span>
-            <span class="captcha-badge captcha-type" id="captchaType">知识点</span>
-            <span class="captcha-badge captcha-source" id="captchaSource">广州课程常见题型</span>
-          </div>
+          <span class="captcha-type" id="captchaType">题型</span>
           <div class="captcha-question" id="captchaQuestion">正在生成验证题……</div>
           <div id="captchaAnswerArea"></div>
           <p class="captcha-feedback" id="captchaFeedback" aria-live="polite"></p>
@@ -943,7 +892,7 @@
             <button class="btn btn-primary" id="captchaSubmitBtn">提交答案</button>
           </div>
         </div>
-        <p class="captcha-note">必须完成全部 500 道数学验证题，VIP 跳过等待才会生效。题库按广州五至九年级分层，选择、填空、计算、大题各 125 题，并加入全国中考题型原创变式、动点、动角、方程组与不等式组。答案错误不会跳题。</p>
+        <p class="captcha-note">系统每轮从内置 4000 道原创数学变式题中随机抽取 100 道，覆盖五至九年级及广州、全国中考常见题型。必须全部答对，错误不会跳题。</p>
       </div>
     </section>
   </div>
@@ -970,6 +919,9 @@
   let totalDuration = 0;
   let messageIndex = 0;
   let toastTimer = null;
+  const QUESTION_BANK_SIZE = 4000;
+  const ROUND_QUESTION_COUNT = 100;
+  let mathQuestionBank = [];
   let verificationChallenges = [];
   let verificationIndex = 0;
   let selectedCaptchaValue = null;
@@ -1160,842 +1112,377 @@
   }
 
 
-  function gcdNumber(a, b) {
-    a = Math.abs(Math.round(a));
-    b = Math.abs(Math.round(b));
+  function gcd(a, b) {
+    a = Math.abs(a); b = Math.abs(b);
     while (b) [a, b] = [b, a % b];
     return a || 1;
   }
 
-  function lcmNumber(a, b) {
-    return Math.abs(a * b) / gcdNumber(a, b);
-  }
-
-  function tidyNumber(value, digits = 6) {
-    const rounded = Number(Number(value).toFixed(digits));
-    return Object.is(rounded, -0) ? 0 : rounded;
-  }
-
   function fractionText(numerator, denominator) {
+    if (denominator === 0) return '无意义';
     const sign = denominator < 0 ? -1 : 1;
-    numerator *= sign;
-    denominator *= sign;
-    const g = gcdNumber(numerator, denominator);
-    return `${numerator / g}/${denominator / g}`;
+    numerator *= sign; denominator *= sign;
+    const divisor = gcd(numerator, denominator);
+    numerator /= divisor; denominator /= divisor;
+    return denominator === 1 ? String(numerator) : `${numerator}/${denominator}`;
   }
 
-  function seededShuffle(items, seed = 20260710) {
-    const result = [...items];
-    let state = seed >>> 0;
-    const random = () => {
-      state = (Math.imul(state, 1664525) + 1013904223) >>> 0;
-      return state / 4294967296;
-    };
-    for (let i = result.length - 1; i > 0; i--) {
-      const j = Math.floor(random() * (i + 1));
-      [result[i], result[j]] = [result[j], result[i]];
-    }
-    return result;
+  function numberText(value, digits = 6) {
+    if (!Number.isFinite(value)) return String(value);
+    const rounded = Number(value.toFixed(digits));
+    return String(Object.is(rounded, -0) ? 0 : rounded);
   }
 
-  function stableStringHash(text) {
-    let hash = 2166136261;
-    for (const ch of String(text)) {
-      hash ^= ch.charCodeAt(0);
-      hash = Math.imul(hash, 16777619);
-    }
-    return hash >>> 0;
-  }
-
-  function makeChoiceOptions(correct, decoys, seedText = '') {
-    const values = [];
-    const pushUnique = value => {
-      const text = String(value);
-      if (!values.includes(text)) values.push(text);
-    };
-    pushUnique(correct);
-    decoys.forEach(pushUnique);
-
-    const numericCorrect = Number(correct);
-    let offset = 1;
-    while (values.length < 4) {
-      if (Number.isFinite(numericCorrect)) {
-        pushUnique(tidyNumber(numericCorrect + offset));
-        pushUnique(tidyNumber(numericCorrect - offset));
-      } else {
-        pushUnique(`${correct}${offset}`);
-      }
-      offset += 1;
-    }
-    return seededShuffle(values.slice(0, 4), stableStringHash(`${seedText}|${correct}`));
-  }
-
-  function createQuestionFactory(list, grade) {
-    const base = (format, topic, source, mode, question, extra = {}) => {
-      list.push({ grade, format, topic, source, mode, question, ...extra });
-    };
-    return {
-      choice(topic, question, correct, decoys, source = '广州课程常见题型') {
-        base('选择题', topic, source, 'choice', question, {
-          answer: String(correct),
-          answerKind: 'text',
-          options: makeChoiceOptions(correct, decoys, `${grade}|${topic}|${question}`)
-        });
-      },
-      fill(topic, question, answer, answerKind = 'number', source = '广州课程常见题型', placeholder = '请输入答案') {
-        base('填空题', topic, source, 'input', question, { answer, answerKind, placeholder });
-      },
-      calc(topic, question, answer, answerKind = 'number', source = '广州课程常见题型', placeholder = '请输入最终计算结果') {
-        base('计算题', topic, source, 'input', question, { answer, answerKind, placeholder });
-      },
-      big(topic, question, parts, source = '全国中考原创变式') {
-        base('大题', topic, source, 'multi', question, { parts });
-      }
-    };
-  }
-
-  function buildVerificationChallenges() {
-    const list = [];
-
-    // 五年级：100 题（选择、填空、计算、大题各 25 题）
-    {
-      const q = createQuestionFactory(list, '五年级');
-      for (let i = 0; i < 25; i++) {
-        const k = i % 5;
-        if (k === 0) {
-          const a = 12 + i;
-          const b = 3 + (i % 7);
-          const correct = tidyNumber(a + b / 10);
-          q.choice('小数运算', `计算 <code>${a} + ${(b / 10).toFixed(1)}</code>，正确结果是（ ）。`, correct, [tidyNumber(correct + 0.1), tidyNumber(correct - 1), tidyNumber(a + b)]);
-        } else if (k === 1) {
-          const a = 18 + i;
-          const b = 24 + i;
-          const correct = gcdNumber(a, b);
-          q.choice('因数与倍数', `<code>${a}</code> 与 <code>${b}</code> 的最大公因数是（ ）。`, correct, [correct + 1, Math.max(1, correct - 1), lcmNumber(a, b)]);
-        } else if (k === 2) {
-          const n = 2 + (i % 6);
-          const options = [`${n}/${n + 1}`, `${n + 1}/${n + 3}`, `${n + 2}/${n + 5}`, `${n + 3}/${n + 7}`];
-          const correct = options.reduce((best, item) => {
-            const [a, b] = item.split('/').map(Number);
-            const [c, d] = best.split('/').map(Number);
-            return a / b > c / d ? item : best;
-          }, options[0]);
-          q.choice('分数大小比较', `下列分数中最大的是（ ）。`, correct, options.filter(item => item !== correct));
-        } else if (k === 3) {
-          const length = 8 + i;
-          const width = 3 + (i % 6);
-          const correct = 2 * (length + width);
-          q.choice('长方形周长', `一个长方形长 <code>${length} cm</code>，宽 <code>${width} cm</code>，周长是（ ）。`, `${correct} cm`, [`${length * width} cm`, `${length + width} cm`, `${correct + 2} cm`]);
-        } else {
-          const length = 4 + (i % 6);
-          const width = 3 + (i % 5);
-          const height = 2 + (i % 4);
-          const correct = length * width * height;
-          q.choice('长方体体积', `长方体长、宽、高分别是 <code>${length} cm、${width} cm、${height} cm</code>，体积是（ ）。`, `${correct} cm³`, [`${2 * (length * width + length * height + width * height)} cm²`, `${length + width + height} cm³`, `${correct + height} cm³`]);
-        }
-      }
-      for (let i = 0; i < 25; i++) {
-        const k = i % 5;
-        if (k === 0) {
-          const integer = 20 + i;
-          const tenth = (i % 9) + 1;
-          q.fill('小数数位', `数 <code>${integer}.${tenth}</code> 中，十分位上的数字是（ ）。`, tenth);
-        } else if (k === 1) {
-          const a = 12 + i;
-          const b = 18 + i;
-          q.fill('最小公倍数', `<code>${a}</code> 和 <code>${b}</code> 的最小公倍数是（ ）。`, lcmNumber(a, b));
-        } else if (k === 2) {
-          const n = 2 + (i % 8);
-          const d = 3 + (i % 7);
-          const g = 2 + (i % 4);
-          q.fill('约分', `把分数 <code>${n * g}/${d * g}</code> 化成最简分数。`, fractionText(n * g, d * g), 'number', '广州课程常见题型', '可输入分数或小数');
-        } else if (k === 3) {
-          const side = 6 + i;
-          q.fill('正方形面积', `边长为 <code>${side} cm</code> 的正方形面积是（ ）cm²。`, side * side);
-        } else {
-          const dm3 = 2 + i;
-          q.fill('体积单位换算', `<code>${dm3} dm³</code> =（ ）cm³。`, dm3 * 1000);
-        }
-      }
-      for (let i = 0; i < 25; i++) {
-        const k = i % 5;
-        if (k === 0) {
-          const a = 18 + i;
-          const b = 2 + (i % 8);
-          const c = 0.5 + (i % 4) * 0.25;
-          q.calc('小数混合运算', `计算：<code>${a} − ${b} × ${c}</code>。`, tidyNumber(a - b * c));
-        } else if (k === 1) {
-          const a = 1 + (i % 4);
-          const b = 2 + (i % 5);
-          const c = 1 + (i % 3);
-          const d = 3 + (i % 6);
-          q.calc('分数加减', `计算：<code>${a}/${b} + ${c}/${d}</code>。`, fractionText(a * d + c * b, b * d), 'number', '广州课程常见题型', '可输入最简分数或小数');
-        } else if (k === 2) {
-          const a = 25 + i;
-          const b = 4 + (i % 7);
-          const c = 6 + (i % 8);
-          q.calc('乘法分配律', `用简便方法计算：<code>${a} × ${b} + ${a} × ${c}</code>。`, a * (b + c));
-        } else if (k === 3) {
-          const base = 70 + i;
-          const scores = [base, base + 5, base - 5, base + 10];
-          q.calc('平均数', `四个数 <code>${scores.join('、')}</code> 的平均数是多少？`, tidyNumber(scores.reduce((s, v) => s + v, 0) / scores.length));
-        } else {
-          const m = 2 + i;
-          const cm = 15 + (i % 60);
-          q.calc('长度单位换算', `计算并用厘米表示：<code>${m} m ${cm} cm</code>。`, m * 100 + cm);
-        }
-      }
-      for (let i = 0; i < 25; i++) {
-        const k = i % 5;
-        if (k === 0) {
-          const price = 18 + i;
-          const count = 3 + (i % 4);
-          const paid = price * count + 20;
-          q.big('购物问题', `文具店里每盒彩笔 <code>${price} 元</code>，小明买了 <code>${count} 盒</code>，付给收银员 <code>${paid} 元</code>。`, [
-            { label: '① 一共应付多少元', answer: price * count, answerKind: 'number' },
-            { label: '② 应找回多少元', answer: paid - price * count, answerKind: 'number' }
-          ]);
-        } else if (k === 1) {
-          const length = 10 + i;
-          const width = 4 + (i % 8);
-          q.big('长方形综合', `一个长方形花坛长 <code>${length} m</code>，宽 <code>${width} m</code>。`, [
-            { label: '① 花坛周长（m）', answer: 2 * (length + width), answerKind: 'number' },
-            { label: '② 花坛面积（m²）', answer: length * width, answerKind: 'number' }
-          ]);
-        } else if (k === 2) {
-          const length = 6 + (i % 6);
-          const width = 4 + (i % 5);
-          const height = 3 + (i % 4);
-          q.big('长方体综合', `一个无盖长方体水箱长 <code>${length} dm</code>、宽 <code>${width} dm</code>、高 <code>${height} dm</code>。`, [
-            { label: '① 水箱容积（dm³）', answer: length * width * height, answerKind: 'number' },
-            { label: '② 制作外壳至少用材料（dm²）', answer: length * width + 2 * length * height + 2 * width * height, answerKind: 'number' }
-          ]);
-        } else if (k === 3) {
-          const speed = 45 + i;
-          const hours = 2 + (i % 3);
-          const total = speed * hours + 30;
-          q.big('行程问题', `汽车以每小时 <code>${speed} km</code> 的速度行驶 <code>${hours} 小时</code>，全程共 <code>${total} km</code>。`, [
-            { label: '① 已行驶路程（km）', answer: speed * hours, answerKind: 'number' },
-            { label: '② 还剩路程（km）', answer: total - speed * hours, answerKind: 'number' }
-          ]);
-        } else {
-          const total = 120 + i * 3;
-          const perBox = 7 + (i % 5);
-          q.big('包装问题', `把 <code>${total}</code> 个零件装盒，每盒装 <code>${perBox}</code> 个。`, [
-            { label: '① 最多装满多少盒', answer: Math.floor(total / perBox), answerKind: 'number' },
-            { label: '② 还剩多少个', answer: total % perBox, answerKind: 'number' }
-          ]);
-        }
-      }
-    }
-
-    // 六年级：100 题
-    {
-      const q = createQuestionFactory(list, '六年级');
-      for (let i = 0; i < 25; i++) {
-        const k = i % 5;
-        if (k === 0) {
-          const base = 80 + i * 4;
-          const percent = 10 + (i % 8) * 5;
-          const correct = base * percent / 100;
-          q.choice('百分数', `<code>${base}</code> 的 <code>${percent}%</code> 是（ ）。`, correct, [base - correct, correct + 5, percent]);
-        } else if (k === 1) {
-          const a = 2 + (i % 7);
-          const b = 3 + (i % 8);
-          const multiplier = 2 + (i % 5);
-          q.choice('比与比例', `与比 <code>${a}:${b}</code> 相等的是（ ）。`, `${a * multiplier}:${b * multiplier}`, [`${a + multiplier}:${b + multiplier}`, `${b * multiplier}:${a * multiplier}`, `${a * multiplier}:${b + multiplier}`]);
-        } else if (k === 2) {
-          const radius = 3 + (i % 8);
-          const correct = tidyNumber(2 * 3.14 * radius, 2);
-          q.choice('圆的周长', `圆的半径为 <code>${radius} cm</code>，取 π=3.14，周长是（ ）。`, `${correct} cm`, [`${tidyNumber(3.14 * radius * radius, 2)} cm²`, `${tidyNumber(3.14 * radius, 2)} cm`, `${tidyNumber(correct + 3.14, 2)} cm`]);
-        } else if (k === 3) {
-          const values = [-12 - i, 4 + i, -(3 + i), 0];
-          const correct = Math.min(...values);
-          q.choice('负数', `下列各数中最小的是（ ）。`, correct, values.filter(v => v !== correct));
-        } else {
-          const data = [10 + i, 12 + i, 14 + i, 16 + i, 18 + i];
-          const correct = data[2];
-          q.choice('统计', `数据 <code>${data.join('、')}</code> 的中位数是（ ）。`, correct, [data[1], data[3], tidyNumber(data.reduce((s, v) => s + v, 0) / data.length)]);
-        }
-      }
-      for (let i = 0; i < 25; i++) {
-        const k = i % 5;
-        if (k === 0) {
-          const percent = 15 + (i % 8) * 5;
-          q.fill('百分数互化', `<code>${percent}%</code> 化成小数是（ ）。`, percent / 100);
-        } else if (k === 1) {
-          const a = 2 + (i % 6);
-          const b = 3 + (i % 7);
-          const c = a * (4 + (i % 5));
-          q.fill('比例', `解比例：<code>${a}:${b} = ${c}:x</code>，x=（ ）。`, b * c / a);
-        } else if (k === 2) {
-          const radius = 4 + (i % 7);
-          q.fill('圆的面积', `半径为 <code>${radius} cm</code> 的圆，取 π=3.14，面积是（ ）cm²。`, tidyNumber(3.14 * radius * radius, 2));
-        } else if (k === 3) {
-          const scale = 100000 + i * 10000;
-          const mapCm = 2 + (i % 6);
-          q.fill('比例尺', `比例尺为 <code>1:${scale}</code>，图上距离 <code>${mapCm} cm</code>，实际距离是（ ）km。`, tidyNumber(scale * mapCm / 100000));
-        } else {
-          const base = 60 + i;
-          const data = [base - 6, base - 2, base + 2, base + 6];
-          q.fill('平均数', `数据 <code>${data.join('、')}</code> 的平均数是（ ）。`, base);
-        }
-      }
-      for (let i = 0; i < 25; i++) {
-        const k = i % 5;
-        if (k === 0) {
-          const a = 1 + (i % 4);
-          const b = 2 + (i % 7);
-          const c = 2 + (i % 5);
-          const d = 3 + (i % 8);
-          q.calc('分数混合运算', `计算：<code>${a}/${b} × ${c}/${d}</code>。`, fractionText(a * c, b * d), 'number', '广州课程常见题型', '可输入最简分数或小数');
-        } else if (k === 1) {
-          const base = 240 + i * 8;
-          const percent = 20 + (i % 6) * 5;
-          q.calc('百分数混合运算', `计算：<code>${base} × (1 − ${percent}%)</code>。`, tidyNumber(base * (1 - percent / 100)));
-        } else if (k === 2) {
-          const a = 3 + (i % 8);
-          const b = 5 + (i % 9);
-          const c = 4 + (i % 6);
-          q.calc('比的应用', `已知 <code>x:y=${a}:${b}</code>，且 <code>x=${a * c}</code>，求 y。`, b * c);
-        } else if (k === 3) {
-          const radius = 5 + (i % 5);
-          q.calc('圆的周长和面积', `取 π=3.14，计算半径为 <code>${radius} cm</code> 的圆的周长。`, tidyNumber(2 * 3.14 * radius, 2));
-        } else {
-          const x = 2 + (i % 8);
-          const k1 = 3 + (i % 6);
-          const k2 = 5 + (i % 7);
-          q.calc('正比例', `若 <code>y</code> 与 <code>x</code> 成正比例，且 x=${k1} 时 y=${k1 * k2}，当 x=${x} 时，y=？`, x * k2);
-        }
-      }
-      for (let i = 0; i < 25; i++) {
-        const k = i % 5;
-        if (k === 0) {
-          const price = 260 + i * 10;
-          const discount = 70 + (i % 4) * 5;
-          q.big('折扣问题', `一件商品原价 <code>${price} 元</code>，按 <code>${discount}%</code> 出售。`, [
-            { label: '① 现价（元）', answer: price * discount / 100, answerKind: 'number' },
-            { label: '② 比原价便宜（元）', answer: price * (100 - discount) / 100, answerKind: 'number' }
-          ]);
-        } else if (k === 1) {
-          const boys = 18 + i;
-          const ratioA = 3 + (i % 4);
-          const ratioB = 2 + (i % 3);
-          const unit = boys / ratioA;
-          const adjustedBoys = ratioA * Math.ceil(unit);
-          q.big('按比分配', `某小组男、女生人数比为 <code>${ratioA}:${ratioB}</code>，男生有 <code>${adjustedBoys}</code> 人。`, [
-            { label: '① 女生人数', answer: ratioB * adjustedBoys / ratioA, answerKind: 'number' },
-            { label: '② 小组总人数', answer: (ratioA + ratioB) * adjustedBoys / ratioA, answerKind: 'number' }
-          ]);
-        } else if (k === 2) {
-          const radius = 4 + (i % 8);
-          q.big('圆形综合', `圆形花坛半径为 <code>${radius} m</code>，取 π=3.14。`, [
-            { label: '① 花坛周长（m）', answer: tidyNumber(2 * 3.14 * radius, 2), answerKind: 'number' },
-            { label: '② 花坛面积（m²）', answer: tidyNumber(3.14 * radius * radius, 2), answerKind: 'number' }
-          ]);
-        } else if (k === 3) {
-          const scale = 200000 + i * 10000;
-          const map = 3 + (i % 5);
-          const actualKm = scale * map / 100000;
-          q.big('比例尺应用', `地图比例尺是 <code>1:${scale}</code>，甲乙两地图上距离为 <code>${map} cm</code>。`, [
-            { label: '① 实际距离（km）', answer: actualKm, answerKind: 'number' },
-            { label: '② 以 60 km/h 行驶需几小时', answer: tidyNumber(actualKm / 60), answerKind: 'number' }
-          ]);
-        } else {
-          const base = 70 + i;
-          const data = [base - 10, base - 4, base, base + 6, base + 8];
-          q.big('统计综合', `五名同学成绩为 <code>${data.join('、')}</code> 分。`, [
-            { label: '① 平均分', answer: tidyNumber(data.reduce((s, v) => s + v, 0) / data.length), answerKind: 'number' },
-            { label: '② 中位数', answer: base, answerKind: 'number' }
-          ]);
-        }
-      }
-    }
-
-    // 七年级：100 题
-    {
-      const q = createQuestionFactory(list, '七年级');
-      for (let i = 0; i < 25; i++) {
-        const k = i % 5;
-        if (k === 0) {
-          const a = -20 - i;
-          const b = 5 + (i % 8);
-          const correct = Math.abs(a + b);
-          q.choice('有理数与绝对值', `<code>|${a} + ${b}|</code> 的值是（ ）。`, correct, [a + b, -correct, correct + 1]);
-        } else if (k === 1) {
-          const x = 2 + (i % 7);
-          const a = 3 + (i % 5);
-          const b = 4 + i;
-          const correct = a * x + b;
-          q.choice('代数式求值', `当 <code>x=${x}</code> 时，代数式 <code>${a}x+${b}</code> 的值是（ ）。`, correct, [a + x + b, correct - a, correct + x]);
-        } else if (k === 2) {
-          const x = (i % 9) - 4;
-          const a = 2 + (i % 5);
-          const b = 3 + (i % 7);
-          const c = a * x + b;
-          q.choice('一元一次方程', `方程 <code>${a}x+${b}=${c}</code> 的解是（ ）。`, `x=${x}`, [`x=${x + 1}`, `x=${-x}`, `x=${x - 1}`]);
-        } else if (k === 3) {
-          const x = (i % 2 === 0 ? 1 : -1) * (2 + i);
-          const y = (i % 3 === 0 ? -1 : 1) * (3 + i);
-          const quadrant = x > 0 && y > 0 ? '第一象限' : x < 0 && y > 0 ? '第二象限' : x < 0 && y < 0 ? '第三象限' : '第四象限';
-          q.choice('平面直角坐标系', `点 <code>P(${x},${y})</code> 位于（ ）。`, quadrant, ['第一象限', '第二象限', '第三象限', '第四象限'].filter(v => v !== quadrant));
-        } else {
-          const angle = 35 + (i % 10) * 5;
-          const correct = 180 - angle;
-          q.choice('角与补角', `一个角为 <code>${angle}°</code>，它的补角是（ ）。`, `${correct}°`, [`${90 - angle}°`, `${angle}°`, `${180 + angle}°`]);
-        }
-      }
-      for (let i = 0; i < 25; i++) {
-        const k = i % 5;
-        if (k === 0) {
-          const a = -18 - i;
-          const b = 7 + (i % 9);
-          const c = 3 + (i % 6);
-          q.fill('绝对值混合运算', `计算：<code>|${a}+${b}|−|${c}−${b}|</code>。`, Math.abs(a + b) - Math.abs(c - b));
-        } else if (k === 1) {
-          const x = 2 + (i % 6);
-          const a = 4 + (i % 7);
-          const b = 3 + i;
-          q.fill('整式求值', `当 <code>x=${x}</code> 时，<code>${a}x−${b}</code> 的值为（ ）。`, a * x - b);
-        } else if (k === 2) {
-          const x = (i % 11) - 5;
-          const a = 3 + (i % 6);
-          const b = 5 + (i % 8);
-          q.fill('一元一次方程', `解方程：<code>${a}x−${b}=${a * x - b}</code>。为避免恒等式，本题指定解为由等价式 <code>x+${b}=${x + b}</code> 得到，x=（ ）。`, x);
-        } else if (k === 3) {
-          const x1 = -8 - i;
-          const x2 = 5 + i;
-          q.fill('数轴', `数轴上两点 A、B 的坐标分别为 <code>${x1}</code>、<code>${x2}</code>，AB=（ ）。`, Math.abs(x2 - x1));
-        } else {
-          const a = 20 + (i % 12) * 5;
-          const b = 35 + (i % 8) * 5;
-          q.fill('三角形内角', `三角形两个内角分别为 <code>${a}°</code>、<code>${b}°</code>，第三个内角为（ ）°。`, 180 - a - b);
-        }
-      }
-      for (let i = 0; i < 25; i++) {
-        const k = i % 5;
-        if (k === 0) {
-          const a = -10 - i;
-          const b = 3 + (i % 8);
-          const c = -4 - (i % 6);
-          q.calc('有理数混合运算', `计算：<code>${a}−(${b})×(${c})</code>。`, a - b * c);
-        } else if (k === 1) {
-          const x = (i % 13) - 6;
-          const a = 2 + (i % 7);
-          const b = 4 + (i % 9);
-          q.calc('解一元一次方程', `解方程：<code>${a}x+${b}=${a * x + b}</code>。请根据等价方程 <code>${a}x=${a * x}</code> 输入指定解 x。`, x);
-        } else if (k === 2) {
-          const x = 2 + (i % 7);
-          const a = 3 + (i % 5);
-          const b = 2 + (i % 6);
-          const c = 5 + i;
-          q.calc('去括号与合并同类项', `当 <code>x=${x}</code> 时，计算 <code>${a}(x+${b})−${c}</code>。`, a * (x + b) - c);
-        } else if (k === 3) {
-          const a = 12 + i;
-          const b = 4 + (i % 7);
-          const c = 20 + (i % 9);
-          q.calc('绝对值四则混合', `计算：<code>|${a}−${b}×5|+|${c}−${a}|</code>。`, Math.abs(a - b * 5) + Math.abs(c - a));
-        } else {
-          const x = 1 + (i % 8);
-          const y = 2 + (i % 7);
-          q.calc('二元式求值', `当 <code>x=${x}, y=${y}</code> 时，计算 <code>3x−2y+5</code>。`, 3 * x - 2 * y + 5);
-        }
-      }
-      for (let i = 0; i < 25; i++) {
-        const k = i % 5;
-        if (k === 0) {
-          const price = 8 + (i % 7);
-          const count = 10 + i;
-          const fee = 5 + (i % 4);
-          const total = price * count + fee;
-          q.big('一元一次方程应用', `某活动购买同价纪念品 <code>${count}</code> 件，另付包装费 <code>${fee} 元</code>，共花 <code>${total} 元</code>。设每件价格为 x 元。`, [
-            { label: '① 方程中的 x 值', answer: price, answerKind: 'number' },
-            { label: '② 购买纪念品本身共花（元）', answer: price * count, answerKind: 'number' }
-          ]);
-        } else if (k === 1) {
-          const a = 30 + (i % 8) * 5;
-          const b = 40 + (i % 6) * 5;
-          q.big('角度综合', `直线 AB、CD 相交于 O，∠AOC=<code>${a}°</code>；射线 OE 平分 ∠BOC，且 ∠BOC=<code>${b}°</code>。`, [
-            { label: '① ∠EOC（°）', answer: b / 2, answerKind: 'number' },
-            { label: '② ∠AOD（°）', answer: b, answerKind: 'number' }
-          ]);
-        } else if (k === 2) {
-          const start = -15 + i;
-          const speed = 2 + (i % 5);
-          const seconds = 4 + (i % 8);
-          const end = start + speed * seconds;
-          q.big('动点·数轴', `数轴上点 P 从坐标 <code>${start}</code> 出发，以每秒 <code>${speed}</code> 个单位向右运动。`, [
-            { label: `① ${seconds} 秒后 P 的坐标`, answer: end, answerKind: 'number' },
-            { label: '② P 到原点的距离', answer: Math.abs(end), answerKind: 'number' }
-          ]);
-        } else if (k === 3) {
-          const x = 3 + (i % 7);
-          const y = 4 + (i % 8);
-          q.big('坐标综合', `点 A(<code>${x},${y}</code>) 关于 x 轴对称得到点 B，关于 y 轴对称得到点 C。`, [
-            { label: '① B 点纵坐标', answer: -y, answerKind: 'number' },
-            { label: '② C 点横坐标', answer: -x, answerKind: 'number' }
-          ]);
-        } else {
-          const initial = 20 + (i % 5) * 10;
-          const speed = 5 + (i % 6);
-          const seconds = 6 + (i % 7);
-          const finalAngle = initial + speed * seconds;
-          q.big('动角·角度与秒数', `射线 OP 与 OX 初始夹角为 <code>${initial}°</code>，OP 以每秒 <code>${speed}°</code> 逆时针转动。`, [
-            { label: `① ${seconds} 秒后方向角（°）`, answer: finalAngle % 360, answerKind: 'number' },
-            { label: `② 转到 ${finalAngle}° 共需（秒）`, answer: seconds, answerKind: 'number' }
-          ]);
-        }
-      }
-    }
-
-    // 八年级：100 题
-    {
-      const q = createQuestionFactory(list, '八年级');
-      for (let i = 0; i < 25; i++) {
-        const k = i % 5;
-        if (k === 0) {
-          const n = 5 + i;
-          q.choice('平方根与立方根', `<code>√${n * n}+∛${(2 + (i % 6)) ** 3}</code> 的值是（ ）。`, n + 2 + (i % 6), [n, n + 1 + (i % 6), n * (2 + (i % 6))]);
-        } else if (k === 1) {
-          const a = 2 + (i % 6);
-          const b = 3 + (i % 7);
-          q.choice('因式分解', `多项式 <code>${a}x²+${a * b}x</code> 分解因式正确的是（ ）。`, `${a}x(x+${b})`, [`${a}(x²+${b})`, `x(${a}x+${b})`, `${a}x(x−${b})`]);
-        } else if (k === 2) {
-          const m = 2 + (i % 6);
-          const b = -5 + (i % 11);
-          const x = 3 + (i % 5);
-          q.choice('一次函数', `一次函数 <code>y=${m}x${b >= 0 ? '+' : ''}${b}</code>，当 x=${x} 时，y=（ ）。`, m * x + b, [m + x + b, m * x - b, m * (x + b)]);
-        } else if (k === 3) {
-          const x = 2 + (i % 7);
-          const y = 1 + (i % 6);
-          const c1 = x + y;
-          const c2 = 2 * x - y;
-          q.choice('二元一次方程组', `方程组 <code>x+y=${c1}<br>2x−y=${c2}</code> 的解是（ ）。`, `(${x},${y})`, [`(${y},${x})`, `(${x + 1},${y - 1})`, `(${-x},${y})`]);
-        } else {
-          const a = 2 + (i % 7);
-          const b = 7 + i;
-          const bound = tidyNumber(b / a);
-          q.choice('一元一次不等式', `不等式 <code>${a}x&lt;${b}</code> 的解集是（ ）。`, `x&lt;${bound}`, [`x&gt;${bound}`, `x≤${bound}`, `x≥${bound}`]);
-        }
-      }
-      for (let i = 0; i < 25; i++) {
-        const k = i % 5;
-        if (k === 0) {
-          const n = 8 + i;
-          q.fill('平方与平方根', `<code>${n}²</code> 的算术平方根是（ ）。`, n);
-        } else if (k === 1) {
-          const n = 3 + (i % 10);
-          q.fill('立方与立方根', `<code>∛${n ** 3}</code> =（ ）。`, n);
-        } else if (k === 2) {
-          const m = 2 + (i % 5);
-          const b = -6 + (i % 13);
-          const x = 4 + (i % 6);
-          q.fill('一次函数求值', `函数 <code>y=${m}x${b >= 0 ? '+' : ''}${b}</code> 中，当 x=${x} 时 y=（ ）。`, m * x + b);
-        } else if (k === 3) {
-          const x = (i % 9) - 4;
-          const y = 2 + (i % 7);
-          q.fill('二元一次方程', `若 <code>3x+2y=${3 * x + 2 * y}</code> 且 y=${y}，则 x=（ ）。`, x);
-        } else {
-          const a = 3 + (i % 6);
-          const b = 4 + (i % 7);
-          q.fill('勾股定理', `直角三角形两直角边为 <code>${3 * a}</code> 和 <code>${4 * a}</code>，斜边为（ ）。`, 5 * a);
-        }
-      }
-      for (let i = 0; i < 25; i++) {
-        const k = i % 5;
-        if (k === 0) {
-          const a = 2 + (i % 6);
-          const b = 3 + (i % 7);
-          q.calc('二次根式', `计算：<code>√${a * a * b * b}−√${a * a}</code>。`, a * b - a);
-        } else if (k === 1) {
-          const a = 2 + (i % 8);
-          const b = 3 + (i % 7);
-          const x = 2 + (i % 5);
-          q.calc('整式乘法与因式分解', `当 x=${x} 时，计算 <code>(x+${a})(x−${a})+${b}</code>。`, x * x - a * a + b);
-        } else if (k === 2) {
-          const x = (i % 7) - 3;
-          const y = 2 + (i % 6);
-          const a = 2 + (i % 5);
-          const b = 3 + (i % 4);
-          q.calc('二元一次方程组', `解方程组并输入 x：<code>${a}x+y=${a * x + y}<br>x−${b}y=${x - b * y}</code>。`, x);
-        } else if (k === 3) {
-          const x = 2 + (i % 8);
-          const a = 3 + (i % 6);
-          const lower = a * (x - 1);
-          const upper = a * (x + 1);
-          q.calc('一元一次不等式组', `整数 x 同时满足 <code>${lower}&lt;${a}x&lt;${upper}</code>，求 x。`, x);
-        } else {
-          const x = 1 + (i % 5);
-          const y = 2 + (i % 4);
-          const z = 3 + (i % 3);
-          q.calc('三元一次方程组', `解方程组并输入 z：<code>x+y+z=${x + y + z}<br>2x−y+z=${2 * x - y + z}<br>x+2y−z=${x + 2 * y - z}</code>。`, z, 'number', '拓展题型');
-        }
-      }
-      for (let i = 0; i < 25; i++) {
-        const k = i % 5;
-        if (k === 0) {
-          const ab = 10 + i;
-          const bc = 6 + (i % 8);
-          const speed = 2 + (i % 4);
-          const seconds = Math.ceil(ab / speed) + 2;
-          const distance = speed * seconds;
-          q.big('动点·矩形边界', `矩形 ABCD 中，AB=<code>${ab} cm</code>，BC=<code>${bc} cm</code>。点 P 从 A 沿 A→B→C 以 <code>${speed} cm/s</code> 运动，经过 <code>${seconds} s</code>。`, [
-            { label: '① P 走过的路程（cm）', answer: distance, answerKind: 'number' },
-            { label: '② P 到 B 的边长距离（cm）', answer: distance - ab, answerKind: 'number' }
-          ]);
-        } else if (k === 1) {
-          const m = 2 + (i % 5);
-          const b = 3 + (i % 7);
-          const x1 = 1 + (i % 4);
-          const x2 = x1 + 3;
-          q.big('一次函数综合', `一次函数 <code>y=${m}x+${b}</code>。`, [
-            { label: `① x=${x1} 时 y`, answer: m * x1 + b, answerKind: 'number' },
-            { label: `② x 从 ${x1} 增至 ${x2}，y 增加`, answer: m * (x2 - x1), answerKind: 'number' }
-          ]);
-        } else if (k === 2) {
-          const x = 2 + (i % 6);
-          const y = 3 + (i % 5);
-          q.big('二元一次方程组应用', `某商店售出甲、乙两类商品共 <code>${x + y}</code> 件；甲每件 12 元，乙每件 8 元，共收入 <code>${12 * x + 8 * y} 元</code>。`, [
-            { label: '① 甲商品件数 x', answer: x, answerKind: 'number' },
-            { label: '② 乙商品件数 y', answer: y, answerKind: 'number' }
-          ]);
-        } else if (k === 3) {
-          const a = -2 + (i % 5);
-          const b = 4 + (i % 7);
-          const c = 3 + (i % 6);
-          const validX = a + 1;
-          const validY = b - 1;
-          const validZ = c - 1;
-          q.big('二元三元一次不等式组', `已知整数 x、y、z 满足 <code>x≥${a}，y&lt;${b}，z≤${c}，x+y+z=${validX + validY + validZ}</code>。`, [
-            { label: '① 取一组满足条件的 x', answer: validX, answerKind: 'number' },
-            { label: '② 对应 y', answer: validY, answerKind: 'number' },
-            { label: '③ 对应 z', answer: validZ, answerKind: 'number' }
-          ], '拓展题型');
-        } else {
-          const initial = 25 + (i % 6) * 5;
-          const w1 = 4 + (i % 5);
-          const w2 = 3 + (i % 4);
-          const seconds = 5 + (i % 6);
-          const target = initial + (w1 + w2) * seconds;
-          q.big('动角·双射线', `OA、OB 初始较小夹角为 <code>${initial}°</code>。OA、OB 分别以每秒 <code>${w1}°</code>、<code>${w2}°</code> 反向转动。`, [
-            { label: `① ${seconds} 秒后夹角（°）`, answer: target, answerKind: 'number' },
-            { label: `② 夹角达到 ${target}° 所需秒数`, answer: seconds, answerKind: 'number' }
-          ]);
-        }
-      }
-    }
-
-    // 九年级：100 题
-    {
-      const q = createQuestionFactory(list, '九年级');
-      for (let i = 0; i < 25; i++) {
-        const k = i % 5;
-        if (k === 0) {
-          const r1 = 2 + (i % 6);
-          const r2 = 5 + (i % 7);
-          const sum = r1 + r2;
-          const product = r1 * r2;
-          q.choice('一元二次方程', `方程 <code>x²−${sum}x+${product}=0</code> 的两根是（ ）。`, `${r1},${r2}`, [`${-r1},${-r2}`, `${r1},${-r2}`, `${sum},${product}`]);
-        } else if (k === 1) {
-          const a = 1 + (i % 3);
-          const b = 2 + (i % 8);
-          const c = -3 - (i % 7);
-          const delta = b * b - 4 * a * c;
-          q.choice('根的判别式', `方程 <code>${a}x²+${b}x${c}=0</code> 的判别式 Δ 为（ ）。`, delta, [b * b + 4 * a * c, delta + 4, Math.abs(delta)]);
-        } else if (k === 2) {
-          const h = -3 + (i % 7);
-          const k0 = 2 + (i % 9);
-          q.choice('二次函数', `抛物线 <code>y=(x−${h})²+${k0}</code> 的顶点是（ ）。`, `(${h},${k0})`, [`(${-h},${k0})`, `(${h},${-k0})`, `(${k0},${h})`]);
-        } else if (k === 3) {
-          const radius = 5 + (i % 8);
-          const distance = radius + 2 + (i % 5);
-          q.choice('圆与点的位置关系', `圆 O 半径为 <code>${radius}</code>，点 P 到圆心距离为 <code>${distance}</code>，P 在圆的（ ）。`, '外部', ['内部', '圆上', '圆心']);
-        } else {
-          const favorable = 2 + (i % 5);
-          const total = favorable + 5 + (i % 6);
-          q.choice('概率', `袋中共有 <code>${total}</code> 个除颜色外完全相同的球，其中红球 <code>${favorable}</code> 个，随机摸一个是红球的概率为（ ）。`, fractionText(favorable, total), [fractionText(total - favorable, total), fractionText(favorable, total - favorable), fractionText(1, total)]);
-        }
-      }
-      for (let i = 0; i < 25; i++) {
-        const k = i % 5;
-        if (k === 0) {
-          const r1 = 1 + (i % 7);
-          const r2 = 4 + (i % 8);
-          q.fill('一元二次方程根', `方程 <code>(x−${r1})(x−${r2})=0</code> 的较大根是（ ）。`, Math.max(r1, r2));
-        } else if (k === 1) {
-          const h = -4 + (i % 9);
-          const k0 = 1 + (i % 10);
-          q.fill('二次函数顶点', `抛物线 <code>y=(x−${h})²+${k0}</code> 的顶点横坐标是（ ）。`, h);
-        } else if (k === 2) {
-          const radius = 4 + (i % 7);
-          q.fill('圆周角', `同弧所对圆心角为 <code>${2 * (30 + i)}°</code>，圆周角为（ ）°。`, 30 + i);
-        } else if (k === 3) {
-          const favorable = 3 + (i % 5);
-          const total = favorable + 7 + (i % 4);
-          q.fill('概率', `共有 <code>${total}</code> 张卡片，其中 <code>${favorable}</code> 张标有偶数，随机抽一张为偶数的概率是（ ）。`, fractionText(favorable, total), 'number', '广州中考常见题型', '可输入分数或小数');
-        } else {
-          const n = 4 + (i % 8);
-          q.fill('平方立方与根式', `计算：<code>√${n * n}+∛${(n + 1) ** 3}−${n}</code>。`, n + 1);
-        }
-      }
-      for (let i = 0; i < 25; i++) {
-        const k = i % 5;
-        if (k === 0) {
-          const r1 = 2 + (i % 6);
-          const r2 = 5 + (i % 7);
-          q.calc('一元二次方程', `解方程 <code>x²−${r1 + r2}x+${r1 * r2}=0</code>，输入较小根。`, Math.min(r1, r2));
-        } else if (k === 1) {
-          const y = 1 + (i % 6);
-          const x = y + 2 + (i % 5);
-          q.calc('二元二次方程组', `已知 x&gt;0，y&gt;0，<code>x−y=${x - y}</code>，<code>x²+y²=${x * x + y * y}</code>，求 x。`, x, 'number', '全国中考原创变式');
-        } else if (k === 2) {
-          const z = 1 + (i % 4);
-          const y = z + 1;
-          const x = y + 1;
-          q.calc('三元二次方程组', `已知 x&gt;y&gt;z&gt;0，<code>x−y=1，y−z=1，x²+y²+z²=${x * x + y * y + z * z}</code>，求 z。`, z, 'number', '拓展压轴题型');
-        } else if (k === 3) {
-          const x = 1 + (i % 5);
-          const y = 2 + (i % 4);
-          const z = 3 + (i % 3);
-          q.calc('三元一次方程组', `解方程组并求 <code>x+y+z</code>：<code>x+y+z=${x + y + z}<br>2x−y+z=${2 * x - y + z}<br>x+2y−z=${x + 2 * y - z}</code>。`, x + y + z, 'number', '拓展题型');
-        } else {
-          const a = -3 + (i % 6);
-          const b = 4 + (i % 7);
-          const c = 2 + (i % 5);
-          const x = a + 1;
-          const y = b - 1;
-          const z = c;
-          q.calc('三元一次不等式组', `整数 x、y、z 满足 <code>x≥${a}，y&lt;${b}，z≤${c}</code>，且取 <code>x=${x},y=${y}</code>，求最大的整数 z。`, z, 'number', '拓展题型');
-        }
-      }
-      for (let i = 0; i < 25; i++) {
-        const k = i % 5;
-        if (k === 0) {
-          const length = 18 + i;
-          const v1 = 2 + (i % 4);
-          const v2 = 3 + (i % 5);
-          const seconds = length / (v1 + v2);
-          const adjustedLength = (v1 + v2) * Math.ceil(seconds);
-          const t = adjustedLength / (v1 + v2);
-          q.big('中考压轴·动点相遇', `线段 AB 长 <code>${adjustedLength} m</code>。P、Q 分别从 A、B 同时出发，相向速度为 <code>${v1} m/s</code>、<code>${v2} m/s</code>。`, [
-            { label: '① 相遇时间（s）', answer: t, answerKind: 'number' },
-            { label: '② P 运动路程（m）', answer: v1 * t, answerKind: 'number' }
-          ]);
-        } else if (k === 1) {
-          const initial = 30 + (i % 6) * 10;
-          const w1 = 5 + (i % 5);
-          const w2 = 3 + (i % 4);
-          const seconds = 6 + (i % 6);
-          const target = initial + (w1 + w2) * seconds;
-          q.big('中考压轴·动角', `两射线初始较小夹角为 <code>${initial}°</code>，分别以每秒 <code>${w1}°</code>、<code>${w2}°</code> 反向转动（未超过 180°）。`, [
-            { label: `① ${seconds} 秒后夹角（°）`, answer: target, answerKind: 'number' },
-            { label: `② 达到 ${target}° 需要（s）`, answer: seconds, answerKind: 'number' }
-          ]);
-        } else if (k === 2) {
-          const h = -2 + (i % 5);
-          const k0 = 1 + (i % 6);
-          const x = h + 3;
-          q.big('中考压轴·二次函数', `抛物线 <code>y=(x−${h})²+${k0}</code>。`, [
-            { label: '① 顶点横坐标', answer: h, answerKind: 'number' },
-            { label: `② x=${x} 时 y`, answer: (x - h) ** 2 + k0, answerKind: 'number' }
-          ]);
-        } else if (k === 3) {
-          const radius = 5 + (i % 6);
-          const angle = 60 + (i % 5) * 10;
-          q.big('中考压轴·圆', `圆 O 半径为 <code>${radius}</code>，圆心角 ∠AOB=<code>${angle}°</code>。`, [
-            { label: '① 同弧所对圆周角（°）', answer: angle / 2, answerKind: 'number' },
-            { label: '② 直径长度', answer: 2 * radius, answerKind: 'number' }
-          ]);
-        } else {
-          const x = 2 + (i % 5);
-          const y = 1 + (i % 4);
-          const z = 3 + (i % 3);
-          q.big('全国中考原创综合变式', `已知三数 x、y、z 满足 <code>x+y=${x + y}</code>，<code>y+z=${y + z}</code>，<code>x²+y²+z²=${x * x + y * y + z * z}</code>，且均为正整数。`, [
-            { label: '① x', answer: x, answerKind: 'number' },
-            { label: '② y', answer: y, answerKind: 'number' },
-            { label: '③ z', answer: z, answerKind: 'number' }
-          ]);
-        }
-      }
-    }
-
-    if (list.length !== 500) throw new Error(`验证题数量错误：${list.length}`);
-
-    const gradeCount = list.reduce((map, item) => {
-      map[item.grade] = (map[item.grade] || 0) + 1;
-      return map;
-    }, {});
-    const formatCount = list.reduce((map, item) => {
-      map[item.format] = (map[item.format] || 0) + 1;
-      return map;
-    }, {});
-    if (Object.values(gradeCount).some(count => count !== 100)) throw new Error('年级题量分配错误');
-    if (Object.values(formatCount).some(count => count !== 125)) throw new Error('题型题量分配错误');
-
-    return seededShuffle(list, 20260710509);
-  }
-
-  function cleanMathInput(value) {
-    return String(value ?? '')
-      .trim()
-      .toLowerCase()
-      .replace(/[，、；]/g, ',')
-      .replace(/[＝]/g, '=')
-      .replace(/[−—–]/g, '-')
-      .replace(/[％]/g, '%')
-      .replace(/\s+/g, '');
-  }
-
-  function parseNumericValue(value, kind = 'number') {
-    let text = cleanMathInput(value)
-      .replace(/(平方厘米|立方厘米|平方分米|立方分米|平方千米|立方米|厘米|分米|千米|公里|米|元|个|盒|件|小时|分钟|秒|度|°|cm³|cm²|cm|dm³|dm²|dm|km|m³|m²|m|s)$/gi, '');
-
-    if (kind === 'percent') {
-      if (text.endsWith('%')) return Number(text.slice(0, -1)) / 100;
-      const numeric = Number(text);
-      return Number.isFinite(numeric) ? (Math.abs(numeric) > 1 ? numeric / 100 : numeric) : NaN;
-    }
-
-    if (/^[+-]?\d+(?:\.\d+)?\/[+-]?\d+(?:\.\d+)?$/.test(text)) {
-      const [a, b] = text.split('/').map(Number);
-      return b === 0 ? NaN : a / b;
-    }
-
-    if (/^[+-]?\d+(?:\.\d+)?%$/.test(text)) return Number(text.slice(0, -1)) / 100;
-    const numeric = Number(text);
-    return Number.isFinite(numeric) ? numeric : NaN;
-  }
-
-  function normalizeTextAnswer(value) {
-    return cleanMathInput(value)
-      .replace(/[（）]/g, match => match === '（' ? '(' : ')')
-      .replace(/[＜]/g, '<')
-      .replace(/[＞]/g, '>');
-  }
-
-  function answerMatches(rawValue, expectedValue, kind = 'number') {
-    if (kind === 'text') return normalizeTextAnswer(rawValue) === normalizeTextAnswer(expectedValue);
-    if (kind === 'list') {
-      const raw = cleanMathInput(rawValue).match(/[+-]?\d+(?:\.\d+)?(?:\/[+-]?\d+(?:\.\d+)?)?/g) || [];
-      const expected = cleanMathInput(expectedValue).match(/[+-]?\d+(?:\.\d+)?(?:\/[+-]?\d+(?:\.\d+)?)?/g) || [];
-      if (raw.length !== expected.length) return false;
-      return raw.every((item, index) => {
-        const a = parseNumericValue(item);
-        const b = parseNumericValue(expected[index]);
-        return Number.isFinite(a) && Number.isFinite(b) && Math.abs(a - b) < 1e-7;
-      });
-    }
-    const submitted = parseNumericValue(rawValue, kind);
-    const expected = parseNumericValue(expectedValue, kind);
-    return Number.isFinite(submitted) && Number.isFinite(expected) && Math.abs(submitted - expected) < 1e-7;
-  }
-
-  function escapeAttribute(value) {
+  function escapeHtml(value) {
     return String(value)
       .replace(/&/g, '&amp;')
-      .replace(/"/g, '&quot;')
       .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;');
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  function deterministicShuffle(values, seed) {
+    const arr = [...values];
+    let state = (seed * 9301 + 49297) % 233280;
+    for (let i = arr.length - 1; i > 0; i--) {
+      state = (state * 9301 + 49297) % 233280;
+      const j = Math.floor((state / 233280) * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  }
+
+  function randomShuffle(values) {
+    const arr = [...values];
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  }
+
+  function kindForIndex(index) {
+    const cycle = index % 10;
+    if (cycle <= 3) return '选择题';
+    if (cycle <= 6) return '填空题';
+    if (cycle <= 8) return '计算题';
+    return '综合大题';
+  }
+
+  function numericDecoys(answer, seed, step = 1) {
+    const n = Number(answer);
+    if (!Number.isFinite(n)) return [];
+    const baseStep = Math.max(Math.abs(step), Math.abs(n) >= 100 ? 10 : Math.abs(n) >= 10 ? 2 : 1);
+    const candidates = [
+      n + baseStep,
+      n - baseStep,
+      n + baseStep * 2,
+      n - baseStep * 2,
+      n * 2,
+      n === 0 ? 1 : -n
+    ].map(v => numberText(v));
+    return deterministicShuffle([...new Set(candidates.filter(v => v !== numberText(n)))], seed).slice(0, 3);
+  }
+
+  function createQuestion(config) {
+    const kind = config.kind || kindForIndex(config.index || 0);
+    const answer = String(config.answer);
+    const answers = (config.answers || [answer]).map(String);
+    const forceChoice = config.forceChoice === true;
+    const forceInput = config.forceInput === true;
+    const mode = forceChoice ? 'choice' : forceInput ? 'input' : (kind === '选择题' ? 'choice' : 'input');
+    let options = config.options ? config.options.map(String) : null;
+
+    if (mode === 'choice') {
+      const decoys = config.decoys ? config.decoys.map(String) : numericDecoys(answer, config.seed || 1, config.step || 1);
+      options = deterministicShuffle([...new Set([answer, ...decoys])], config.seed || 1);
+      let guard = 1;
+      while (options.length < 4) {
+        const fallback = `${answer}${guard}`;
+        if (!options.includes(fallback)) options.push(fallback);
+        guard += 1;
+      }
+      options = options.slice(0, 4);
+    }
+
+    const formatHint = config.formatHint
+      ? `<span class="answer-format">作答格式：${config.formatHint}</span>`
+      : (mode === 'input' ? '<span class="answer-format">只填写最终答案，不需要写解题过程。</span>' : '');
+
+    return {
+      id: config.id,
+      grade: config.grade,
+      kind,
+      topic: config.topic,
+      type: `${config.grade} · ${kind} · ${config.topic}`,
+      mode,
+      inputMode: config.inputMode || (/^-?[\d.]+$/.test(answer) ? 'decimal' : 'text'),
+      question: `${config.context ? `<span class="question-context">${config.context}</span>` : ''}${config.stem}${formatHint}`,
+      answer,
+      answers,
+      options,
+      caseInsensitive: config.caseInsensitive !== false
+    };
+  }
+
+  function makeTemplateQuestion(templateIndex, itemIndex, data) {
+    const id = `M${String(templateIndex + 1).padStart(2, '0')}-${String(itemIndex + 1).padStart(3, '0')}`;
+    return createQuestion({ ...data, id, index: itemIndex, seed: (templateIndex + 1) * 1009 + itemIndex * 37 });
+  }
+
+  function buildMathQuestionBank() {
+    const templates = [];
+
+    // 五年级：整数、小数、分数、单位、平面图形、体积、平均数、简易方程
+    templates.push((k, t) => {
+      const a = 24 + (k % 37), b = 3 + (k % 8), c = 2 + ((k * 3) % 7);
+      const divisor = 2 + ((k * 5) % 6), quotient = 2 + ((k * 7) % 9), dividend = divisor * quotient;
+      const ans = a + b * c - quotient;
+      return makeTemplateQuestion(t, k, { grade: '五年级', topic: '整数加减乘除混合运算', stem: `计算：<code>${a} + ${b} × ${c} − ${dividend} ÷ ${divisor}</code>`, answer: ans, step: 2 });
+    });
+    templates.push((k, t) => {
+      const a = (15 + (k % 31)) / 10, b = (7 + ((k * 3) % 23)) / 10, c = (2 + (k % 6)) / 10;
+      const ans = numberText(a + b - c, 1);
+      return makeTemplateQuestion(t, k, { grade: '五年级', topic: '小数加减混合运算', stem: `计算：<code>${a.toFixed(1)} + ${b.toFixed(1)} − ${c.toFixed(1)}</code>`, answer: ans, step: 0.1 });
+    });
+    templates.push((k, t) => {
+      const n1 = 1 + (k % 5), d1 = 6 + (k % 5), n2 = 1 + ((k * 2) % 4), d2 = 3 + (k % 4);
+      const ans = fractionText(n1 * d2 + n2 * d1, d1 * d2);
+      const decimal = numberText(n1 / d1 + n2 / d2, 6);
+      return makeTemplateQuestion(t, k, { grade: '五年级', topic: '异分母分数加法', stem: `计算：<code>${n1}/${d1} + ${n2}/${d2}</code>`, answer: ans, answers: [ans, decimal], decoys: [fractionText(n1+n2,d1+d2), fractionText(n1*d2-n2*d1,d1*d2), fractionText(n1*d2+n2*d1,d1+d2)], inputMode: 'text' });
+    });
+    templates.push((k, t) => {
+      const mode = k % 3;
+      if (mode === 0) {
+        const meters = 2 + (k % 18), centimeters = 5 + ((k * 7) % 90), ans = meters * 100 + centimeters;
+        return makeTemplateQuestion(t, k, { grade: '五年级', topic: '长度单位换算', stem: `<code>${meters}米${centimeters}厘米</code>一共是多少厘米？`, answer: ans, context: '单位换算题：只填写数字。' });
+      }
+      if (mode === 1) {
+        const kg = 1 + (k % 12), g = 50 + ((k * 37) % 900), ans = kg * 1000 + g;
+        return makeTemplateQuestion(t, k, { grade: '五年级', topic: '质量单位换算', stem: `<code>${kg}千克${g}克</code>一共是多少克？`, answer: ans, context: '单位换算题：只填写数字。', step: 100 });
+      }
+      const h = 1 + (k % 5), min = 5 + ((k * 11) % 55), ans = h * 60 + min;
+      return makeTemplateQuestion(t, k, { grade: '五年级', topic: '时间单位换算', stem: `<code>${h}小时${min}分</code>一共是多少分钟？`, answer: ans, context: '单位换算题：只填写数字。', step: 10 });
+    });
+    templates.push((k, t) => {
+      const l = 8 + (k % 13), w = 5 + ((k * 3) % 9), askArea = k % 2 === 0;
+      const ans = askArea ? l * w : 2 * (l + w);
+      return makeTemplateQuestion(t, k, { grade: '五年级', topic: askArea ? '长方形面积' : '长方形周长', stem: `一个长方形长 <code>${l}厘米</code>、宽 <code>${w}厘米</code>，求它的${askArea ? '面积（平方厘米）' : '周长（厘米）'}。`, answer: ans, context: '平面图形基础题：只填数值。', step: 2 });
+    });
+    templates.push((k, t) => {
+      const l = 3 + (k % 8), w = 2 + ((k * 3) % 7), h = 2 + ((k * 5) % 6), ans = l * w * h;
+      return makeTemplateQuestion(t, k, { grade: '五年级', topic: '长方体体积', stem: `一个长方体长 <code>${l}cm</code>、宽 <code>${w}cm</code>、高 <code>${h}cm</code>，体积是多少立方厘米？`, answer: ans, context: '空间与体积题：只填数值。', step: 5 });
+    });
+    templates.push((k, t) => {
+      const base = 68 + (k % 21), nums = [base, base + 4, base + 8, base + 12], ans = base + 6;
+      return makeTemplateQuestion(t, k, { grade: '五年级', topic: '平均数', stem: `四次数学小测成绩分别为 <code>${nums.join('、')}</code> 分，平均分是多少？`, answer: ans, context: '数据分析基础题：只填数值。' });
+    });
+    templates.push((k, t) => {
+      const x = 2 + (k % 17), a = 2 + (k % 5), b = 3 + ((k * 7) % 13), c = a * x + b;
+      return makeTemplateQuestion(t, k, { grade: '五年级', topic: '简易方程', stem: `解方程：<code>${a}x + ${b} = ${c}</code>，求 <code>x</code>。`, answer: x, context: '方程题：只填写 x 的值。' });
+    });
+
+    // 六年级：负数、比、百分数、圆、分数方程、比例尺、统计、行程与工程
+    templates.push((k, t) => {
+      const x = -(3 + (k % 14)), y = 1 + ((k * 3) % 9), ans = Math.abs(x) - 2 * y + Math.abs(x + y);
+      return makeTemplateQuestion(t, k, { grade: '六年级', topic: '负数与绝对值混合运算', stem: `计算：<code>|${x}| − 2 × ${y} + |${x + y}|</code>`, answer: ans, step: 2 });
+    });
+    templates.push((k, t) => {
+      const m = 2 + (k % 5), n = 3 + ((k * 2) % 6), unit = 4 + (k % 7), total = (m + n) * unit, ans = m * unit;
+      return makeTemplateQuestion(t, k, { grade: '六年级', topic: '按比分配', stem: `把 <code>${total}</code> 按 <code>${m}:${n}</code> 分成两部分，前项对应的那一部分是多少？`, answer: ans, context: '比和比例应用题：只填数值。', step: unit });
+    });
+    templates.push((k, t) => {
+      const original = 80 + (k % 31) * 10, discount = [70, 75, 80, 85, 90][k % 5], ans = numberText(original * discount / 100, 2);
+      return makeTemplateQuestion(t, k, { grade: '六年级', topic: '百分数与折扣', stem: `一件商品原价 <code>${original}元</code>，按原价的 <code>${discount}%</code> 出售，售价是多少元？`, answer: ans, context: '百分数应用题：只填写金额数字。', step: 10 });
+    });
+    templates.push((k, t) => {
+      const r = 2 + (k % 10), askArea = k % 2 === 0;
+      const ans = askArea ? numberText(3.14 * r * r, 2) : numberText(2 * 3.14 * r, 2);
+      return makeTemplateQuestion(t, k, { grade: '六年级', topic: askArea ? '圆的面积' : '圆的周长', stem: `一个圆的半径是 <code>${r}cm</code>，取 π=3.14，求${askArea ? '面积（cm²）' : '周长（cm）'}。`, answer: ans, context: '圆的计算题：只填数值。', step: 3.14 });
+    });
+    templates.push((k, t) => {
+      const d = 2 + (k % 7), x = 2 + ((k * 3) % 13), b = 1 + (k % 5), c = x / d + b;
+      const cText = numberText(c, 6);
+      return makeTemplateQuestion(t, k, { grade: '六年级', topic: '分数方程', stem: `解方程：<code>x/${d} + ${b} = ${cText}</code>，求 x。`, answer: x, context: '方程题：只填写 x 的值。' });
+    });
+    templates.push((k, t) => {
+      const scale = [100000, 200000, 500000][k % 3], mapCm = 2 + (k % 9), realKm = mapCm * scale / 100000;
+      return makeTemplateQuestion(t, k, { grade: '六年级', topic: '比例尺', stem: `一幅地图比例尺为 <code>1:${scale}</code>，图上两地相距 <code>${mapCm}cm</code>，实际距离是多少千米？`, answer: numberText(realKm), context: '比例尺应用题：只填写千米数。', step: 1 });
+    });
+    templates.push((k, t) => {
+      const base = 10 + (k % 15), data = [base, base + 2, base + 4, base + 6, base + 8], askRange = k % 2 === 0, ans = askRange ? 8 : base + 4;
+      return makeTemplateQuestion(t, k, { grade: '六年级', topic: askRange ? '极差' : '中位数', stem: `数据 <code>${data.join('，')}</code> 的${askRange ? '极差' : '中位数'}是多少？`, answer: ans, context: '统计基础题：只填数值。' });
+    });
+    templates.push((k, t) => {
+      const speed = 40 + (k % 8) * 5, time = 2 + (k % 5), rest = 10 + (k % 6) * 5, ans = speed * time + rest;
+      return makeTemplateQuestion(t, k, { grade: '六年级', topic: '行程问题', stem: `一辆车以 <code>${speed}千米/时</code> 行驶 <code>${time}小时</code>，又继续行驶 <code>${rest}千米</code>，全程多少千米？`, answer: ans, context: '行程应用题：只填总路程数值。', step: 10 });
+    });
+
+    // 七年级：乘方、整式、方程、方程组、不等式、坐标、角、概率
+    templates.push((k, t) => {
+      const a = 2 + (k % 7), b = 2 + ((k * 3) % 5), c = 2 + ((k * 5) % 8), d = 2 + ((k * 7) % 6);
+      const ans = a * a + b * b * b - c + d;
+      return makeTemplateQuestion(t, k, { grade: '七年级', topic: '平方、立方、平方根与立方根', stem: `计算：<code>${a}² + ${b}³ − √${c*c} + ∛${d*d*d}</code>`, answer: ans, context: '乘方与根式混合运算。', step: 3 });
+    });
+    templates.push((k, t) => {
+      const a = 2 + (k % 6), b = 1 + ((k * 3) % 5), c = 3 + ((k * 5) % 7), x = 2 + (k % 9);
+      const ans = (a + c) * x - b;
+      return makeTemplateQuestion(t, k, { grade: '七年级', topic: '整式化简求值', stem: `当 <code>x=${x}</code> 时，求 <code>${a}x − ${b} + ${c}x</code> 的值。`, answer: ans, step: 2 });
+    });
+    templates.push((k, t) => {
+      const x = -5 + (k % 17), a = 2 + (k % 5), b = 1 + ((k * 7) % 9), c = a * (x + b);
+      return makeTemplateQuestion(t, k, { grade: '七年级', topic: '一元一次方程', stem: `解方程：<code>${a}(x + ${b}) = ${c}</code>，求 x。`, answer: x, context: '方程题：只填写 x 的值。' });
+    });
+    templates.push((k, t) => {
+      const x = 1 + (k % 9), y = 2 + ((k * 3) % 8), s = x + y, d = x - y;
+      const ans = `${x},${y}`;
+      return makeTemplateQuestion(t, k, { grade: '七年级', topic: '二元一次方程组', stem: `解方程组：<code>x + y = ${s}<br>x − y = ${d}</code>`, answer: ans, answers: [ans, `x=${x},y=${y}`, `(${x},${y})`], decoys: [`${y},${x}`, `${x+1},${y-1}`, `${x-1},${y+1}`], inputMode: 'text', formatHint: `按 x,y 顺序填写，例如 ${x},${y}` });
+    });
+    templates.push((k, t) => {
+      const a = 2 + (k % 5), boundary = -3 + (k % 12), b = a * boundary - 1;
+      const answer = `x>${boundary}`;
+      return makeTemplateQuestion(t, k, { grade: '七年级', topic: '一元一次不等式', stem: `解不等式：<code>${a}x − ${b} &gt; 1</code>`, answer, answers: [answer, `x&gt;${boundary}`, `x大于${boundary}`], decoys: [`x<${boundary}`, `x≥${boundary}`, `x≤${boundary}`], inputMode: 'text', formatHint: `使用 x&gt;数字、x≥数字、x&lt;数字或 x≤数字` });
+    });
+    templates.push((k, t) => {
+      const x1 = -8 + (k % 9), y1 = -6 + ((k * 3) % 11), x2 = x1 + 2 * (1 + (k % 5)), y2 = y1;
+      const ans = Math.abs(x2 - x1);
+      return makeTemplateQuestion(t, k, { grade: '七年级', topic: '平面直角坐标系', stem: `点 A(<code>${x1},${y1}</code>) 与点 B(<code>${x2},${y2}</code>) 在同一水平线上，线段 AB 的长度是多少？`, answer: ans, context: '坐标与距离题：只填数值。' });
+    });
+    templates.push((k, t) => {
+      const angle = 25 + (k % 55), askSupplement = k % 2 === 0, ans = (askSupplement ? 180 : 90) - angle;
+      return makeTemplateQuestion(t, k, { grade: '七年级', topic: askSupplement ? '补角' : '余角', stem: `一个角为 <code>${angle}°</code>，它的${askSupplement ? '补角' : '余角'}是多少度？`, answer: ans, context: '角度计算题：只填度数。' });
+    });
+    templates.push((k, t) => {
+      const red = 2 + (k % 6), blue = 3 + ((k * 3) % 7), total = red + blue, ans = fractionText(red, total);
+      return makeTemplateQuestion(t, k, { grade: '七年级', topic: '简单概率', stem: `袋中有 <code>${red}</code> 个红球和 <code>${blue}</code> 个蓝球，随机摸出 1 个球，摸到红球的概率是多少？`, answer: ans, answers: [ans, numberText(red/total,6)], decoys: [fractionText(blue,total), fractionText(red,blue), fractionText(1,total)], inputMode: 'text' });
+    });
+
+    // 八年级：根式、勾股、一次函数、因式分解、分式方程、动点、相似、统计
+    templates.push((k, t) => {
+      const a = 3 + (k % 12), b = 2 + ((k * 5) % 8), ans = a + b;
+      return makeTemplateQuestion(t, k, { grade: '八年级', topic: '算术平方根与立方根', stem: `计算：<code>√${a*a} + ∛${b*b*b}</code>`, answer: ans, step: 2 });
+    });
+    templates.push((k, t) => {
+      const triples = [[3,4,5],[5,12,13],[6,8,10],[8,15,17],[7,24,25]], tri = triples[k % triples.length], scale = 1 + Math.floor(k / triples.length) % 4;
+      const a = tri[0]*scale, b = tri[1]*scale, c = tri[2]*scale;
+      return makeTemplateQuestion(t, k, { grade: '八年级', topic: '勾股定理', stem: `直角三角形两直角边长分别为 <code>${a}</code> 和 <code>${b}</code>，斜边长是多少？`, answer: c, context: '勾股定理题：只填数值。', step: scale });
+    });
+    templates.push((k, t) => {
+      const m = -3 + (k % 7) || 2, b = -5 + ((k * 3) % 11), x = -4 + ((k * 5) % 13), ans = m*x+b;
+      return makeTemplateQuestion(t, k, { grade: '八年级', topic: '一次函数', stem: `一次函数 <code>y=${m}x${b>=0?'+':''}${b}</code>，当 <code>x=${x}</code> 时，y 的值是多少？`, answer: ans, step: 2 });
+    });
+    templates.push((k, t) => {
+      const a = 2 + (k % 8), b = 1 + ((k * 3) % 7), x = 1 + ((k * 5) % 9), ans = (a*x+b)*(a*x-b);
+      return makeTemplateQuestion(t, k, { grade: '八年级', topic: '平方差公式', stem: `当 <code>x=${x}</code> 时，计算 <code>(${a}x+${b})(${a}x−${b})</code>。`, answer: ans, context: '可使用平方差公式。', step: 5 });
+    });
+    templates.push((k, t) => {
+      const a = 1 + (k % 9), b = 2 + ((k * 3) % 11), x = a + b;
+      return makeTemplateQuestion(t, k, { grade: '八年级', topic: '分式方程', stem: `解方程：<code>1/(x−${a}) = 1/${b}</code>，求 x。`, answer: x, context: '注意检验分母不为 0；只填写 x 的值。' });
+    });
+    templates.push((k, t) => {
+      const length = 24 + (k % 13) * 2, speedP = 2 + (k % 5), speedQ = 3 + ((k * 2) % 5), time = numberText(length/(speedP+speedQ), 6);
+      return makeTemplateQuestion(t, k, { grade: '八年级', topic: '动点相遇问题', stem: `线段 AB 长 <code>${length}cm</code>。点 P、Q 同时从 A、B 出发相向运动，速度分别为 <code>${speedP}cm/s</code>、<code>${speedQ}cm/s</code>。两点经过多少秒相遇？`, answer: time, context: '动点综合题：设运动时间为 t 秒，只填写 t 的值。', step: 1 });
+    });
+    templates.push((k, t) => {
+      const ratio = 2 + (k % 4), small = 3 + ((k * 3) % 9), large = ratio * small;
+      return makeTemplateQuestion(t, k, { grade: '八年级', topic: '相似三角形', stem: `两个相似三角形的相似比为 <code>1:${ratio}</code>，较小三角形对应边长为 <code>${small}cm</code>，较大三角形对应边长是多少？`, answer: large, context: '相似图形题：只填数值。', step: ratio });
+    });
+    templates.push((k, t) => {
+      const base = 5 + (k % 12), data = [base, base+1, base+1, base+3, base+5, base+5, base+5], askMode = k % 2 === 0, ans = askMode ? base+5 : base+3;
+      return makeTemplateQuestion(t, k, { grade: '八年级', topic: askMode ? '众数' : '中位数', stem: `数据 <code>${data.join('，')}</code> 的${askMode ? '众数' : '中位数'}是多少？`, answer: ans, context: '统计题：只填数值。' });
+    });
+
+    // 九年级与中考：二次方程、二次函数、反比例、圆、动角、三元方程组、不等式组、综合应用
+    templates.push((k, t) => {
+      const r1 = 1 + (k % 8), r2 = -1 - ((k * 3) % 7), sum = r1+r2, product = r1*r2;
+      const askSum = k % 2 === 0, ans = askSum ? sum : product;
+      return makeTemplateQuestion(t, k, { grade: '九年级/中考', topic: '一元二次方程', stem: `方程 <code>x² ${-sum>=0?'+':''}${-sum}x ${product>=0?'+':''}${product}=0</code> 的两根分别为 x₁、x₂，求 <code>${askSum?'x₁+x₂':'x₁x₂'}</code>。`, answer: ans, context: '中考常见根与系数关系原创变式。', step: 2 });
+    });
+    templates.push((k, t) => {
+      const h = -4 + (k % 9), min = -6 + ((k * 3) % 13), a = 1 + (k % 3), x = h + ((k * 5) % 7 - 3), ans = a*(x-h)*(x-h)+min;
+      return makeTemplateQuestion(t, k, { grade: '九年级/中考', topic: '二次函数', stem: `二次函数 <code>y=${a}(x−(${h}))²${min>=0?'+':''}${min}</code>，当 <code>x=${x}</code> 时，y 的值是多少？`, answer: ans, context: '中考二次函数原创变式。', step: 2 });
+    });
+    templates.push((k, t) => {
+      const x = 2 + (k % 9), y = 3 + ((k * 5) % 11), product = x*y, newX = 1 + ((k * 7) % 10), ans = numberText(product/newX, 6);
+      return makeTemplateQuestion(t, k, { grade: '九年级/中考', topic: '反比例函数', stem: `反比例函数 <code>y=k/x</code> 经过点 <code>(${x},${y})</code>。当 <code>x=${newX}</code> 时，y 等于多少？`, answer: ans, context: '中考反比例函数原创变式。', step: 1 });
+    });
+    templates.push((k, t) => {
+      const central = 40 + (k % 61) * 2, ans = central / 2;
+      return makeTemplateQuestion(t, k, { grade: '九年级/中考', topic: '圆周角定理', stem: `同弧所对的圆心角为 <code>${central}°</code>，对应圆周角是多少度？`, answer: ans, context: '圆的中考常见题型原创变式。', step: 5 });
+    });
+    templates.push((k, t) => {
+      const speed = 5 + (k % 8), startAngle = (k % 6) * 5, lowT = 2 + (k % 5), highT = lowT + 3 + (k % 4);
+      const lowAngle = startAngle + speed*lowT, highAngle = startAngle + speed*highT;
+      const ans = `${lowT}≤t≤${highT}`;
+      return makeTemplateQuestion(t, k, { grade: '九年级/中考', topic: '动角角度与秒数取值', stem: `射线 OP 从初始角 <code>${startAngle}°</code> 开始，以 <code>${speed}°/s</code> 匀速转动，t 秒后角度为 θ。若 <code>${lowAngle}°≤θ≤${highAngle}°</code>，求 t 的取值范围。`, answer: ans, answers: [ans, `${lowT}<=t<=${highT}`, `t∈[${lowT},${highT}]`, `[${lowT},${highT}]`], decoys: [`${lowT}<t<${highT}`, `${lowT+1}≤t≤${highT+1}`, `0≤t≤${highT}`], inputMode: 'text', formatHint: `例如 ${lowT}≤t≤${highT}` , context: '动角综合题：角度单位为度，时间单位为秒。' });
+    });
+    templates.push((k, t) => {
+      if (k % 2 === 0) {
+        const x = 1 + (k % 7), y = 2 + ((k * 3) % 8), z = 3 + ((k * 5) % 9);
+        const s1=x+y+z, s2=2*x-y+z, s3=x+2*y-z, ans=`${x},${y},${z}`;
+        return makeTemplateQuestion(t, k, { grade: '九年级/中考', topic: '三元一次方程组', stem: `解方程组：<code>x+y+z=${s1}<br>2x−y+z=${s2}<br>x+2y−z=${s3}</code>`, answer: ans, answers: [ans, `x=${x},y=${y},z=${z}`, `(${x},${y},${z})`], decoys: [`${y},${x},${z}`, `${x+1},${y-1},${z}`, `${x},${y+1},${z-1}`], inputMode: 'text', formatHint: `按 x,y,z 顺序填写，例如 ${x},${y},${z}`, context: '三元一次方程组综合题。' });
+      }
+      const x = 1 + (k % 6), y = x + 1 + ((k * 3) % 5), sum = x + y, product = x * y, ans = `${x},${y}`;
+      return makeTemplateQuestion(t, k, { grade: '九年级/中考', topic: '二元二次方程组', stem: `已知 <code>x≤y</code>，解方程组：<code>x+y=${sum}<br>xy=${product}</code>`, answer: ans, answers: [ans, `x=${x},y=${y}`, `(${x},${y})`], decoys: [`${y},${x}`, `${x-1},${y+1}`, `${x+1},${y-1}`], inputMode: 'text', formatHint: `按 x,y 顺序填写，例如 ${x},${y}`, context: '二元二次方程组原创变式。' });
+    });
+    templates.push((k, t) => {
+      if (k % 3 === 0) {
+        const lower = -3 + (k % 9), upper = lower + 4 + (k % 5), ans = `${lower}<x≤${upper}`;
+        return makeTemplateQuestion(t, k, { grade: '九年级/中考', topic: '一元一次不等式组', stem: `解不等式组：<code>x&gt;${lower}<br>2x≤${2*upper}</code>`, answer: ans, answers: [ans, `${lower}<x<=${upper}`, `x∈(${lower},${upper}]`], decoys: [`${lower}≤x<${upper}`, `x≤${lower}`, `x>${upper}`], inputMode: 'text', formatHint: `例如 ${lower}&lt;x≤${upper}`, context: '中考不等式组原创变式。' });
+      }
+      if (k % 3 === 1) {
+        const a = 1 + (k % 4), b = 2 + ((k * 3) % 4), limit = a + b + 4 + (k % 3);
+        const ans = `${a+1},${b+1}`;
+        return makeTemplateQuestion(t, k, { grade: '九年级/中考', kind: '选择题', forceChoice: true, topic: '二元一次不等式组', stem: `下列哪个点满足不等式组：<code>x≥${a}<br>y≥${b}<br>x+y≤${limit}</code>`, answer: ans, decoys: [`${a-1},${b+1}`, `${a+1},${b-1}`, `${a+3},${b+2+(k%3)}`], context: '二元一次不等式组：选项按 x,y 顺序表示坐标。' });
+      }
+      const a = 1 + (k % 3), b = 1 + ((k * 2) % 4), c = 2 + ((k * 5) % 4), limit = a+b+c+5;
+      const ans = `${a+1},${b+1},${c+1}`;
+      return makeTemplateQuestion(t, k, { grade: '九年级/中考', kind: '选择题', forceChoice: true, topic: '三元一次不等式组', stem: `下列哪个有序数组满足不等式组：<code>x≥${a}<br>y≥${b}<br>z≥${c}<br>x+y+z≤${limit}</code>`, answer: ans, decoys: [`${a-1},${b+1},${c+1}`, `${a+1},${b-1},${c+1}`, `${a+3},${b+2},${c+1}`], context: '三元一次不等式组：选项按 x,y,z 顺序表示。' });
+    });
+    templates.push((k, t) => {
+      const price = 20 + (k % 16) * 2, cost = 10 + ((k * 3) % 9), quantity = 30 + (k % 11) * 5, fixed = 50 + (k % 8) * 10;
+      const profit = (price-cost)*quantity-fixed;
+      return makeTemplateQuestion(t, k, { grade: '九年级/中考', topic: '中考综合应用题', stem: `某文创商品售价 <code>${price}元/件</code>，进价 <code>${cost}元/件</code>，当天售出 <code>${quantity}件</code>，另有固定费用 <code>${fixed}元</code>。当天利润是多少元？`, answer: profit, context: '广州及全国中考常见“利润与函数”题型原创变式，只填写最终利润。', step: 10 });
+    });
+
+    const bank = [];
+    templates.forEach((template, templateIndex) => {
+      for (let itemIndex = 0; itemIndex < 100; itemIndex++) {
+        bank.push(template(itemIndex, templateIndex));
+      }
+    });
+
+    if (bank.length !== QUESTION_BANK_SIZE) {
+      throw new Error(`数学题库数量错误：${bank.length}`);
+    }
+
+    const ids = new Set(bank.map(item => item.id));
+    if (ids.size !== bank.length) throw new Error('数学题库题号重复。');
+    return bank;
+  }
+
+  function sampleVerificationChallenges() {
+    if (!mathQuestionBank.length) mathQuestionBank = buildMathQuestionBank();
+    return randomShuffle(mathQuestionBank).slice(0, ROUND_QUESTION_COUNT);
+  }
+
+  function normalizeCaptchaValue(value, challenge) {
+    let normalized = String(value ?? '')
+      .trim()
+      .toLowerCase()
+      .replace(/\s+/g, '')
+      .replace(/[，、；]/g, ',')
+      .replace(/[（）]/g, match => match === '（' ? '(' : ')')
+      .replace(/＝/g, '=')
+      .replace(/＞/g, '>')
+      .replace(/＜/g, '<')
+      .replace(/≥/g, '>=')
+      .replace(/≤/g, '<=')
+      .replace(/∈/g, 'in')
+      .replace(/[度元厘米千米平方厘米立方厘米秒分]/g, '');
+    if (challenge.caseInsensitive === false) return normalized;
+    return normalized;
   }
 
   function renderCaptchaChallenge() {
@@ -2013,18 +1500,14 @@
     $('#captchaProgress').style.width = `${(completed / total) * 100}%`;
     $('#captchaProgressText').textContent = `已完成 ${completed} 题`;
     $('#captchaMistakeText').textContent = `错误 ${captchaMistakes} 次`;
-    $('#captchaGrade').textContent = challenge.grade;
-    $('#captchaFormat').textContent = challenge.format;
-    $('#captchaType').textContent = challenge.topic;
-    $('#captchaSource').textContent = challenge.source;
+    $('#captchaType').textContent = challenge.type;
     $('#captchaQuestion').innerHTML = challenge.question;
     $('#captchaFeedback').textContent = '';
     $('#captchaSubmitBtn').disabled = false;
 
     const area = $('#captchaAnswerArea');
     if (challenge.mode === 'choice') {
-      const letters = ['A', 'B', 'C', 'D'];
-      area.innerHTML = `<div class="captcha-options">${challenge.options.map((option, index) => `<button class="captcha-option" type="button" data-value="${escapeAttribute(option)}"><span class="captcha-option-letter">${letters[index]}</span><span>${option}</span></button>`).join('')}</div>`;
+      area.innerHTML = `<div class="captcha-options">${challenge.options.map(option => `<button class="captcha-option" type="button" data-value="${escapeHtml(option)}">${escapeHtml(option)}</button>`).join('')}</div>`;
       $$('.captcha-option', area).forEach(button => {
         button.addEventListener('click', () => {
           selectedCaptchaValue = button.dataset.value;
@@ -2032,19 +1515,8 @@
           $('#captchaFeedback').textContent = '';
         });
       });
-    } else if (challenge.mode === 'multi') {
-      area.innerHTML = `<div class="captcha-multi">${challenge.parts.map((part, index) => `<label class="captcha-part"><span>${part.label}</span><input class="captcha-input captcha-part-input" data-part-index="${index}" type="text" inputmode="decimal" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="${escapeAttribute(part.placeholder || '请输入答案')}" aria-label="${escapeAttribute(part.label)}"></label>`).join('')}</div>`;
-      const inputs = $$('.captcha-part-input', area);
-      inputs.forEach((input, index) => {
-        input.addEventListener('keydown', event => {
-          if (event.key !== 'Enter') return;
-          if (index < inputs.length - 1) inputs[index + 1].focus();
-          else submitCaptchaAnswer();
-        });
-      });
-      setTimeout(() => inputs[0]?.focus({ preventScroll: true }), 40);
     } else {
-      area.innerHTML = `<input class="captcha-input" id="captchaInput" type="text" inputmode="decimal" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="${escapeAttribute(challenge.placeholder || '请输入答案')}" aria-label="验证答案">`;
+      area.innerHTML = `<input class="captcha-input" id="captchaInput" type="text" inputmode="${challenge.inputMode || 'text'}" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="请输入最终答案" aria-label="验证答案">`;
       const input = $('#captchaInput');
       input.addEventListener('keydown', event => {
         if (event.key === 'Enter') submitCaptchaAnswer();
@@ -2060,51 +1532,23 @@
     const challenge = verificationChallenges[verificationIndex];
     if (!challenge) return;
 
-    let correct = false;
-    let missing = false;
-    let wrongPart = -1;
-
-    if (challenge.mode === 'choice') {
-      if (selectedCaptchaValue === null) missing = true;
-      else correct = answerMatches(selectedCaptchaValue, challenge.answer, 'text');
-    } else if (challenge.mode === 'multi') {
-      const inputs = $$('.captcha-part-input', $('#captchaAnswerArea'));
-      const values = inputs.map(input => input.value);
-      missing = values.some(value => !String(value).trim());
-      if (!missing) {
-        correct = challenge.parts.every((part, index) => {
-          const matched = answerMatches(values[index], part.answer, part.answerKind || 'number');
-          if (!matched && wrongPart < 0) wrongPart = index;
-          return matched;
-        });
-      }
-    } else {
-      const input = $('#captchaInput');
-      const value = input ? input.value : '';
-      missing = !String(value).trim();
-      if (!missing) correct = answerMatches(value, challenge.answer, challenge.answerKind || 'number');
-    }
-
-    if (missing) {
-      $('#captchaFeedback').textContent = challenge.mode === 'choice' ? '请先选择一个答案。' : '请填写完整后再提交。';
+    const rawValue = challenge.mode === 'choice' ? selectedCaptchaValue : ($('#captchaInput') ? $('#captchaInput').value : '');
+    if (rawValue === null || String(rawValue).trim() === '') {
+      $('#captchaFeedback').textContent = challenge.mode === 'choice' ? '请先选择一个答案。' : '请输入答案后再提交。';
       return;
     }
 
-    if (!correct) {
+    const submitted = normalizeCaptchaValue(rawValue, challenge);
+    const expectedAnswers = (challenge.answers || [challenge.answer]).map(value => normalizeCaptchaValue(value, challenge));
+    if (!expectedAnswers.includes(submitted)) {
       captchaMistakes += 1;
       $('#captchaMistakeText').textContent = `错误 ${captchaMistakes} 次`;
-      $('#captchaFeedback').textContent = wrongPart >= 0
-        ? `第 ${wrongPart + 1} 小问答案不正确，请重新核对。本题不会跳过。`
-        : '答案不正确，请重新核对。本题不会自动跳过。';
+      $('#captchaFeedback').textContent = '答案不正确，请重新核对。本题不会自动跳过。';
       const card = $('#captchaCard');
       card.classList.remove('shake');
       void card.offsetWidth;
       card.classList.add('shake');
-      if (challenge.mode === 'multi' && wrongPart >= 0) {
-        const input = $$('.captcha-part-input', $('#captchaAnswerArea'))[wrongPart];
-        input?.select();
-        input?.focus();
-      } else if ($('#captchaInput')) {
+      if ($('#captchaInput')) {
         $('#captchaInput').select();
         $('#captchaInput').focus();
       }
@@ -2151,7 +1595,7 @@
 
   function openVipVerification() {
     pauseTravelForVerification();
-    verificationChallenges = buildVerificationChallenges();
+    verificationChallenges = sampleVerificationChallenges();
     verificationIndex = 0;
     selectedCaptchaValue = null;
     captchaMistakes = 0;
@@ -2164,17 +1608,17 @@
     verificationIndex = 0;
     selectedCaptchaValue = null;
     captchaMistakes = 0;
-    verificationChallenges = buildVerificationChallenges();
+    verificationChallenges = sampleVerificationChallenges();
     renderCaptchaChallenge();
-    showToast('500 道数学验证已从第 1 题重新开始。');
+    showToast('已从 4000 道题库重新随机抽取 100 题。');
   }
 
   function completeVipVerification() {
     $('#captchaProgress').style.width = '100%';
-    $('#captchaProgressText').textContent = '已完成 500 题';
+    $('#captchaProgressText').textContent = `已完成 ${ROUND_QUESTION_COUNT} 题`;
     $('#captchaModal').classList.add('hidden');
     document.body.classList.remove('modal-open');
-    showToast('500 道数学人机验证全部通过，VIP 跳过已生效。');
+    showToast('随机 100 道数学验证全部通过，VIP 跳过已生效。');
     finishTravel(true);
   }
 
@@ -2291,6 +1735,13 @@
     if (event.key === 'Escape' && !$('#travelModal').classList.contains('hidden')) cancelTravel();
     if (event.key === 'Enter' && $('#travelModal').classList.contains('hidden') && !captchaOpen) startTravel();
   });
+
+  try {
+    mathQuestionBank = buildMathQuestionBank();
+  } catch (error) {
+    console.error(error);
+    showToast('数学题库初始化失败，请刷新页面重试。');
+  }
 
   setDefaultAbsolute();
   refreshHints();
