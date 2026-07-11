@@ -3452,7 +3452,8 @@
       <h2 id="visitorNoticeTitle">使用须知</h2>
       <div class="visitor-notice-content">
         <p>1. 欢迎访客登录使用该程序</p>
-        <p>2. 因为一些原因我们暂时不开放“个人简介，中心介绍，视频抽帧”的使用及控制界面，请理解</p>
+        <p>2. 因为一些原因我们暂时不开放“个人简介，中心介绍”的使用及控制界面，请理解</p>
+        <p>“视频抽帧”已开放，我们已通过43次迭代，19次内测及意见问题征集修改，提出 v1.2.42 版本。</p>
         <p>3. 如果你需要访问“个人简介，中心介绍，视频抽帧”，请联系管理员获取访问密码</p>
         <p>4. 联系方式如下：</p>
         <div class="visitor-contact">
@@ -3754,7 +3755,7 @@
         title: "视频抽帧",
         description: "选择网页版本或同文件夹内的本地版本。",
         files: {
-          web: { label: "网页版", file: "https://www.konglomg.cc.cd" },
+          web: { label: "网页版", file: "https://videofe.flore.top/" },
           local1: { label: "本地1", file: "视频抽帧.html" }
         }
       },
@@ -3974,7 +3975,7 @@
         <h2>四、访客权限</h2>
         <ul>
           <li>访客登录后会显示使用须知。</li>
-          <li>访客访问个人简介、中心简介、视频抽帧时，需要管理员密码。</li>
+          <li>访客访问个人简介、中心简介时，需要管理员密码；视频抽帧已开放。</li>
           <li>点名程序和关于页面默认可查看。</li>
         </ul>
       </article>
@@ -4001,6 +4002,8 @@
           <li>调整顶部导航顺序：视频抽帧位于点名程序前方。</li>
           <li>登录账号输入框提示改为“请输入账号/手机号”。</li>
           <li>关于栏目新增“服务协议”与“免责声明”入口。</li>
+          <li>取消视频抽帧访客访问限制，并更新访客使用须知。</li>
+          <li>视频抽帧已开放，当前说明版本为 v1.2.42。</li>
           <li>优化访客模式与受限栏目访问逻辑。</li>
           <li>新增密码末尾 @ 简化验证规则。</li>
           <li>修复手机端滑块、服务协议滑动、拼图点击消失等交互问题。</li>
@@ -4163,7 +4166,7 @@
     let sectionGateEnabled = false;
     let pendingGateSection = "";
     const unlockedGateSections = new Set();
-    const protectedSectionKeys = new Set(["personal", "center", "videoFrame"]);
+    const protectedSectionKeys = new Set(["personal", "center"]);
 
     function needsSectionGate(sectionKey) {
       return sectionGateEnabled &&
