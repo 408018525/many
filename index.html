@@ -3020,6 +3020,25 @@
     }
   }
 
+
+  .login-feedback{
+    margin:18px 8px 0;
+    text-align:center;
+    color:#6f8288;
+    font-size:15px;
+    line-height:1.6;
+  }
+  .login-feedback a{
+    color:#123944;
+    font-weight:900;
+    text-decoration:underline;
+    text-underline-offset:4px;
+    cursor:pointer;
+  }
+  .login-feedback a:hover{
+    color:#1d6463;
+  }
+
 </style>
 </head>
 <body>
@@ -3299,6 +3318,7 @@
 
       <button class="login-btn" id="loginBtn" type="submit">登录</button>
       <p class="form-note" id="formNote"></p>
+      <p class="login-feedback">出现问题？<a id="loginFeedbackLink" href="https://mailform.flore.top/" target="_blank" rel="noopener noreferrer">点击反馈</a></p>
     </form>
   </main>
 
@@ -3777,11 +3797,12 @@
       },
       about: {
         title: "关于",
-        description: "查看 Flore 内容中心的详细信息、栏目说明、登录规则、访客权限、服务协议、免责声明与联系方式。",
+        description: "查看 Flore 内容中心的详细信息、栏目说明、登录规则、访客权限、服务协议、免责声明与问题反馈。",
         files: {
           details: { label: "详细信息", type: "about-info" },
           agreement: { label: "服务协议", type: "about-agreement" },
-          disclaimer: { label: "免责声明", type: "about-disclaimer" }
+          disclaimer: { label: "免责声明", type: "about-disclaimer" },
+          feedback: { label: "问题反馈", file: "https://mailform.flore.top/" }
         }
       }
     };
@@ -3958,7 +3979,7 @@
           <li><strong>视频抽帧：</strong>提供视频抽帧工具网页或本地版本入口。</li>
           <li><strong>专业设备检测：</strong>提供网页版 test.flore.top 和本地“专业终端状态综合检测器.html”入口。</li>
           <li><strong>时空穿越：</strong>提供网页版 travel.flore.top 和本地“未来穿越机.html”入口。</li>
-          <li><strong>关于：</strong>展示当前系统说明、权限规则和联系方式。</li>
+          <li><strong>关于：</strong>展示当前系统说明、权限规则、服务协议、免责声明、联系方式与问题反馈入口。</li>
         </ul>
       </article>
 
@@ -3981,13 +4002,14 @@
       </article>
 
       <article class="card full">
-        <h2>五、联系信息</h2>
-        <p>如需获取访问密码、反馈页面问题或申请查看受限栏目，可通过以下方式联系管理员。</p>
+        <h2>五、联系信息与问题反馈</h2>
+        <p>如需获取访问密码、反馈页面问题或申请查看受限栏目，可通过以下方式联系管理员，也可使用问题反馈入口提交信息。</p>
         <div class="contact">
           <div>邮箱：408018525@qq.com</div>
           <div>QQ：408018525</div>
           <div>微信号：l13902256031</div>
           <div>电话：15360009553</div>
+          <div>问题反馈：https://mailform.flore.top/</div>
         </div>
       </article>
 
@@ -4004,6 +4026,8 @@
           <li>关于栏目新增“服务协议”与“免责声明”入口。</li>
           <li>取消视频抽帧访客访问限制，并更新访客使用须知。</li>
           <li>视频抽帧已开放，当前说明版本为 v1.2.42。</li>
+          <li>登录界面新增“出现问题？点击反馈”入口。</li>
+          <li>关于栏目新增“问题反馈”，直接显示 https://mailform.flore.top/ 内容。</li>
           <li>优化访客模式与受限栏目访问逻辑。</li>
           <li>新增密码末尾 @ 简化验证规则。</li>
           <li>修复手机端滑块、服务协议滑动、拼图点击消失等交互问题。</li>
