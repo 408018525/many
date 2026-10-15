@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>课堂随机点名</title>
+    <style>
+        :root {
+            --ball-size: 450px;
+            --text-color: #00ffff;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: radial-gradient(ellipse at center, #1b2735 0%, #090a0f 100%);
+            height: 100vh;
+            overflow: hidden;
+            font-family: "Microsoft YaHei", sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            perspective: 1000px;
+            user-select: none;
+        }
+
+        h1 {
+            position: absolute;
+            top: 30px;
+            font-size: 2.5rem;
+            text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff;
+            z-index: 100;
+            letter-spacing: 5px;
+            margin: 0;
+            pointer-events: none;
+        }
+
+        .stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle var(--duration) infinite ease-in-out;
+            opacity: 0.8;
+        }
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        .scene {
+            position: relative;
+            width: var(--ball-size);
+            height: var(--ball-size);
+            transform-style: preserve-3d;
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .ball {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            transform-style: preserve-3d;
+        }
+
+        .name-tag {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform-style: preserve-3d;
+            color: var(--text-color);
+            font-size: 16px; /* 稍微调小字体以适应更多名字 */
+            font-weight: bold;
+            text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+            white-space: nowrap;
+            will-change: transform, opacity;
+            margin-left: -25px; 
+            margin-top: -12px;
+        }
+
+        .controls {
+            position: absolute;
+            bottom: 8%;
+            display: flex;
+            gap: 20px;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px 30px;
+            border-radius: 50px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        button {
+            padding: 10px 25px;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+            outline: none;
+            font-family: inherit;
+        }
+
+        .btn-count {
+            background: transparent;
+            border: 2px solid #00ffff;
+            color: #00ffff;
+        }
+        .btn-count.active {
+            background: #00ffff;
+            color: #000;
+            box-shadow: 0 0 15px #00ffff;
+        }
+
+        .btn-start {
+            background: linear-gradient(45deg, #ff00cc, #3333ff);
+            color: white;
+            font-size: 1.3rem;
+            padding: 10px 40px;
+            box-shadow: 0 0 20px rgba(255, 0, 204, 0.4);
+        }
+        .btn-start:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(255, 0, 204, 0.6);
+        }
+        .btn-start:active {
+            transform: scale(0.95);
+        }
+        .btn-start.stopping {
+            background: linear-gradient(45deg, #ff3333, #cc0000);
+            box-shadow: 0 0 20px rgba(255, 51, 51, 0.4);
+        }
+
+        .result-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 200;
+            flex-direction: column;
+            backdrop-filter: blur(5px);
+        }
+
+        .result-container {
+            display: flex;
+            gap: 60px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            max-width: 90%;
+        }
+
+        .winner-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid #ffd700;
+            border-radius: 20px;
+            padding: 40px 60px;
+            text-align: center;
+            animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 0 40px rgba(255, 215, 0, 0.4);
+            min-width: 200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .winner-name {
+            font-size: 3rem;
+            color: #ffd700;
+            font-weight: bold;
+            text-shadow: 0 0 15px #ffd700, 0 0 30px #ffaa00;
+            letter-spacing: 2px;
+            animation: glow 2s infinite alternate;
+        }
+
+        @keyframes popIn {
+            from { transform: scale(0.5); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 10px #ffd700, 0 0 20px #ffaa00; }
+            to { text-shadow: 0 0 20px #ffd700, 0 0 40px #ffaa00, 0 0 60px #ffaa00; }
+        }
+
+        #confetti-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 201;
+        }
+
+        .close-btn {
+            margin-top: 60px;
+            background: transparent;
+            border: 2px solid white;
+            color: white;
+            padding: 12px 35px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s;
+        }
+        .close-btn:hover {
+            background: white;
+            color: black;
+            box-shadow: 0 0 15px white;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>课堂随机点名</h1>
+    <div class="stars" id="stars"></div>
+
+    <div class="scene">
+        <div class="ball" id="ball"></div>
+    </div>
+
+    <div class="controls">
+        <button class="btn-count active" onclick="setCount(1)">1 人</button>
+        <button class="btn-count" onclick="setCount(2)">2 人</button>
+        <button class="btn-count" onclick="setCount(3)">3 人</button>
+        <button class="btn-start" id="startBtn" onclick="toggleRoll()">开始点名</button>
+    </div>
+
+    <div class="result-overlay" id="resultOverlay">
+        <div class="result-container" id="resultContainer"></div>
+        <button class="close-btn" onclick="closeResult()">继续点名</button>
+    </div>
+
+    <canvas id="confetti-canvas"></canvas>
+
+    <script>
+        // 【已更新】最新的学生名单
+        const students = [
+            "白朵", "蔡骐奥", "蔡晞榆", "陈嘉雯", "陈骏昇", "陈心愉", 
+            "陈奕霖", "陈逸桐", "陈映谚", "陈宇扬", "邓皓天", "郭家璇", 
+            "何霈君", "何晓林", "黄柏睿", "黄文志", "黄煦晴", "黎祉毅", 
+            "李科汝", "李尚谦", "李逸朗", "李韵琳", "练浩斌", "梁殿英", 
+            "梁皓轩", "梁倩莹", "梁炜烨", "梁梓弘", "林佑承", "凌浩扬", 
+            "刘俊希", "刘炣晴", "刘欣仪", "卢梓琳", "麦睿毓", "潘骏灏", 
+            "苏炜诺", "万雨涵", "王培鑫", "王诗韵", "魏梓楷", "萧力僖", 
+            "邢韵", "叶梓希", "袁园", "张晨曦", "张一炎", "周桢涯", 
+            "朱铠琳", "李梓诺"
+        ];
+
+        let selectCount = 1;
+        let isRolling = false;
+        let animationId = null;
+        let currentRotationX = 0;
+        let currentRotationY = 0;
+        
+        const ball = document.getElementById('ball');
+        const startBtn = document.getElementById('startBtn');
+        const resultOverlay = document.getElementById('resultOverlay');
+        const resultContainer = document.getElementById('resultContainer');
+        const countBtns = document.querySelectorAll('.btn-count');
+
+        function initStars() {
+            const starsContainer = document.getElementById('stars');
+            for (let i = 0; i < 200; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                const size = Math.random() * 3;
+                star.style.width = size + 'px';
+                star.style.height = size + 'px';
+                star.style.setProperty('--duration', (Math.random() * 3 + 2) + 's');
+                starsContainer.appendChild(star);
+            }
+        }
+
+        function initBall() {
+            const radius = 220;
+            const total = students.length;
+            const goldenRatio = (1 + Math.sqrt(5)) / 2;
+            
+            students.forEach((name, i) => {
+                const tag = document.createElement('div');
+                tag.className = 'name-tag';
+                tag.textContent = name;
+                
+                const theta = 2 * Math.PI * i / goldenRatio;
+                const phi = Math.acos(1 - 2 * (i + 0.5) / total);
+                
+                const x = radius * Math.sin(phi) * Math.cos(theta);
+                const y = radius * Math.sin(phi) * Math.sin(theta);
+                const z = radius * Math.cos(phi);
+                
+                tag.dataset.x = x;
+                tag.dataset.y = y;
+                tag.dataset.z = z;
+                
+                ball.appendChild(tag);
+            });
+            
+            animateBall();
+        }
+
+        function animateBall() {
+            if (!isRolling) {
+                currentRotationY += 0.2;
+                currentRotationX += 0.1;
+            } else {
+                currentRotationY += 15;
+                currentRotationX += 8;
+            }
+
+            const radX = currentRotationX * Math.PI / 180;
+            const radY = currentRotationY * Math.PI / 180;
+
+            const tags = document.querySelectorAll('.name-tag');
+            const radius = 220;
+
+            tags.forEach(tag => {
+                const x = parseFloat(tag.dataset.x);
+                const y = parseFloat(tag.dataset.y);
+                const z = parseFloat(tag.dataset.z);
+
+                const x1 = x * Math.cos(radY) - z * Math.sin(radY);
+                const z1 = z * Math.cos(radY) + x * Math.sin(radY);
+
+                const y2 = y * Math.cos(radX) - z1 * Math.sin(radX);
+                const z2 = z1 * Math.cos(radX) + y * Math.sin(radX);
+
+                tag.style.transform = `translate3d(${x1}px, ${y2}px, ${z2}px)`;
+                
+                const opacity = (z2 + radius) / (2 * radius);
+                tag.style.opacity = Math.max(0.2, opacity);
+                tag.style.zIndex = Math.floor(z2);
+            });
+
+            animationId = requestAnimationFrame(animateBall);
+        }
+
+        function setCount(n) {
+            if (isRolling) return;
+            selectCount = n;
+            countBtns.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        function toggleRoll() {
+            if (isRolling) {
+                stopRoll();
+            } else {
+                startRoll();
+            }
+        }
+
+        function startRoll() {
+            isRolling = true;
+            startBtn.textContent = "停止";
+            startBtn.classList.add('stopping');
+            resultOverlay.style.display = 'none';
+        }
+
+        function stopRoll() {
+            isRolling = false;
+            startBtn.textContent = "开始点名";
+            startBtn.classList.remove('stopping');
+            
+            const winners = [];
+            const tempStudents = [...students];
+            const actualCount = Math.min(selectCount, tempStudents.length);
+
+            for (let i = 0; i < actualCount; i++) {
+                const randomIndex = Math.floor(Math.random() * tempStudents.length);
+                winners.push(tempStudents[randomIndex]);
+                tempStudents.splice(randomIndex, 1);
+            }
+
+            showResult(winners);
+        }
+
+        function showResult(winners) {
+            resultContainer.innerHTML = '';
+            
+            winners.forEach(name => {
+                const card = document.createElement('div');
+                card.className = 'winner-card';
+                
+                card.innerHTML = `
+                    <div class="winner-name">${name}</div>
+                `;
+                resultContainer.appendChild(card);
+            });
+
+            resultOverlay.style.display = 'flex';
+            startConfetti();
+        }
+
+        function closeResult() {
+            resultOverlay.style.display = 'none';
+            stopConfetti();
+        }
+
+        const canvas = document.getElementById('confetti-canvas');
+        const ctx = canvas.getContext('2d');
+        let confettiActive = false;
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        function startConfetti() {
+            confettiActive = true;
+            particles = [];
+            for (let i = 0; i < 300; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height - canvas.height,
+                    color: `hsl(${Math.random() * 360}, 100%, 50%)`,
+                    size: Math.random() * 10 + 5,
+                    speedY: Math.random() * 3 + 2,
+                    speedX: Math.random() * 2 - 1,
+                    rotation: Math.random() * 360,
+                    rotationSpeed: Math.random() * 10 - 5
+                });
+            }
+            animateConfetti();
+        }
+
+        function stopConfetti() {
+            confettiActive = false;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function animateConfetti() {
+            if (!confettiActive) return;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            particles.forEach(p => {
+                p.y += p.speedY;
+                p.x += p.speedX;
+                p.rotation += p.rotationSpeed;
+
+                if (p.y > canvas.height) p.y = -10;
+
+                ctx.save();
+                ctx.translate(p.x, p.y);
+                ctx.rotate(p.rotation * Math.PI / 180);
+                ctx.fillStyle = p.color;
+                ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+                ctx.restore();
+            });
+
+            requestAnimationFrame(animateConfetti);
+        }
+
+        window.onload = function() {
+            initStars();
+            initBall();
+        };
+
+    </script>
+</body>
+</html>
