@@ -46,7 +46,6 @@
             user-select: none;
         }
 
-        /* 内置主题 */
         body[data-theme="warm"] {
             --text-color: #fff0d7;
             --page-text: #fff7ec;
@@ -416,6 +415,32 @@
             z-index: 201;
         }
 
+        /* 星空霓虹主题下 "继续点名" 按钮：空心白边白字 */
+        body[data-theme="starry"] .close-btn {
+            background: transparent;
+            border: 3px solid #ffffff;
+            border-radius: 50px;
+            color: #ffffff;
+            font-weight: bold;
+            font-size: 1.5rem;
+            letter-spacing: 4px;
+            padding: 14px 48px;
+            margin-top: 40px;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.15);
+            text-shadow: none;
+            transition: all 0.3s;
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            line-height: 1.2;
+            min-width: 200px;
+        }
+
+        body[data-theme="starry"] .close-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #ffffff;
+            color: #ffffff;
+            box-shadow: 0 0 25px rgba(255, 255, 255, 0.4);
+        }
+
         .close-btn {
             margin-top: 60px;
             background: transparent;
@@ -434,7 +459,6 @@
             box-shadow: 0 0 15px var(--result-text);
         }
 
-        /* 极低存在感的页角标记：视觉仅为 3 个 4px 圆点，实际点击区为其约两倍 */
         .footer-mark {
             position: fixed;
             left: 8px;
@@ -515,7 +539,6 @@
             box-shadow: 0 0 0 3px rgba(117, 210, 255, 0.12);
         }
 
-        /* 自定义风格选择器：避免浏览器原生 select 弹层在部分设备上被异常放大 */
         .theme-picker {
             display: grid;
             grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -851,7 +874,7 @@
 
                 <div class="field-label">
                     页面风格
-                    <small>点击下方卡片选择风格；不再调用浏览器原生下拉菜单。</small>
+                    <small>点击下方卡片选择风格。</small>
                     <input id="settingTheme" type="hidden" value="starry">
                     <div class="theme-picker" id="themePicker" role="radiogroup" aria-label="页面风格">
                         <button type="button" class="theme-choice" data-theme-value="starry" role="radio" aria-checked="false"><span class="theme-dot starry"></span><span>星空霓虹</span></button>
@@ -877,7 +900,7 @@
 
                 <label class="field-label">
                     访问密码
-                    <small>默认 202061。修改后需用新密码进入设置。</small>
+                    <small>修改后需用新密码进入设置。</small>
                     <input id="settingPassword" type="password" autocomplete="new-password" maxlength="32">
                 </label>
 
@@ -885,11 +908,11 @@
                     <div class="roster-tools">
                         <div>
                             <h3>抽取名称与随机概率</h3>
-                            <p class="settings-hint">概率按“随机权重”自动计算；权重越高，抽中的概率越高。权重为 0 时不会被抽中。</p>
+                            <p class="settings-hint">概率按“随机权重”自动计算；权重越高，抽中的概率越高。权重为 0 时不会被抽中。Shift + 点击或滑动可多选名称。</p>
                         </div>
                         <button type="button" onclick="addRosterRow()">添加名称</button>
                     </div>
-                    <div class="roster-table-wrap">
+                    <div class="roster-table-wrap" id="rosterTableWrap">
                         <table class="roster-table">
                             <thead>
                                 <tr>
@@ -921,29 +944,100 @@
     </div>
 
     <script>
-        const defaultStudents = [
-            "白朵", "蔡骐奥", "蔡晞榆", "陈嘉雯", "陈骏昇", "陈心愉",
-            "陈奕霖", "陈逸桐", "陈映谚", "陈宇扬", "邓皓天", "郭家璇",
-            "何霈君", "何晓林", "黄柏睿", "黄文志", "黄煦晴", "黎祉毅",
-            "李科汝", "李尚谦", "李逸朗", "李韵琳", "1", "梁殿英",
-            "梁皓轩", "梁倩莹", "梁炜烨", "梁梓弘", "林佑承", "凌浩扬",
-            "刘俊希", "刘炣晴", "刘欣仪", "卢梓琳", "麦睿毓", "潘骏灏",
-            "苏炜诺", "万雨涵", "王培鑫", "王诗韵", "魏梓楷", "萧力僖",
-            "邢韵", "叶梓希", "袁园", "张晨曦", "张一炎", "周桢涯",
-            "朱铠琳", "李梓诺"
+        // ---------- 加密/解密工具 ----------
+        function encrypt(text) {
+            if (!text) return '';
+            try {
+                return btoa(encodeURIComponent(text));
+            } catch (e) {
+                let result = '';
+                for (let i = 0; i < text.length; i++) {
+                    result += String.fromCharCode(text.charCodeAt(i) ^ 0xAA);
+                }
+                return btoa(result);
+            }
+        }
+
+        function decrypt(encoded) {
+            if (!encoded) return '';
+            try {
+                return decodeURIComponent(atob(encoded));
+            } catch (e) {
+                try {
+                    const raw = atob(encoded);
+                    let result = '';
+                    for (let i = 0; i < raw.length; i++) {
+                        result += String.fromCharCode(raw.charCodeAt(i) ^ 0xAA);
+                    }
+                    return result;
+                } catch (e2) {
+                    return encoded;
+                }
+            }
+        }
+
+        // ---------- 加密学生名单（Base64，肉眼不可直接读）----------
+        const defaultStudentsEncrypted = [
+            "55m95pys", "6JSh6b6N5aWl", "6JSh5pmh5qaG", "6ZmI5ZiJ6Zuy", "6ZmI6aqP5piH", "6ZmI5b+D5oKj",
+            "6ZmI5aWV6Zey", "6ZmI6YC45qKf", "6ZmI5pig6LCa", "6ZmI5a6H5oms", "6YKT55qT5aSp", "6YOt5a625peL",
+            "5L2V6Z2I5ZCb", "5L2V5pmT5p6X", "6buE5p+X552/", "6buE5paH5b+X", "6buE5pit5pm0", "6buO56WJ5q+F",
+            "5p2O56eR5rKn", "5p2O5bCa6LCm", "5p2O6YC45pyX", "5p2O6Z+z55m7", "57uD5rWp5paM", "5qKB5q67",
+            "5qKB55qT6L2p", "5qKB5YCp6L6J", "5qKB54Ks54Os", "5qKB5qKT5byY", "5p6X5L2R5om/", "5YeM5rWp5oms",
+            "5YiY5L+K5biM", "5YiY54Kz5pm0", "5YiY5qyj5Luq", "5Y2i5qKT55mz", "6bqm55W/5q+T", "5p2c6aqP55ef",
+            "6IuP54Ks6K+6", "5LiH6Zuo5rWp", "546L5Z+55ZGQ", "546L6K+X6Z+1", "6ZW/5qKT5qW3", "6JCn5Yqb5YGl",
+            "6YKi6Z+1", "5Y2X5qKT5biM", "6KKB5Zut", "5byg5pmo5pum", "5byg5LiA54Kx", "5ZGo5qGT5rav",
+            "5pyx6ZOB55m7", "5p2O5qKT6K+6"
         ];
 
         const supportedThemes = ["starry", "warm", "minimal", "blackboard", "sakura", "ocean", "forest", "royal", "lavender"];
 
+        // 预加密的默认配置（title, password 均使用密文）
         const fallbackConfig = {
-            title: "课堂随机点名",
+            title: "6K+75aCC6ZqP5py65Lqu5ZCN", 
             theme: "starry",
-            password: "202061",
+            password: "MjAyMDYx", 
             repeatChance: 0,
-            roster: defaultStudents.map(name => ({ name, weight: 1, selected: true }))
+            roster: defaultStudentsEncrypted.map(name => ({ name, weight: 1, selected: true }))
         };
 
-        const storageKey = "classroom.roll.settings.v2";
+        const storageKey = "classroom.roll.settings.enc.v3";
+
+        // 解密整个配置
+        function decryptConfig(raw) {
+            if (!raw) return null;
+            try {
+                return {
+                    title: decrypt(raw.title),
+                    theme: raw.theme,
+                    password: decrypt(raw.password),
+                    repeatChance: raw.repeatChance,
+                    roster: (raw.roster || []).map(item => ({
+                        name: decrypt(item.name),
+                        weight: item.weight,
+                        selected: item.selected !== false
+                    }))
+                };
+            } catch (e) {
+                return null;
+            }
+        }
+
+        // 加密整个配置
+        function encryptConfig(cfg) {
+            return {
+                title: encrypt(cfg.title),
+                theme: cfg.theme,
+                password: encrypt(cfg.password),
+                repeatChance: cfg.repeatChance,
+                roster: (cfg.roster || []).map(item => ({
+                    name: encrypt(item.name),
+                    weight: item.weight,
+                    selected: item.selected !== false
+                }))
+            };
+        }
+
+        // ---------- 配置加载 ----------
         let config = loadConfig();
         let selectCount = 1;
         let isRolling = false;
@@ -951,6 +1045,9 @@
         let currentRotationX = 0;
         let currentRotationY = 0;
         let drawHistory = [];
+
+        let superClickTimes = [];
+        const SUPER_PASS = 'qw3';
 
         const ball = document.getElementById("ball");
         const startBtn = document.getElementById("startBtn");
@@ -968,22 +1065,51 @@
 
         function loadConfig() {
             try {
-                const saved = JSON.parse(localStorage.getItem(storageKey));
-                if (!saved || !Array.isArray(saved.roster) || saved.roster.length === 0) return structuredClone(fallbackConfig);
-                return {
-                    title: typeof saved.title === "string" && saved.title.trim() ? saved.title.trim() : fallbackConfig.title,
-                    theme: supportedThemes.includes(saved.theme) ? saved.theme : fallbackConfig.theme,
-                    password: typeof saved.password === "string" && saved.password ? saved.password : fallbackConfig.password,
-                    repeatChance: clampNumber(saved.repeatChance, 0, 100, 0),
-                    roster: sanitizeRoster(saved.roster)
-                };
+                const savedRaw = JSON.parse(localStorage.getItem(storageKey));
+                if (!savedRaw || !Array.isArray(savedRaw.roster) || savedRaw.roster.length === 0) {
+                    const decryptedFallback = decryptConfig(fallbackConfig);
+                    return decryptedFallback || {
+                        title: "课堂随机点名",
+                        theme: "starry",
+                        password: "202061",
+                        repeatChance: 0,
+                        roster: defaultStudentsEncrypted.map(name => ({
+                            name: decrypt(name),
+                            weight: 1,
+                            selected: true
+                        }))
+                    };
+                }
+                const decrypted = decryptConfig(savedRaw);
+                if (decrypted) {
+                    if (!decrypted.title || !decrypted.title.trim()) decrypted.title = "课堂随机点名";
+                    if (!supportedThemes.includes(decrypted.theme)) decrypted.theme = "starry";
+                    if (!decrypted.password) decrypted.password = "202061";
+                    decrypted.repeatChance = clampNumber(decrypted.repeatChance, 0, 100, 0);
+                    decrypted.roster = sanitizeRoster(decrypted.roster);
+                    return decrypted;
+                }
+                throw new Error('decrypt failed');
             } catch (error) {
-                return structuredClone(fallbackConfig);
+                console.warn('配置加载失败，使用默认值');
+                const decryptedFallback = decryptConfig(fallbackConfig);
+                return decryptedFallback || {
+                    title: "课堂随机点名",
+                    theme: "starry",
+                    password: "202061",
+                    repeatChance: 0,
+                    roster: defaultStudentsEncrypted.map(name => ({
+                        name: decrypt(name),
+                        weight: 1,
+                        selected: true
+                    }))
+                };
             }
         }
 
         function persistConfig() {
-            localStorage.setItem(storageKey, JSON.stringify(config));
+            const encrypted = encryptConfig(config);
+            localStorage.setItem(storageKey, JSON.stringify(encrypted));
         }
 
         function clampNumber(value, min, max, fallback) {
@@ -1003,7 +1129,12 @@
                     clean.push({ name, weight, selected });
                 }
             });
-            return clean.length ? structuredClone(clean) : structuredClone(fallbackConfig.roster);
+            // 若清洗后为空，使用解密后的默认名单
+            if (clean.length === 0) {
+                const decryptedFallback = decryptConfig(fallbackConfig);
+                return decryptedFallback ? decryptedFallback.roster : [];
+            }
+            return clean;
         }
 
         function getActiveRoster() {
@@ -1095,7 +1226,6 @@
         }
 
         function setCount(n, button) {
-            if (isRolling) return;
             selectCount = n;
             countBtns.forEach(btn => btn.classList.remove("active"));
             button.classList.add("active");
@@ -1259,6 +1389,7 @@
             requestAnimationFrame(animateConfetti);
         }
 
+        // ---------- 隐藏入口和超级密码后门 ----------
         function bindHiddenAccess() {
             const mark = document.querySelector(".footer-mark");
             let clicks = [];
@@ -1277,11 +1408,53 @@
                     showAccess();
                 }
             });
+
+            passInput.addEventListener("input", (e) => {
+                const val = e.target.value.trim();
+                passError.textContent = '';
+                if (val === SUPER_PASS) {
+                    const now = Date.now();
+                    superClickTimes.push(now);
+                    superClickTimes = superClickTimes.filter(t => now - t <= 3000);
+                    if (superClickTimes.length >= 3) {
+                        superClickTimes = [];
+                        hideAccess();
+                        showSettings();
+                        passInput.value = '';
+                    }
+                } else {
+                    if (val !== SUPER_PASS) {
+                        superClickTimes = [];
+                    }
+                }
+            });
+
+            passInput.addEventListener("keydown", (e) => {
+                if (e.key === 'Enter') {
+                    const val = passInput.value.trim();
+                    if (val === SUPER_PASS) {
+                        e.preventDefault();
+                        const now = Date.now();
+                        superClickTimes.push(now);
+                        superClickTimes = superClickTimes.filter(t => now - t <= 3000);
+                        if (superClickTimes.length >= 3) {
+                            superClickTimes = [];
+                            hideAccess();
+                            showSettings();
+                            passInput.value = '';
+                        }
+                    } else {
+                        verifyAccess();
+                    }
+                }
+                if (e.key === 'Escape') hideAccess();
+            });
         }
 
         function showAccess() {
             passError.textContent = "";
             passInput.value = "";
+            superClickTimes = [];
             accessLayer.style.display = "flex";
             setTimeout(() => passInput.focus(), 0);
         }
@@ -1293,6 +1466,23 @@
         }
 
         function verifyAccess() {
+            const inputVal = passInput.value.trim();
+            if (inputVal === SUPER_PASS) {
+                const now = Date.now();
+                superClickTimes.push(now);
+                superClickTimes = superClickTimes.filter(t => now - t <= 3000);
+                if (superClickTimes.length >= 3) {
+                    superClickTimes = [];
+                    hideAccess();
+                    showSettings();
+                    passInput.value = '';
+                    return;
+                } else {
+                    passError.textContent = `超级密码需连按3次 (${superClickTimes.length}/3)`;
+                    return;
+                }
+            }
+
             if (passInput.value === config.password) {
                 hideAccess();
                 showSettings();
@@ -1302,13 +1492,8 @@
             }
         }
 
-        passInput.addEventListener("keydown", event => {
-            if (event.key === "Enter") verifyAccess();
-            if (event.key === "Escape") hideAccess();
-        });
-
         function syncThemePicker(theme) {
-            const selectedTheme = supportedThemes.includes(theme) ? theme : fallbackConfig.theme;
+            const selectedTheme = supportedThemes.includes(theme) ? theme : "starry";
             const themeInput = document.getElementById("settingTheme");
             themeInput.value = selectedTheme;
             document.querySelectorAll(".theme-choice").forEach(button => {
@@ -1350,11 +1535,15 @@
             repeatChance.value = clampNumber(repeatChanceValue.value, 0, 100, 0);
         });
 
+        // ---------- 名单编辑器，支持shift多选 ----------
+        let lastCheckedIndex = -1;
+
         function renderRosterEditor(roster) {
             rosterBody.innerHTML = "";
             roster.forEach(item => rosterBody.appendChild(createRosterRow(item.name, item.weight, item.selected)));
             updateSelectAllState();
             updateProbabilityLabels();
+            lastCheckedIndex = -1;
         }
 
         function createRosterRow(name = "", weight = 1, selected = true) {
@@ -1368,10 +1557,29 @@
             selectInput.checked = selected !== false;
             selectInput.className = "roster-selected";
             selectInput.setAttribute("aria-label", "是否参与抽取");
+
+            selectInput.addEventListener("click", (e) => {
+                const checkboxes = [...rosterBody.querySelectorAll(".roster-selected")];
+                const currentIndex = checkboxes.indexOf(selectInput);
+
+                if (e.shiftKey && lastCheckedIndex !== -1 && lastCheckedIndex !== currentIndex) {
+                    const start = Math.min(lastCheckedIndex, currentIndex);
+                    const end = Math.max(lastCheckedIndex, currentIndex);
+                    const targetState = selectInput.checked;
+                    for (let i = start; i <= end; i++) {
+                        checkboxes[i].checked = targetState;
+                    }
+                }
+                lastCheckedIndex = currentIndex;
+                updateSelectAllState();
+                updateProbabilityLabels();
+            });
+
             selectInput.addEventListener("change", () => {
                 updateSelectAllState();
                 updateProbabilityLabels();
             });
+
             const nameInput = document.createElement("input");
             nameInput.type = "text";
             nameInput.value = name;
@@ -1405,6 +1613,7 @@
                 row.remove();
                 updateSelectAllState();
                 updateProbabilityLabels();
+                lastCheckedIndex = -1;
             });
             actionCell.appendChild(removeButton);
 
@@ -1418,6 +1627,7 @@
             updateSelectAllState();
             updateProbabilityLabels();
             row.querySelector(".roster-name").focus();
+            lastCheckedIndex = -1;
         }
 
         function toggleAllRoster(checked) {
@@ -1426,6 +1636,7 @@
             });
             updateSelectAllState();
             updateProbabilityLabels();
+            lastCheckedIndex = -1;
         }
 
         function updateSelectAllState() {
@@ -1463,15 +1674,15 @@
                 const firstSelected = roster.find(item => item.selected);
                 if (firstSelected) firstSelected.weight = 1;
             }
-            const title = document.getElementById("settingTitle").value.trim().slice(0, 30) || fallbackConfig.title;
-            const password = document.getElementById("settingPassword").value || fallbackConfig.password;
+            const title = document.getElementById("settingTitle").value.trim().slice(0, 30) || "课堂随机点名";
+            const password = document.getElementById("settingPassword").value || "202061";
             const theme = document.getElementById("settingTheme").value;
 
             config = {
                 ...config,
                 title,
                 password,
-                theme: supportedThemes.includes(theme) ? theme : fallbackConfig.theme,
+                theme: supportedThemes.includes(theme) ? theme : "starry",
                 repeatChance: clampNumber(repeatChanceValue.value, 0, 100, 0),
                 roster
             };
@@ -1484,9 +1695,20 @@
         }
 
         function restoreDefaultSettings() {
-            const keepPassword = document.getElementById("settingPassword").value || config.password || fallbackConfig.password;
-            config = structuredClone(fallbackConfig);
-            config.password = keepPassword;
+            const keepPassword = document.getElementById("settingPassword").value || config.password || "202061";
+            // 解密预加密的默认名单
+            const defaultRoster = defaultStudentsEncrypted.map(name => ({
+                name: decrypt(name),
+                weight: 1,
+                selected: true
+            }));
+            config = {
+                title: "课堂随机点名",
+                theme: "starry",
+                password: keepPassword,
+                repeatChance: 0,
+                roster: defaultRoster
+            };
             drawHistory = [];
 
             document.getElementById("settingTitle").value = config.title;
